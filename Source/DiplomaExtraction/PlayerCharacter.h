@@ -46,6 +46,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Input")
     UInputAction* MoveInputAction;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    UInputAction* ShiftInputAction;
+
     UPROPERTY(EditDefaultsOnly, Category = "Camera")
     float RotateSpeed = 1.f;
 
@@ -67,10 +70,18 @@ protected:
     void OnMove(const FInputActionValue& Value);
     void OnRotate(const FInputActionValue& Value);
     void OnZoom(const FInputActionValue& Value);
+    void OnShift(const FInputActionValue& Value);
 
     void ZoomTick(float DeltaTime);
     void RotateTick(float DeltaTime);
     void RotatePawnToCursor();
 
     void AddMappingContext();
+
+    // Initialize
+protected:
+    UPROPERTY(EditDefaultsOnly, Category = "Initialize")
+    FDataTableRowHandle DataTableRowHandle;
+
+    void InitializeRowHandle();
 };

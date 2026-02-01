@@ -3,10 +3,15 @@
 #include "CharacterLogic.h"
 #include "SpawnLibrary.h"
 #include "ItemLogic.h"
+#include "MacroLibrary.h"
 
 void UCharacterLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
     Super::InitializeRowHandler(InitRowHandle);
+
+    auto Row = InitRowHandle.GetRow<FCharacterLogicRow>(FILE_FUNC);
+    if (!Row)
+        return;
 }
 
 bool UCharacterLogic::EquipItem(ULogicBase* Item)
@@ -28,7 +33,7 @@ bool UCharacterLogic::EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* It
         return false;
 
     EquippedItems.Add(TargetSlot, Item);
-    Item->SetOwnerLogic(this);
+    AddLogicComponent(Item);
 
     return true;
 }
@@ -52,7 +57,7 @@ ULogicBase* UCharacterLogic::UnequipItem(EEquipmentSlot const& TargetSlot)
 
     auto Item = EquippedItems[TargetSlot];
     EquippedItems.Remove(TargetSlot);
-    Item->SetOwnerLogic(nullptr);
+    RemoveLogicComponent(Item);
 
     return Item;
 }
@@ -80,7 +85,7 @@ bool UCharacterLogic::IsValidEquippedItem(ULogicBase* Item)
 
 UItemLogic* UCharacterLogic::GetItemLogicComponent(ULogicBase* Item)
 {
-    auto ItemLogic = Cast<UItemLogic>(Item->GetLogicComponent<UItemLogic>(UItemLogic::StaticClass()));
+    auto ItemLogic = Cast<UItemLogic>(Item->GetLogicComponent<UItemLogic>());
     if (!ItemLogic)
         return nullptr;
     return ItemLogic;

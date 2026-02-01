@@ -4,10 +4,10 @@
 
 ULogicBase* ACharacterBase::GetLogic_Implementation()
 {
-	return Logic;
+    return LogicBase;
 }
 
 void ACharacterBase::SetLogic_Implementation(ULogicBase* NewLogic)
 {
-	Logic = NewLogic;
+    LogicBase = NewLogic;
 }

@@ -6,12 +6,11 @@
 #include "UW_ProgressBarBase.h"
 #include "UW_HealthProgressBar.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API UUW_HealthProgressBar : public UUW_ProgressBarBase
 {
 	GENERATED_BODY()
-	
+
+protected:
+    virtual void LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLogic) override;
 };

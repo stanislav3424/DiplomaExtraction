@@ -6,12 +6,17 @@
 #include "UW_Base.h"
 #include "UW_ProgressBarBase.generated.h"
 
-/**
- * 
- */
-UCLASS()
+class UProgressBar;
+
+UCLASS(Abstract, NotBlueprintable)
 class DIPLOMAEXTRACTION_API UUW_ProgressBarBase : public UUW_Base
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+protected:
+    UPROPERTY(meta = (BindWidget))
+    UProgressBar* ProgressBar;
+
+    UFUNCTION()
+    void SetPercent(float Current, float Max);
 };

@@ -48,7 +48,11 @@ ULogicBase* USpawnLibrary::SpawnLogicByRowHandler(UObject* WorldContextObject, F
     if (!LogicRow)
         return nullptr;
 
-    auto Logic = NewObject<ULogicBase>(World, LogicRow->LogicClass);
+    auto& Class = LogicRow->LogicClass;
+    if (!Class)
+        return nullptr;
+
+    auto Logic = NewObject<ULogicBase>(World, Class);
     if (!Logic)
         return nullptr;
 

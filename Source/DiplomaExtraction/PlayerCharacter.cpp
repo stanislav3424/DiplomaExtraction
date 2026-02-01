@@ -6,6 +6,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "MacroLibrary.h"
+#include "SpawnLibrary.h"
+#include "LogicBase.h"
+#include "StaminaLogic.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -31,10 +34,13 @@ void APlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
+    InitializeRowHandle();
+
     AddMappingContext();
     SetActorTickEnabled(true);
    
     TargetArmLength = SpringArm ? SpringArm->TargetArmLength : 1000.f;
+
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -58,6 +64,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     EnhancedInputComponent->BindAction(RotateInputAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnRotate);
     CHECK_FIELD_RETURN(ZoomInputAction)
     EnhancedInputComponent->BindAction(ZoomInputAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnZoom);
+    CHECK_FIELD_RETURN(ShiftInputAction)
+    EnhancedInputComponent->BindAction(ShiftInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnShift);
+    CHECK_FIELD_RETURN(ShiftInputAction)
+    EnhancedInputComponent->BindAction(ShiftInputAction, ETriggerEvent::Completed, this, &APlayerCharacter::OnShift);
 }
 
 void APlayerCharacter::OnMove(const FInputActionValue& Value)
@@ -82,6 +92,17 @@ void APlayerCharacter::OnZoom(const FInputActionValue& Value)
 
     if (SpringArm)
         TargetArmLength = FMath::Clamp(TargetArmLength + ZoomInput * ZoomMultiplier, MinZoom, MaxZoom);
+}
+
+void APlayerCharacter::OnShift(const FInputActionValue& Value)
+{
+    auto ShiftInput = Value.Get<bool>();
+
+    auto Logic = GetLogic_Implementation();
+    CHECK_FIELD_RETURN(Logic)
+    auto StaminaLogic = Logic->GetLogicComponent<UStaminaLogic>();
+    CHECK_FIELD_RETURN(StaminaLogic)
+    StaminaLogic->SetCanRunning(ShiftInput);
 }
 
 void APlayerCharacter::ZoomTick(float DeltaTime)
@@ -127,5 +148,13 @@ void APlayerCharacter::AddMappingContext()
         return;
     EnhancedInputLocalPlayerSubsystem->AddMappingContext(CameraInputMappingContext, 0);
     EnhancedInputLocalPlayerSubsystem->AddMappingContext(ControlPawnInputMappingContext, 0);
+}
+
+void APlayerCharacter::InitializeRowHandle()
+{
+    CHECK_FIELD_RETURN(!DataTableRowHandle.IsNull());   
+    auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), DataTableRowHandle);
+    CHECK_FIELD_RETURN(Logic);
+    Logic->HardSetRepresentationActor(this);
 }
     

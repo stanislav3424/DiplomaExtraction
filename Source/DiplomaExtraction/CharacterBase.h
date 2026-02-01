@@ -9,9 +9,6 @@
 
 class ULogicBase;
 
-/**
- *
- */
 UCLASS(Abstract, NotBlueprintable)
 class DIPLOMAEXTRACTION_API ACharacterBase : public ACharacter, public ILogicInterface
 {
@@ -23,5 +20,5 @@ public:
 
 private:
     UPROPERTY(Transient)
-    ULogicBase* Logic;
+    ULogicBase* LogicBase;
 };

@@ -10,7 +10,7 @@ enum class EEquipmentSlot : uint8;
 
 class UItemLogic;
 
-UCLASS(Abstract, NotBlueprintable)
+UCLASS(Blueprintable)
 class DIPLOMAEXTRACTION_API UCharacterLogic : public ULogicBase
 {
     GENERATED_BODY()

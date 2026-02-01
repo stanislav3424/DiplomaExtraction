@@ -49,6 +49,13 @@ struct FInventoryLogicRow : public FLogicBaseRow
     // Reserved for future inventory settings
 };
 
+USTRUCT(BlueprintType)
+struct FCharacterLogicRow : public FLogicBaseRow
+{
+    GENERATED_BODY()
+
+};
+
 UENUM(BlueprintType)
 enum class EEquipmentSlot : uint8
 {

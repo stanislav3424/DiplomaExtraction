@@ -1,8 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "StaminaLogic.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "SpawnLibrary.h"
 #include "MacroLibrary.h"
+
+UStaminaLogic::UStaminaLogic()
+{
+    bIsTickEnabled = true;
+}
 
 void UStaminaLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
@@ -18,23 +25,71 @@ void UStaminaLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandl
 void UStaminaLogic::SetOwnerLogic(ULogicBase* IntOwnerLogic)
 {
     Super::SetOwnerLogic(IntOwnerLogic);
+
     CurrentStamina = MaxStamina;
 }
 
-void UStaminaLogic::ConsumeStamina(float Amount)
+void UStaminaLogic::SetRunning(bool bNewRunning)
 {
-    if (Amount <= 0.0f)
+    bIsRunning = bNewRunning;
+
+    auto Logic = GetOwnerLogic();
+    if (!Logic)
         return;
 
-    CurrentStamina = FMath::Max(0.0f, CurrentStamina - Amount);
+    auto Character = Cast<ACharacter>(Logic->GetRepresentationActor());
+    if (!Character)
+        return;
+
+    auto Movement  = Character->GetCharacterMovement();
+    if (!Movement)
+        return;
+    Movement->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
+}
+
+void UStaminaLogic::Tick(float DeltaTime)
+{
+    if (!GetOwnerLogic())
+        return;
+
+    ConsumeStamina(DeltaTime);
+    RegenerateStamina(DeltaTime);
+    CheckRunningState();
+}
+
+void UStaminaLogic::ConsumeStamina(float DeltaTime)
+{
+    if (!bIsRunning)
+        return;
+
+    CurrentStamina = FMath::Max(0.0f, CurrentStamina - StaminaConsumptionRate * DeltaTime);
     BroadcastStaminaChanged();
 }
 
-void UStaminaLogic::RestoreStamina(float Amount)
+void UStaminaLogic::RegenerateStamina(float DeltaTime)
 {
-    if (Amount <= 0.0f)
+    if (bIsRunning)
         return;
+    if (CurrentStamina < MaxStamina)
+    {
+        CurrentStamina = FMath::Min(MaxStamina, CurrentStamina + StaminaRegenRate * DeltaTime);
+        BroadcastStaminaChanged();
+    }
+}
 
-    CurrentStamina = FMath::Min(CurrentStamina + Amount, MaxStamina);
-    BroadcastStaminaChanged();
+void UStaminaLogic::CheckRunningState()
+{
+    if (!bCanRun)
+    {
+        SetRunning(false);
+        return;
+    }
+
+    if (bIsRunning)
+        if (CurrentStamina <= 0.f)
+             SetRunning(false);
+
+    if (!bIsRunning)
+        if (CurrentStamina > MinStaminaToRun)
+             SetRunning(true);
 }

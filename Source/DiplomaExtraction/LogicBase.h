@@ -21,18 +21,20 @@ private:
     FDataTableRowHandle RowHandle;
 
     // Components
-public:
+protected:
     virtual void SetOwnerLogic(ULogicBase* IntOwnerLogic);
     virtual void Deinitialize();
+
+public:
     ULogicBase* GetOwnerLogic() const { return OwnerLogic; }
 
     void AddLogicComponent(ULogicBase* Component);
     void RemoveLogicComponent(ULogicBase* Component);
-    template <typename TypeComponent = ULogicBase>
-    TypeComponent* GetLogicComponent(TSubclassOf<ULogicBase> ComponentClass)
+    template <typename TypeComponent = ULogicBase> TypeComponent* GetLogicComponent()
     {
-        for (ULogicBase* Component : LogicComponents)
-            if (Component && Component->IsA(ComponentClass))
+        const UClass* Wanted = TypeComponent::StaticClass();
+        for (auto* Component : LogicComponents)
+            if (Component && Component->IsA(Wanted))
                 return Cast<TypeComponent>(Component);
         return nullptr;
     }
@@ -49,6 +51,7 @@ private:
 public:
     AActor* GetRepresentationActor() const { return RepresentationActor; }
     AActor* SpawnRepresentationActor(FVector const& SpawnLocation, FRotator const& SpawnRotation);
+    void    HardSetRepresentationActor(AActor* NewRepresentationActor);
 
 private:
     UPROPERTY(Transient)

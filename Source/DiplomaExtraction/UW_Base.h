@@ -9,7 +9,7 @@
 
 class ULogicBase;
 
-UCLASS(Abstract, NotBlueprintable)
+UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API UUW_Base : public UUserWidget, public ILogicInterface
 {
     GENERATED_BODY()
@@ -24,4 +24,8 @@ protected:
 private:
     UPROPERTY(Transient)
     ULogicBase* Logic;
+
+    // Auto initialize child logic
+protected:
+    virtual void AutoInitializeChildLogic(ULogicBase* NewLogic);
 };

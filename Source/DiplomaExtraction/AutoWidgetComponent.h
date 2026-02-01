@@ -4,14 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "Components/WidgetComponent.h"
+#include "LogicInterface.h"
 #include "AutoWidgetComponent.generated.h"
 
-/**
- * 
- */
-UCLASS()
-class DIPLOMAEXTRACTION_API UAutoWidgetComponent : public UWidgetComponent
+UCLASS(Blueprintable, ClassGroup = "UserInterface",
+    hidecategories = (Object, Activation, "Components|Activation", Sockets, Base, Lighting, LOD, Mesh), editinlinenew,
+    meta           = (BlueprintSpawnableComponent))
+class DIPLOMAEXTRACTION_API UAutoWidgetComponent : public UWidgetComponent, public ILogicInterface
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    virtual ULogicBase* GetLogic_Implementation() override;
+    virtual void        SetLogic_Implementation(ULogicBase* NewLogic) override;
+
+private:
+    UPROPERTY(Transient)
+    ULogicBase* LogicBase;
 };

@@ -10,7 +10,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, CurrentHealth, float, MaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
 
-UCLASS(Abstract, NotBlueprintable)
+UCLASS(Blueprintable)
 class DIPLOMAEXTRACTION_API UHealthLogic : public ULogicBase
 {
     GENERATED_BODY()

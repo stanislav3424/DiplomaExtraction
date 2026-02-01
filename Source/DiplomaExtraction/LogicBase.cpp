@@ -2,7 +2,9 @@
 
 #include "LogicBase.h"
 #include "SpawnLibrary.h"
+#include "LogicLibrary.h"
 #include "MacroLibrary.h"
+#include "LogicInterface.h"
 
 void ULogicBase::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
@@ -26,11 +28,9 @@ void ULogicBase::SetOwnerLogic(ULogicBase* IntOwnerLogic)
 
 void ULogicBase::Deinitialize()
 {
-	for (ULogicBase* Component : LogicComponents)
-	{
+	for (auto Component : LogicComponents)
 		if (Component)
 			Component->Deinitialize();
-	}
 	LogicComponents.Empty();
 	OwnerLogic = nullptr;
 }
@@ -39,8 +39,8 @@ void ULogicBase::AddLogicComponent(ULogicBase* Component)
 {
 	if (Component)
 	{
-		LogicComponents.Add(Component);
-		Component->SetOwnerLogic(OwnerLogic);
+		LogicComponents.AddUnique(Component);
+		Component->SetOwnerLogic(this);
 	}
 }
 
@@ -49,7 +49,7 @@ void ULogicBase::RemoveLogicComponent(ULogicBase* Component)
 	if (Component)
 	{
 		LogicComponents.Remove(Component);
-        Component->Deinitialize();
+        Component->SetOwnerLogic(nullptr);
     }
 }
 
@@ -67,13 +67,34 @@ AActor* ULogicBase::SpawnRepresentationActor(FVector const& SpawnLocation, FRota
     if (!World)
         return nullptr;
 
-    RepresentationActor = World->SpawnActor<AActor>(AActor::StaticClass(), SpawnLocation, SpawnRotation);
-    if (!IsValid(RepresentationActor))
+    auto LocalRepresentationActor = World->SpawnActor<AActor>(AActor::StaticClass(), SpawnLocation, SpawnRotation);
+    if (!IsValid(LocalRepresentationActor))
         return nullptr;
 
-    RepresentationActor->SetActorLocationAndRotation(SpawnLocation, SpawnRotation);
+    HardSetRepresentationActor(LocalRepresentationActor);
 
-    return RepresentationActor;
+    LocalRepresentationActor->SetActorLocationAndRotation(SpawnLocation, SpawnRotation);
+
+    return LocalRepresentationActor;
+}
+
+void ULogicBase::HardSetRepresentationActor(AActor* NewRepresentationActor)
+{
+    if (!IsValid(NewRepresentationActor))
+        return;
+
+    if (IsValid(RepresentationActor))
+    {
+        RepresentationActor->Destroy();
+        RepresentationActor = nullptr;
+    }
+
+    RepresentationActor = NewRepresentationActor;
+
+    ULogicLibrary::SetLogic(NewRepresentationActor, this);
+
+    for (auto Component : NewRepresentationActor->GetComponents())
+        ULogicLibrary::SetLogic(Component, this);
 }
 
 void ULogicBase::Tick(float DeltaTime)

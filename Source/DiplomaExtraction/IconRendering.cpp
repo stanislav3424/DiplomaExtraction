@@ -76,9 +76,6 @@ void AIconRendering::Tick(float DeltaSeconds)
         SceneCapture->CaptureScene();
         Actor->Destroy();
 
-        const FDataTableRowHandle& RowHandle    = Pair.Key;
-        UTextureRenderTarget2D*    RenderTarget = Pair.Value;
-
         if (!RenderTarget)
             return;
         if (auto Found = CacheTextures.Find(RowHandle.RowName))

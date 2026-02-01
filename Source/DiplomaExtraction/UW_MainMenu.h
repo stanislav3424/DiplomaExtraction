@@ -6,12 +6,14 @@
 #include "UW_Dialog.h"
 #include "UW_MainMenu.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API UUW_MainMenu : public UUW_Dialog
 {
 	GENERATED_BODY()
-	
+
+protected:
+    virtual void StartOpen();
+    virtual void StartClose();
+    virtual void FinishOpen();
+    virtual void FinishClose();
 };

@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "ExfilGameMode.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGamePausedChanged, bool, bIsPaused);
+
 class AIconRendering;
 
 UCLASS(Abstract, Blueprintable)
@@ -16,6 +18,8 @@ class DIPLOMAEXTRACTION_API AExfilGameMode : public AGameModeBase
 protected:
     virtual void BeginPlay() override;
 
+    // IconRenderer
+protected:
     UPROPERTY(Transient)
     AIconRendering* IconRenderer;
 
@@ -24,4 +28,14 @@ protected:
 
 public:
     AIconRendering* GetIconRenderer() const { return IconRenderer; }
+
+    // Status Game
+public:
+    void                 TogglePause();
+    void                 SetPause(bool bPause);
+    FOnGamePausedChanged OnGamePausedChanged;
+    void                 BroadcastGamePausedChanged() const;
+
+private:
+    bool bIsPaused = false;
 };

@@ -1,34 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "InitRowHandle.h"
+#include "MacroLibrary.h"
+#include "SpawnLibrary.h"
+#include "LogicBase.h"
 
-// Sets default values for this component's properties
-UInitRowHandle::UInitRowHandle()
-{
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
 void UInitRowHandle::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-	// ...
-	
+    auto Actor = GetOwner();
+    CHECK_FIELD_RETURN(Actor);
+    CHECK_FIELD_RETURN(!InitRowHandle.IsNull());
+    auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), InitRowHandle);
+    CHECK_FIELD_RETURN(Logic);
+    Logic->HardSetRepresentationActor(Actor);
+
 }
 
-
-// Called every frame
-void UInitRowHandle::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
 

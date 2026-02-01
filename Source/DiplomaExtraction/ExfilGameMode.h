@@ -6,9 +6,22 @@
 #include "GameFramework/GameModeBase.h"
 #include "ExfilGameMode.generated.h"
 
-UCLASS(Abstract,Blueprintable)
+class AIconRendering;
+
+UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API AExfilGameMode : public AGameModeBase
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+protected:
+    virtual void BeginPlay() override;
+
+    UPROPERTY(Transient)
+    AIconRendering* IconRenderer;
+
+    UPROPERTY(EditDefaultsOnly, Category = "IconRendererClass")
+    TSubclassOf<AIconRendering> IconRendererClass;
+
+public:
+    AIconRendering* GetIconRenderer() const { return IconRenderer; }
 };

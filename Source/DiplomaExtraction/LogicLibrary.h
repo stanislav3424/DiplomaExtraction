@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "LogicInterface.h"
 #include "LogicLibrary.generated.h"
 
 class ILogicInterface;
@@ -18,7 +19,7 @@ public:
     static ULogicBase* GetLogic(TScriptInterface<ILogicInterface> TargetObject);
     static void        SetLogic(TScriptInterface<ILogicInterface> TargetObject, ULogicBase* NewLogic);
 
-    template <typename TypeLogic = ULogicBase> static TypeLogic* GetLogicAs(TScriptInterface<ILogicInterface> TargetObject)
+    template <typename TypeLogic = ULogicBase> static TypeLogic* GetLogic(TScriptInterface<ILogicInterface> TargetObject)
     {
         return Cast<TypeLogic>(GetLogic(TargetObject));
     }

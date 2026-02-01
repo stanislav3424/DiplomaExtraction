@@ -78,10 +78,4 @@ protected:
 
     void AddMappingContext();
 
-    // Initialize
-protected:
-    UPROPERTY(EditDefaultsOnly, Category = "Initialize")
-    FDataTableRowHandle DataTableRowHandle;
-
-    void InitializeRowHandle();
 };

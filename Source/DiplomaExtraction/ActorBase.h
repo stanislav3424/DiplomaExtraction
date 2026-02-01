@@ -4,23 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "LogicInterface.h"
 #include "ActorBase.generated.h"
 
-UCLASS()
-class DIPLOMAEXTRACTION_API AActorBase : public AActor
+UCLASS(Abstract, Blueprintable)
+class DIPLOMAEXTRACTION_API AActorBase : public AActor, public ILogicInterface
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AActorBase();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+public:
+    virtual ULogicBase* GetLogic_Implementation() override;
+    virtual void        SetLogic_Implementation(ULogicBase* NewLogic) override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+private:
+    UPROPERTY(Transient)
+    ULogicBase* LogicBase;
 };

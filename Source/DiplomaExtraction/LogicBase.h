@@ -15,7 +15,7 @@ class DIPLOMAEXTRACTION_API ULogicBase : public UObject, public FTickableGameObj
 public:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle);
 
-    FDataTableRowHandle const& GetDataTableRowHandle() const { return RowHandle; }
+    FDataTableRowHandle const& GetRowHandle() const { return RowHandle; }
 
 private:
     FDataTableRowHandle RowHandle;

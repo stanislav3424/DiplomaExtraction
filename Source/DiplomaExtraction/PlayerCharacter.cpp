@@ -34,8 +34,6 @@ void APlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    InitializeRowHandle();
-
     AddMappingContext();
     SetActorTickEnabled(true);
    
@@ -150,11 +148,4 @@ void APlayerCharacter::AddMappingContext()
     EnhancedInputLocalPlayerSubsystem->AddMappingContext(ControlPawnInputMappingContext, 0);
 }
 
-void APlayerCharacter::InitializeRowHandle()
-{
-    CHECK_FIELD_RETURN(!DataTableRowHandle.IsNull());   
-    auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), DataTableRowHandle);
-    CHECK_FIELD_RETURN(Logic);
-    Logic->HardSetRepresentationActor(this);
-}
     

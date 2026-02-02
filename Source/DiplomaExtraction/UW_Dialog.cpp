@@ -27,6 +27,8 @@ void UUW_Dialog::OpenDialog()
     if (!World)
         return;
 
+    StartOpen();
+
     World->GetTimerManager().ClearTimer(FinishTimerHandle);
     SetVisibility(ESlateVisibility::Visible);
     bIsOpen = true;
@@ -49,6 +51,8 @@ void UUW_Dialog::CloseDialog()
     auto World = GetWorld();
     if (!World)
         return;
+
+    StartClose();
 
     World->GetTimerManager().ClearTimer(FinishTimerHandle);
     if (DialogAnimation)

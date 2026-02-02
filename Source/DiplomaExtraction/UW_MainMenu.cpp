@@ -12,7 +12,7 @@ void UUW_MainMenu::StartOpen()
     if (!GameMode)
         return;
 
-    GameMode->SetPause(true);
+    GameMode->SetPauseGame(true);
 }
 
 void UUW_MainMenu::StartClose()
@@ -35,5 +35,5 @@ void UUW_MainMenu::FinishClose()
     if (!GameMode)
         return;
 
-    GameMode->SetPause(true);
+    GameMode->SetPauseGame(false);
 }

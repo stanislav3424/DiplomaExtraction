@@ -14,7 +14,7 @@ class DIPLOMAEXTRACTION_API UUW_Dialog : public UUW_Base
 protected:
     virtual void NativeConstruct() override;
 
-    UPROPERTY(meta = (BindWidgetAnimOptional))
+    UPROPERTY(meta = (BindWidgetAnimOptional), Transient)
     UWidgetAnimation* DialogAnimation;
 
 public:

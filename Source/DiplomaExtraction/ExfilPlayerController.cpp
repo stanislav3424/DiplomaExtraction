@@ -10,8 +10,6 @@ void AExfilPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
-    SetShowMouseCursor(true);
-
     AddMappingContext();
 }
 
@@ -40,8 +38,9 @@ void AExfilPlayerController::SetupInputComponent()
         return;
 
     CHECK_FIELD_RETURN(MainMenuInputAction)
-        EnhancedInputComponent->BindAction(
+    EnhancedInputComponent->BindAction(
         MainMenuInputAction, ETriggerEvent::Started, this, &AExfilPlayerController::OnMainMenu);
+
     CHECK_FIELD_RETURN(InventoryInputAction)
     EnhancedInputComponent->BindAction(
         InventoryInputAction, ETriggerEvent::Started, this, &AExfilPlayerController::OnInventory);

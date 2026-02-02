@@ -2,7 +2,7 @@
 
 #include "CharacterLogic.h"
 #include "SpawnLibrary.h"
-#include "ItemLogic.h"
+#include "EquipmentLogic.h"
 #include "MacroLibrary.h"
 
 void UCharacterLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
@@ -83,9 +83,9 @@ bool UCharacterLogic::IsValidEquippedItem(ULogicBase* Item)
     return true;
 }
 
-UItemLogic* UCharacterLogic::GetItemLogicComponent(ULogicBase* Item)
+UEquipmentLogic* UCharacterLogic::GetItemLogicComponent(ULogicBase* Item)
 {
-    auto ItemLogic = Cast<UItemLogic>(Item->GetLogicComponent<UItemLogic>());
+    auto ItemLogic = Cast<UEquipmentLogic>(Item->GetLogicComponent<UEquipmentLogic>());
     if (!ItemLogic)
         return nullptr;
     return ItemLogic;

@@ -15,6 +15,7 @@ void UAnimInstanceBase::NativeBeginPlay()
 void UAnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
 {
     Super::NativeUpdateAnimation(DeltaSeconds);
+
     if (!CharacterLogic)
         CharacterLogic = ULogicLibrary::GetLogic<UCharacterLogic>(TryGetPawnOwner());
 
@@ -23,8 +24,11 @@ void UAnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
 
     if (Pawn)
     {
-        Speed  = Pawn->GetVelocity().Size();
-        Rotate = Pawn->GetActorRotation().Yaw - Pawn->GetVelocity().Rotation().Yaw;
+        Speed = Pawn->GetVelocity().Size();
+
+        float ActorYaw    = Pawn->GetActorRotation().Yaw;
+        float MovementYaw = Pawn->GetVelocity().Rotation().Yaw;
+        Rotate            = FMath::FindDeltaAngleDegrees(ActorYaw, MovementYaw);
     }
 
     if (CharacterLogic->GetEquippedItem(EEquipmentSlot::Hands))

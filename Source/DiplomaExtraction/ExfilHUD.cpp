@@ -11,17 +11,18 @@ void AExfilHUD::BeginPlay()
     Super::BeginPlay();
 
     CHECK_FIELD_RETURN(MainMenuWidgetClass) 
-    CHECK_FIELD_RETURN(InventoryWidgetClass)
 
     MainMenuWidget = CreateWidget<UUW_Dialog>(GetWorld(), MainMenuWidgetClass);
     if (!MainMenuWidget) 
         return;
-    MainMenuWidget->AddToViewport(0);
+    MainMenuWidget->AddToViewport(5);
+
+    CHECK_FIELD_RETURN(InventoryWidgetClass)
 
     InventoryWidget = CreateWidget<UUW_Dialog>(GetWorld(), InventoryWidgetClass);
     if (!InventoryWidget)
         return;
-    InventoryWidget->AddToViewport(-1);
+    InventoryWidget->AddToViewport(4);
 
     auto PlayerLogic = ULogicLibrary::GetLogic(GetOwningPlayerController());
     CHECK_FIELD_RETURN(PlayerLogic)

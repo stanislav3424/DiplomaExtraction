@@ -32,7 +32,7 @@ public:
     // Status Game
 public:
     void                 TogglePause();
-    void                 SetPause(bool bPause);
+    void                 SetPauseGame(bool bPause);
     FOnGamePausedChanged OnGamePausedChanged;
     void                 BroadcastGamePausedChanged() const;
 

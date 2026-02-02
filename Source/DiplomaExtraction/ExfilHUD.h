@@ -16,10 +16,10 @@ class DIPLOMAEXTRACTION_API AExfilHUD : public AHUD
 protected:
     virtual void BeginPlay() override;
 
-    UPROPERTY(EditDefaultsOnly, Category = "UI", meta = (MustImplement = "/Script/DiplomaExtraction.LogicInterface"))
+    UPROPERTY(EditDefaultsOnly, Category = "UI")
     TSubclassOf<UUW_Dialog> MainMenuWidgetClass;
 
-    UPROPERTY(EditDefaultsOnly, Category = "UI", meta = (MustImplement = "/Script/DiplomaExtraction.LogicInterface"))
+    UPROPERTY(EditDefaultsOnly, Category = "UI")
     TSubclassOf<UUW_Dialog> InventoryWidgetClass;
 
     UPROPERTY(Transient)

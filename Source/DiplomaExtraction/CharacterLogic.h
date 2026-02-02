@@ -8,7 +8,7 @@
 
 enum class EEquipmentSlot : uint8;
 
-class UItemLogic;
+class UEquipmentLogic;
 
 UCLASS(Blueprintable)
 class DIPLOMAEXTRACTION_API UCharacterLogic : public ULogicBase
@@ -27,7 +27,7 @@ public:
     ULogicBase*           UnequipItem(EEquipmentSlot const& TargetSlot);
     ULogicBase*           GetEquippedItem(EEquipmentSlot const& TargetSlot) const;
     bool                  IsValidEquippedItem(ULogicBase* Item);
-    static UItemLogic*    GetItemLogicComponent(ULogicBase* Item);
+    static UEquipmentLogic*    GetItemLogicComponent(ULogicBase* Item);
     static EEquipmentSlot GetEquipmentSlot(ULogicBase* Item);
 
 private:

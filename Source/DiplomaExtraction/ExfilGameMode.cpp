@@ -3,6 +3,7 @@
 #include "ExfilGameMode.h"
 #include "IconRendering.h"
 #include "Kismet/GameplayStatics.h"
+#include "MacroLibrary.h"
 
 void AExfilGameMode::BeginPlay()
 {
@@ -17,11 +18,14 @@ void AExfilGameMode::BeginPlay()
 
 void AExfilGameMode::TogglePause()
 {
-    SetPause(!bIsPaused);
+    SetPauseGame(!bIsPaused);
 }
 
-void AExfilGameMode::SetPause(bool bPause)
+void AExfilGameMode::SetPauseGame(bool bPause)
 {
+    if (bIsPaused == bPause)
+        return;
+
     bIsPaused = bPause;
     UGameplayStatics::SetGamePaused(GetWorld(), bIsPaused);
     BroadcastGamePausedChanged();

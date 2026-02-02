@@ -6,10 +6,7 @@
 #include "LogicBase.h"
 #include "ItemLogic.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(Abstract, NotBlueprintable)
 class DIPLOMAEXTRACTION_API UItemLogic : public ULogicBase
 {
 	GENERATED_BODY()

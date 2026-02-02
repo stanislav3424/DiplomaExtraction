@@ -62,9 +62,13 @@ private:
 
     // Tickable
 public:
+    virtual void TickLogic(float DeltaTime);
+
+    bool bIsTickEnabled = false;
+
+private:
     virtual void    Tick(float DeltaTime) override;
     virtual bool    IsTickable() const override { return bIsTickEnabled; }
     virtual TStatId GetStatId() const override { RETURN_QUICK_DECLARE_CYCLE_STAT(ULogicBase, STATGROUP_Tickables); }
-
-    bool bIsTickEnabled = false;
+    virtual bool    IsTickableWhenPaused() const override { return false; }
 };

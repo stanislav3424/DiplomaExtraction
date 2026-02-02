@@ -48,7 +48,7 @@ private:
 public:
     void SetCanRunning(bool bNewCanRun) { bCanRun = bNewCanRun; }
 
-    virtual void Tick(float DeltaTime) override;
+    virtual void TickLogic(float DeltaTime) override;
 
 private:
     void ConsumeStamina(float DeltaTime);

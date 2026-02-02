@@ -47,7 +47,7 @@ void UStaminaLogic::SetRunning(bool bNewRunning)
     Movement->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
 }
 
-void UStaminaLogic::Tick(float DeltaTime)
+void UStaminaLogic::TickLogic(float DeltaTime)
 {
     if (!GetOwnerLogic())
         return;

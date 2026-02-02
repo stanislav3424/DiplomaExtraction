@@ -97,6 +97,13 @@ void ULogicBase::HardSetRepresentationActor(AActor* NewRepresentationActor)
         ULogicLibrary::SetLogic(Component, this);
 }
 
+void ULogicBase::TickLogic(float DeltaTime)
+{
+}
+
 void ULogicBase::Tick(float DeltaTime)
 {
+    auto World = GetWorld();
+    if (World && !World->IsPaused())
+        TickLogic(DeltaTime);
 }

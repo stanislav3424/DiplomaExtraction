@@ -3,6 +3,7 @@
 #include "SpawnLibrary.h"
 #include "MacroLibrary.h"
 #include "LogicBase.h"
+#include "Row.h"
 
 AActor* USpawnLibrary::SpawnActorByRowHandler(UObject* WorldContextObject, FDataTableRowHandle const& RowHandle,
     FVector const& SpawnLocation, FRotator const& SpawnRotation)

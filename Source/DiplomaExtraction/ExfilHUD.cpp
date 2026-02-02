@@ -17,16 +17,16 @@ void AExfilHUD::BeginPlay()
         return;
     MainMenuWidget->AddToViewport(5);
 
-    CHECK_FIELD_RETURN(InventoryWidgetClass)
+    CHECK_FIELD_RETURN(PawnInfoWidgetClass)
 
-    InventoryWidget = CreateWidget<UUW_Dialog>(GetWorld(), InventoryWidgetClass);
-    if (!InventoryWidget)
+    PawnInfoWidget = CreateWidget<UUW_Dialog>(GetWorld(), PawnInfoWidgetClass);
+    if (!PawnInfoWidget)
         return;
-    InventoryWidget->AddToViewport(4);
+    PawnInfoWidget->AddToViewport(4);
 
     auto PlayerLogic = ULogicLibrary::GetLogic(GetOwningPlayerController());
     CHECK_FIELD_RETURN(PlayerLogic)
-    ULogicLibrary::SetLogic(InventoryWidget, PlayerLogic);
+    ULogicLibrary::SetLogic(PawnInfoWidget, PlayerLogic);
 }
 
 void AExfilHUD::ToggleMainMenu()
@@ -35,8 +35,8 @@ void AExfilHUD::ToggleMainMenu()
         MainMenuWidget->ToggleDialog();
 }
 
-void AExfilHUD::ToggleInventory()
+void AExfilHUD::TogglePawnInfo()
 {
-    if (InventoryWidget)
-        InventoryWidget->ToggleDialog();
+    if (PawnInfoWidget)
+        PawnInfoWidget->ToggleDialog();
 }

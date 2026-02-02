@@ -3,6 +3,7 @@
 #include "HealthLogic.h"
 #include "SpawnLibrary.h"
 #include "MacroLibrary.h"
+#include "Row.h"
 
 void UHealthLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {

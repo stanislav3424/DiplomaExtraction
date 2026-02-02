@@ -41,9 +41,9 @@ void AExfilPlayerController::SetupInputComponent()
     EnhancedInputComponent->BindAction(
         MainMenuInputAction, ETriggerEvent::Started, this, &AExfilPlayerController::OnMainMenu);
 
-    CHECK_FIELD_RETURN(InventoryInputAction)
+    CHECK_FIELD_RETURN(PawnInfoInputAction)
     EnhancedInputComponent->BindAction(
-        InventoryInputAction, ETriggerEvent::Started, this, &AExfilPlayerController::OnInventory);
+        PawnInfoInputAction, ETriggerEvent::Started, this, &AExfilPlayerController::OnPawnInfo);
 }
 
 void AExfilPlayerController::OnMainMenu(FInputActionValue const& Value)
@@ -55,11 +55,11 @@ void AExfilPlayerController::OnMainMenu(FInputActionValue const& Value)
     HUD->ToggleMainMenu();
 }
 
-void AExfilPlayerController::OnInventory(FInputActionValue const& Value)
+void AExfilPlayerController::OnPawnInfo(FInputActionValue const& Value)
 {
     auto HUD = GetHUD<AExfilHUD>();
     if (!HUD)
         return;
 
-    HUD->ToggleInventory();
+    HUD->TogglePawnInfo();
 }

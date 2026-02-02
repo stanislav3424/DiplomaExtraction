@@ -5,6 +5,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "SpawnLibrary.h"
 #include "MacroLibrary.h"
+#include "Row.h"
 
 UStaminaLogic::UStaminaLogic()
 {

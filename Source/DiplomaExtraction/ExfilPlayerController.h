@@ -28,8 +28,8 @@ protected:
     UInputAction* MainMenuInputAction;
 
     UPROPERTY(EditDefaultsOnly, Category = "Input")
-    UInputAction* InventoryInputAction;
+    UInputAction* PawnInfoInputAction;
 
     void OnMainMenu(FInputActionValue const& Value);
-    void OnInventory(FInputActionValue const& Value);
+    void OnPawnInfo(FInputActionValue const& Value);
 };

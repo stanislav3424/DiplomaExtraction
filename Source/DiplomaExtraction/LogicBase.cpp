@@ -5,15 +5,16 @@
 #include "LogicLibrary.h"
 #include "MacroLibrary.h"
 #include "LogicInterface.h"
+#include "Row.h"
 
 void ULogicBase::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
     RowHandle = InitRowHandle;
-    auto LogicRow = RowHandle.GetRow<FLogicBaseRow>(FILE_FUNC);
-    if (!LogicRow)
+    auto Row = RowHandle.GetRow<FLogicBaseRow>(FILE_FUNC);
+    if (!Row)
 		return;
-	RepresentationActorClass = LogicRow->RepresentationActorClass;
-	for (auto const& ComponentRowHandle : LogicRow->ComponentRows)
+	RepresentationActorClass = Row->RepresentationActorClass;
+	for (auto const& ComponentRowHandle : Row->ComponentRows)
 	{
 		auto ComponentLogic = USpawnLibrary::SpawnLogicByRowHandler(this, ComponentRowHandle);
 		if (ComponentLogic)

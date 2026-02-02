@@ -20,15 +20,15 @@ protected:
     TSubclassOf<UUW_Dialog> MainMenuWidgetClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "UI")
-    TSubclassOf<UUW_Dialog> InventoryWidgetClass;
+    TSubclassOf<UUW_Dialog> PawnInfoWidgetClass;
 
     UPROPERTY(Transient)
     UUW_Dialog* MainMenuWidget;
 
     UPROPERTY(Transient)
-    UUW_Dialog* InventoryWidget;
+    UUW_Dialog* PawnInfoWidget;
 
 public:
     void ToggleMainMenu();
-    void ToggleInventory();
+    void TogglePawnInfo();
 };

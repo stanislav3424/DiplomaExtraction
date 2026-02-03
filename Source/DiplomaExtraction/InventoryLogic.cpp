@@ -4,16 +4,16 @@
 #include "SpawnLibrary.h"
 #include "Row.h"
 #include "MacroLibrary.h"
-#include "ItemLogic.h"
 
 void UInventoryLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
     Super::InitializeRowHandler(InitRowHandle);
     
     auto Row = InitRowHandle.GetRow<FInventoryLogicRow>(FILE_FUNC);
-
     if (!Row)
         return;
+
+    InventorySize = Row->InventorySize;
 
     CheckValidInventorySize();
 
@@ -49,13 +49,13 @@ FIntVector2 UInventoryLogic::IndexToPosition(int32 Index)
     return FIntVector2(Index % InventorySize.X, Index / InventorySize.X);
 }
 
-bool UInventoryLogic::IsPositionOccupied(FIntVector2 const& Position) const
+bool UInventoryLogic::IsPositionNotOccupied(FIntVector2 const& Position) const
 {
     int32 Index = PositionToIndex(Position);
     if (InventoryGrid.IsValidIndex(Index))
         if (auto Item = InventoryGrid[Index])
-            return true;
-    return false;
+            return false;
+    return true;
 }
 
 bool UInventoryLogic::IsPositionValid(FIntVector2 const& Position) const
@@ -66,16 +66,157 @@ bool UInventoryLogic::IsPositionValid(FIntVector2 const& Position) const
     return false;
 }
 
-bool UInventoryLogic::CanAddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
+bool UInventoryLogic::CanPlaceItemAt(FIntVector2 const& Position, FIntVector2 const& ItemSize)
 {
-    if (!IsPositionValid(Position))
+    FIntVector2 TopLeft     = Position;
+    FIntVector2 BottomRight = Position + ItemSize - FIntVector2(1, 1);
+    if (!IsPositionValid(TopLeft))
+        return false;
+    if (!IsPositionValid(BottomRight))
         return false;
 
-    auto ItemLogic = Cast<UItemLogic>(Item);
+    if (BottomRight.X >= InventorySize.X || BottomRight.Y >= InventorySize.Y)
+        return false;
+
+    if (!ArePositionsNotOccupied(GetPositions(Position, ItemSize)))
+        return false;
+
+    return true;
+}
+
+TArray<FIntVector2> UInventoryLogic::GetPositions(FIntVector2 const& Position, FIntVector2 const& ItemSize)
+{
+    TArray<FIntVector2> Positions;
+    Positions.Reserve(ItemSize.X * ItemSize.Y);
+    for (int32 X = 0; X < ItemSize.X; ++X)
+        for (int32 Y = 0; Y < ItemSize.Y; ++Y)
+            Positions.Add(Position + FIntVector2(X, Y));
+    return Positions;
+}
+
+bool UInventoryLogic::ArePositionsNotOccupied(TArray<FIntVector2> const& Positions) const
+{
+    for (auto Position : Positions)
+        if (!IsPositionNotOccupied(Position))
+            return false;
+    return true;
+}
+
+bool UInventoryLogic::CanAddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
+{
+    if (!IsPositionNotOccupied(Position))
+        return false;
+
+    auto ItemLogic = GetItemLogicComponent(Item);
     if (ItemLogic)
         return false;
 
     auto ItemSize = UItemLogic::GetRotationSize(ItemLogic->GetItemSize(), Rotation);
 
+    if (!CanPlaceItemAt(Position, ItemSize))
+        return false;
+
     return true;
+}
+
+bool UInventoryLogic::AddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
+{
+    if (CanAddItemToPosition(Item, Position, Rotation))
+        return false;
+
+    PlaceItemInInventory(Item, Position, Rotation);
+    return true;
+}
+
+bool UInventoryLogic::AddItemToFirstAvailablePosition(ULogicBase* Item, bool PrioritizeRotation)
+{
+    auto AllPositionsInInventory = GetPositions(FIntVector2(1, 1), GetInventorySize());
+    for (auto& Position : AllPositionsInInventory)
+        if (CanAddItemToPosition(Item, Position, PrioritizeRotation))
+        {
+            PlaceItemInInventory(Item, Position, PrioritizeRotation);
+            return true;
+        }
+
+    for (auto& Position : AllPositionsInInventory)
+        if (CanAddItemToPosition(Item, Position, !PrioritizeRotation))
+        {
+            PlaceItemInInventory(Item, Position, !PrioritizeRotation);
+            return true;
+        }
+
+    return false;
+}
+
+bool UInventoryLogic::RemoveItemFromInventory(ULogicBase* Item)
+{
+    if (!ItemsInInventory.Contains(Item))
+        return false;
+
+    ItemsInInventory.Remove(Item);
+
+    for (auto& Slot : InventoryGrid)
+        if (Slot == Item)
+            Slot = nullptr;
+
+    return true;
+}
+
+ULogicBase* UInventoryLogic::RemoveItemFromPosition(FIntVector2 const& Position)
+{
+    if (!IsPositionValid(Position))
+        return nullptr;
+
+    int32 Index = PositionToIndex(Position);
+    if (InventoryGrid.IsValidIndex(Index))
+        if (auto Item = InventoryGrid[Index])
+        {
+            RemoveItemFromInventory(Item);
+            return Item;
+        }
+
+    return nullptr;
+}
+
+bool UInventoryLogic::GetItemInventoryData(ULogicBase* Item, FItemInventoryData& OutItemInventoryData) const
+{
+    if (!Item)
+        return false;
+
+    if (!ItemsInInventory.Contains(Item))
+        return false;
+
+    OutItemInventoryData = ItemsInInventory[Item];
+
+    return true;
+}
+
+void UInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
+{
+    if (!Item)
+        return;
+
+    auto ItemLogic = GetItemLogicComponent(Item);
+    if (!ItemLogic)
+        return;
+
+    ItemsInInventory.Add(Item, FItemInventoryData{ Position, Rotation });
+
+    auto ItemSize = ItemLogic->GetItemSize();
+
+    auto Positions = GetPositions(Position, UItemLogic::GetRotationSize(ItemSize, Rotation));
+    for (auto& LocalPosition : Positions)
+    {
+        int32 Index = PositionToIndex(LocalPosition);
+        if (InventoryGrid.IsValidIndex(Index))
+            InventoryGrid[Index] = Item;
+    }
+}
+
+UItemLogic* UInventoryLogic::GetItemLogicComponent(ULogicBase* Item)
+{
+    if (!Item)
+        return nullptr;
+    auto ItemLogic = Item->GetLogicComponent<UItemLogic>();
+    return ItemLogic;
 }

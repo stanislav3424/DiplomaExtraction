@@ -45,7 +45,8 @@ struct FInventoryLogicRow : public FLogicBaseRow
 {
     GENERATED_BODY()
 
-    // Reserved for future inventory settings
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FIntVector2 InventorySize = FIntVector2(1, 1);
 };
 
 USTRUCT(BlueprintType)
@@ -59,10 +60,10 @@ enum class EEquipmentSlot : uint8
 {
     None,
     Hands,
-    Head,
-    Chest,
+    //Head,
+    //Chest,
     BackPack,
-    BackWeapon,
+    //BackWeapon,
 };
 
 USTRUCT(BlueprintType)
@@ -84,10 +85,16 @@ struct FItemLogicRow : public FLogicBaseRow
 };
 
 USTRUCT(BlueprintType)
-struct FInventoryLogicRow : public FLogicBaseRow
+struct FWeaponLogicRow : public FLogicBaseRow
 {
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FIntVector2 IventorySize = FIntVector2(1, 1);
+    float Damage = 35.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float RateOfFire = 600.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Ammo = 30.f;
 };

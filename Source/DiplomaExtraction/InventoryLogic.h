@@ -16,7 +16,9 @@ struct FItemInventoryData
     bool RotationItem = false;
 };
 
-UCLASS(Abstract, NotBlueprintable)
+class UItemLogic;
+
+UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UInventoryLogic : public ULogicBase
 {
     GENERATED_BODY()
@@ -26,27 +28,33 @@ public:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
 
 private:
-    void CheckValidInventorySize();
-    void InitializeInventory();
+    void        CheckValidInventorySize();
+    void        InitializeInventory();
     static bool IsValidInventorySize(ULogicBase* Item);
 
-    // Inventory Management
-public:
-    FIntVector2 GetInventorySize() const { return InventorySize; }
-    int32       PositionToIndex(FIntVector2 const& Position) const;
-    FIntVector2 IndexToPosition(int32 Index);
-    bool        IsPositionOccupied(FIntVector2 const& Position) const;
-    bool        IsPositionValid(FIntVector2 const& Position) const;
+    // Inventory Functionality
+private:
+    int32               PositionToIndex(FIntVector2 const& Position) const;
+    FIntVector2         IndexToPosition(int32 Index);
+    bool                IsPositionNotOccupied(FIntVector2 const& Position) const;
+    bool                IsPositionValid(FIntVector2 const& Position) const;
+    bool                CanPlaceItemAt(FIntVector2 const& Position, FIntVector2 const& ItemSize);
+    TArray<FIntVector2> GetPositions(FIntVector2 const& Position, FIntVector2 const& ItemSize);
+    bool                ArePositionsNotOccupied(TArray<FIntVector2> const& Positions) const;
 
+public:
     bool        CanAddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
     bool        AddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
     bool        AddItemToFirstAvailablePosition(ULogicBase* Item, bool PrioritizeRotation = false);
     bool        RemoveItemFromInventory(ULogicBase* Item);
     ULogicBase* RemoveItemFromPosition(FIntVector2 const& Position);
     bool        GetItemInventoryData(ULogicBase* Item, FItemInventoryData& OutItemInventoryData) const;
+    FIntVector2 GetInventorySize() const { return InventorySize; }
 
 private:
-    bool PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
+    void PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
+
+    static UItemLogic* GetItemLogicComponent(ULogicBase* Item);
 
     FIntVector2 InventorySize = FIntVector2(1, 1);
 

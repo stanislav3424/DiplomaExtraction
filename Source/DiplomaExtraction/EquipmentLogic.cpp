@@ -4,6 +4,7 @@
 #include "CharacterLogic.h"
 #include "SpawnLibrary.h"
 #include "MacroLibrary.h"
+#include "Row.h"
 
 UEquipmentLogic::UEquipmentLogic()
 {
@@ -14,7 +15,7 @@ void UEquipmentLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHan
 {
     Super::InitializeRowHandler(InitRowHandle);
 
-    auto Row = InitRowHandle.GetRow<FItemLogicRow>(FILE_FUNC);
+    auto Row = InitRowHandle.GetRow<FEquipmentLogicRow>(FILE_FUNC);
     if (!Row)
         return;
 

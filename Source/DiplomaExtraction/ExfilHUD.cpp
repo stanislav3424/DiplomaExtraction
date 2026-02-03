@@ -10,10 +10,15 @@ void AExfilHUD::BeginPlay()
 {
     Super::BeginPlay();
 
-    CHECK_FIELD_RETURN(MainMenuWidgetClass) 
+
+}
+
+void AExfilHUD::InitHUD()
+{
+    CHECK_FIELD_RETURN(MainMenuWidgetClass)
 
     MainMenuWidget = CreateWidget<UUW_Dialog>(GetWorld(), MainMenuWidgetClass);
-    if (!MainMenuWidget) 
+    if (!MainMenuWidget)
         return;
     MainMenuWidget->AddToViewport(5);
 
@@ -24,7 +29,10 @@ void AExfilHUD::BeginPlay()
         return;
     PawnInfoWidget->AddToViewport(4);
 
-    auto PlayerLogic = ULogicLibrary::GetLogic(GetOwningPlayerController());
+    auto PC = GetOwningPlayerController();
+    if (!PC)
+        return;
+    auto PlayerLogic = ULogicLibrary::GetLogic(PC->GetPawn());
     CHECK_FIELD_RETURN(PlayerLogic)
     ULogicLibrary::SetLogic(PawnInfoWidget, PlayerLogic);
 }

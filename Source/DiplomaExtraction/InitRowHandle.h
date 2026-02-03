@@ -15,6 +15,6 @@ class DIPLOMAEXTRACTION_API UInitRowHandle : public UActorComponent
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "InitRowHandle")
+	UPROPERTY(EditAnywhere, Category = "InitRowHandle")
 	FDataTableRowHandle InitRowHandle;
 };

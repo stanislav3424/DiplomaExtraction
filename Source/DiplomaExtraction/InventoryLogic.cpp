@@ -4,6 +4,7 @@
 #include "SpawnLibrary.h"
 #include "Row.h"
 #include "MacroLibrary.h"
+#include "ItemLogic.h"
 
 void UInventoryLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {

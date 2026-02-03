@@ -6,7 +6,7 @@
 #include "LogicBase.h"
 #include "ItemLogic.generated.h"
 
-UCLASS(Abstract, NotBlueprintable)
+UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UItemLogic : public ULogicBase
 {
     GENERATED_BODY()
@@ -15,7 +15,7 @@ class DIPLOMAEXTRACTION_API UItemLogic : public ULogicBase
 public:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
 
-    // Item Management
+    // Item Functionality
 public:
     FIntVector2 GetItemSize() const { return ItemSize; }
 

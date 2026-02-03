@@ -29,6 +29,9 @@ protected:
     UUW_Dialog* PawnInfoWidget;
 
 public:
+    UFUNCTION(BlueprintCallable)
+    void InitHUD();
+
     void ToggleMainMenu();
     void TogglePawnInfo();
 };

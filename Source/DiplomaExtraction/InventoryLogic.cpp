@@ -108,7 +108,7 @@ bool UInventoryLogic::CanAddItemToPosition(ULogicBase* Item, FIntVector2 const& 
     if (!IsPositionNotOccupied(Position))
         return false;
 
-    auto ItemLogic = GetItemLogicComponent(Item);
+    auto ItemLogic = UItemLogic::GetItemLogicComponent(Item);
     if (ItemLogic)
         return false;
 
@@ -197,7 +197,7 @@ void UInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& 
     if (!Item)
         return;
 
-    auto ItemLogic = GetItemLogicComponent(Item);
+    auto ItemLogic = UItemLogic::GetItemLogicComponent(Item);
     if (!ItemLogic)
         return;
 
@@ -212,12 +212,4 @@ void UInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& 
         if (InventoryGrid.IsValidIndex(Index))
             InventoryGrid[Index] = Item;
     }
-}
-
-UItemLogic* UInventoryLogic::GetItemLogicComponent(ULogicBase* Item)
-{
-    if (!Item)
-        return nullptr;
-    auto ItemLogic = Item->GetLogicComponent<UItemLogic>();
-    return ItemLogic;
 }

@@ -30,6 +30,14 @@ bool UItemLogic::IsValidItemSize(ULogicBase* Item)
     return ItemLogic && ItemLogic->ItemSize.X > 0 && ItemLogic->ItemSize.Y > 0;
 }
 
+UItemLogic* UItemLogic::GetItemLogicComponent(ULogicBase* Item)
+{
+    if (!Item)
+        return nullptr;
+    auto ItemLogic = Item->GetLogicComponent<UItemLogic>();
+    return ItemLogic;
+}
+
 void UItemLogic::CheckValidItemSize()
 {
     if (IsValidItemSize(this))

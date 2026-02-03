@@ -54,8 +54,6 @@ public:
 private:
     void PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
 
-    static UItemLogic* GetItemLogicComponent(ULogicBase* Item);
-
     FIntVector2 InventorySize = FIntVector2(1, 1);
 
     UPROPERTY(Transient)

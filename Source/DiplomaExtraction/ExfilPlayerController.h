@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "ExfilPlayerController.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryItemRotate);
+
 class UInputMappingContext;
 class UInputAction;
 
@@ -32,4 +34,7 @@ protected:
 
     void OnMainMenu(FInputActionValue const& Value);
     void OnPawnInfo(FInputActionValue const& Value);
+
+public:
+    FOnInventoryItemRotate OnInventoryItemRotate;
 };

@@ -22,6 +22,8 @@ public:
     static FIntVector2 GetRotationSize(FIntVector2 const& OriginalSize, bool Rotation);
     static bool        IsValidItemSize(ULogicBase* Item);
 
+    static UItemLogic* GetItemLogicComponent(ULogicBase* Item);
+
 private:
     void CheckValidItemSize();
 

@@ -10,6 +10,7 @@
 #include "SpawnLibrary.h"
 #include "MacroLibrary.h"
 #include "ExfilGameMode.h"
+#include "Row.h"
 
 AIconRendering::AIconRendering()
 {
@@ -98,7 +99,7 @@ bool AIconRendering::WarmupCapture(float DeltaSeconds)
     {
         if (!SceneCapture->TextureTarget)
             SceneCapture->TextureTarget = GetNewRenderTarget();
-        SceneCapture->bCaptureEveryFrame = true;
+        //SceneCapture->bCaptureEveryFrame = true;
         WarmupTime -= DeltaSeconds;
         return true;
     }

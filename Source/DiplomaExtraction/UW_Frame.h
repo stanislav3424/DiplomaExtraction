@@ -6,12 +6,15 @@
 #include "UW_Base.h"
 #include "UW_Frame.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UUW_Frame : public UUW_Base
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+protected:
+    virtual int32 NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry,
+        const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId,
+        const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
+
+    FLinearColor BorderColor = FLinearColor::Black;
 };

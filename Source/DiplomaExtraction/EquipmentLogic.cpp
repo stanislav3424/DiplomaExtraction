@@ -33,3 +33,12 @@ EEquipmentSlot const& UEquipmentLogic::GetEquipmentSlot() const
 
     return EquipmentSlot;
 }
+
+
+UEquipmentLogic* UEquipmentLogic::GetEquipmentLogicComponent(ULogicBase* Item)
+{
+    auto EquipmentLogic = Cast<UEquipmentLogic>(Item->GetLogicComponent<UEquipmentLogic>());
+    if (!EquipmentLogic)
+        return nullptr;
+    return EquipmentLogic;
+}

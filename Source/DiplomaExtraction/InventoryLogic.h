@@ -4,6 +4,8 @@
 #include "LogicBase.h"
 #include "InventoryLogic.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);
+
 USTRUCT(BlueprintType)
 struct FItemInventoryData
 {
@@ -48,8 +50,10 @@ public:
     bool        AddItemToFirstAvailablePosition(ULogicBase* Item, bool PrioritizeRotation = false);
     bool        RemoveItemFromInventory(ULogicBase* Item);
     ULogicBase* RemoveItemFromPosition(FIntVector2 const& Position);
-    bool        GetItemInventoryData(ULogicBase* Item, FItemInventoryData& OutItemInventoryData) const;
     FIntVector2 GetInventorySize() const { return InventorySize; }
+    TMap<ULogicBase*, FItemInventoryData> GetItemsInInventory() { return ItemsInInventory; }
+
+    FOnInventoryChanged OnInventoryChanged;
 
 private:
     void PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);

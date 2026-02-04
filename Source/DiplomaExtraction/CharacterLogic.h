@@ -6,6 +6,8 @@
 #include "LogicBase.h"
 #include "CharacterLogic.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEquipmentChanged);
+
 enum class EEquipmentSlot : uint8;
 
 class UEquipmentLogic;
@@ -21,14 +23,15 @@ public:
 
     // Equipment Management
 public:
-    bool                  EquipItem(ULogicBase* Item);
-    bool                  EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
-    bool                  CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
-    ULogicBase*           UnequipItem(EEquipmentSlot const& TargetSlot);
-    ULogicBase*           GetEquippedItem(EEquipmentSlot const& TargetSlot) const;
-    bool                  IsValidEquippedItem(ULogicBase* Item);
-    static UEquipmentLogic*    GetItemLogicComponent(ULogicBase* Item);
-    static EEquipmentSlot GetEquipmentSlot(ULogicBase* Item);
+    bool                    EquipItem(ULogicBase* Item);
+    bool                    EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
+    bool                    CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
+    ULogicBase*             UnequipItem(EEquipmentSlot const& TargetSlot);
+    ULogicBase*             GetEquippedItem(EEquipmentSlot const& TargetSlot) const;
+    bool                    IsValidEquippedItem(ULogicBase* Item);
+    static EEquipmentSlot   GetEquipmentSlot(ULogicBase* Item);
+
+    FOnEquipmentChanged OnEquipmentChanged;
 
 private:
     TMap<EEquipmentSlot, ULogicBase*> EquippedItems;

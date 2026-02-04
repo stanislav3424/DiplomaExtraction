@@ -12,7 +12,8 @@ ULogicBase* UUW_Base::GetLogic_Implementation()
 void UUW_Base::SetLogic_Implementation(ULogicBase* NewLogic)
 {
     LogicChanged(Logic, NewLogic);
-    AutoInitializeChildLogic(NewLogic);
+    if (bIsAutoInitializeChildLogic)
+        InitializeChildLogic(NewLogic);
 }
 
 void UUW_Base::LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLogic)
@@ -20,7 +21,7 @@ void UUW_Base::LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLogic)
     Logic = NewLogic;
 }
 
-void UUW_Base::AutoInitializeChildLogic(ULogicBase* NewLogic)
+void UUW_Base::InitializeChildLogic(ULogicBase* NewLogic)
 {
     if (!WidgetTree)
         return;

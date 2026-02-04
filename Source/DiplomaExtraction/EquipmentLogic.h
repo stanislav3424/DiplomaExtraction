@@ -21,6 +21,7 @@ public:
     // Item Management
 public:
     EEquipmentSlot const& GetEquipmentSlot() const;
+    static UEquipmentLogic* GetEquipmentLogicComponent(ULogicBase* Item);
 
 private:
     EEquipmentSlot EquipmentSlot;

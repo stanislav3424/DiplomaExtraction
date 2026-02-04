@@ -25,7 +25,9 @@ private:
     UPROPERTY(Transient)
     ULogicBase* Logic;
 
-    // Auto initialize child logic
+    // Initialize child logic
 protected:
-    virtual void AutoInitializeChildLogic(ULogicBase* NewLogic);
+    virtual void InitializeChildLogic(ULogicBase* NewLogic);
+
+    bool bIsAutoInitializeChildLogic = true;
 };

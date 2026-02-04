@@ -62,7 +62,7 @@ enum class EEquipmentSlot : uint8
     Hands,
     //Head,
     //Chest,
-    BackPack,
+    Backpack,
     //BackWeapon,
 };
 
@@ -97,4 +97,16 @@ struct FWeaponLogicRow : public FLogicBaseRow
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Ammo = 30.f;
+};
+
+USTRUCT(BlueprintType)
+struct FTemplateCharacterRow : public FTableRowBase
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FDataTableRowHandle CharacterRow;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TMap<EEquipmentSlot, FDataTableRowHandle> Equipment;
 };

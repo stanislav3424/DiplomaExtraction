@@ -6,9 +6,25 @@
 #include "UW_Base.h"
 #include "UW_Equipment.generated.h"
 
+class UUW_Item;
+enum class EEquipmentSlot : uint8;
+
 UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API UUW_Equipment : public UUW_Base
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+    UUW_Equipment();
+
+protected:
+    virtual void LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLogic);
+
+    UPROPERTY(meta = (BindWidget))
+    UUW_Item* ItemWidget;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EquipmentSlot")
+    EEquipmentSlot EquipmentSlot;
+
+    UFUNCTION()
+    void OnEquipmentChanged();
 };

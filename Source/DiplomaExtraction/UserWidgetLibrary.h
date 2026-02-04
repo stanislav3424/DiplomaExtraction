@@ -13,5 +13,6 @@ class DIPLOMAEXTRACTION_API UUserWidgetLibrary : public UBlueprintFunctionLibrar
 
 public:
     static FVector2D GetSizeInViewport(FIntVector2 const& Size);
+    static FVector2D GetPositionInViewport(FIntVector2 const& Position);
     static float     GetCellSize() { return 25.f; }
 };

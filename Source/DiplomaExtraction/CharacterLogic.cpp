@@ -4,6 +4,7 @@
 #include "SpawnLibrary.h"
 #include "EquipmentLogic.h"
 #include "MacroLibrary.h"
+#include "Row.h"
 
 void UCharacterLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
@@ -34,6 +35,7 @@ bool UCharacterLogic::EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* It
 
     EquippedItems.Add(TargetSlot, Item);
     AddLogicComponent(Item);
+    OnEquipmentChanged.Broadcast();
 
     return true;
 }
@@ -58,6 +60,7 @@ ULogicBase* UCharacterLogic::UnequipItem(EEquipmentSlot const& TargetSlot)
     auto Item = EquippedItems[TargetSlot];
     EquippedItems.Remove(TargetSlot);
     RemoveLogicComponent(Item);
+    OnEquipmentChanged.Broadcast();
 
     return Item;
 }
@@ -83,19 +86,12 @@ bool UCharacterLogic::IsValidEquippedItem(ULogicBase* Item)
     return true;
 }
 
-UEquipmentLogic* UCharacterLogic::GetItemLogicComponent(ULogicBase* Item)
-{
-    auto ItemLogic = Cast<UEquipmentLogic>(Item->GetLogicComponent<UEquipmentLogic>());
-    if (!ItemLogic)
-        return nullptr;
-    return ItemLogic;
-}
 
 EEquipmentSlot UCharacterLogic::GetEquipmentSlot(ULogicBase* Item)
 {
-    auto ItemLogic = GetItemLogicComponent(Item);
-    if (!ItemLogic)
+    auto EquipmentLogic = UEquipmentLogic::GetEquipmentLogicComponent(Item);
+    if (!EquipmentLogic)
         return EEquipmentSlot::None;
 
-    return ItemLogic->GetEquipmentSlot();
+    return EquipmentLogic->GetEquipmentSlot();
 }

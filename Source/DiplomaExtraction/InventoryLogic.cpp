@@ -160,6 +160,8 @@ bool UInventoryLogic::RemoveItemFromInventory(ULogicBase* Item)
         if (Slot == Item)
             Slot = nullptr;
 
+    OnInventoryChanged.Broadcast();
+
     return true;
 }
 
@@ -177,19 +179,6 @@ ULogicBase* UInventoryLogic::RemoveItemFromPosition(FIntVector2 const& Position)
         }
 
     return nullptr;
-}
-
-bool UInventoryLogic::GetItemInventoryData(ULogicBase* Item, FItemInventoryData& OutItemInventoryData) const
-{
-    if (!Item)
-        return false;
-
-    if (!ItemsInInventory.Contains(Item))
-        return false;
-
-    OutItemInventoryData = ItemsInInventory[Item];
-
-    return true;
 }
 
 void UInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
@@ -212,4 +201,6 @@ void UInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& 
         if (InventoryGrid.IsValidIndex(Index))
             InventoryGrid[Index] = Item;
     }
+
+    OnInventoryChanged.Broadcast();
 }

@@ -12,10 +12,8 @@ void UInitRowHandle::BeginPlay()
     auto Actor = GetOwner();
     CHECK_FIELD_RETURN(Actor);
     CHECK_FIELD_RETURN(!InitRowHandle.IsNull());
-    auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), InitRowHandle);
+    auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), InitRowHandle, Actor);
     CHECK_FIELD_RETURN(Logic);
-    Logic->HardSetRepresentationActor(Actor);
-
 }
 
 

@@ -22,7 +22,7 @@ AActor* USpawnLibrary::SpawnActorByRowHandler(UObject* WorldContextObject, FData
     if (RowHandle.IsNull())
         return nullptr;
 
-    auto Logic = SpawnLogicByRowHandler(WorldContextObject, RowHandle);
+    auto Logic = SpawnLogicByRowHandler(WorldContextObject, RowHandle, nullptr);
     if (!Logic)
         return nullptr;
 
@@ -31,7 +31,8 @@ AActor* USpawnLibrary::SpawnActorByRowHandler(UObject* WorldContextObject, FData
     return Actor;
 }
 
-ULogicBase* USpawnLibrary::SpawnLogicByRowHandler(UObject* WorldContextObject, FDataTableRowHandle const& RowHandle)
+ULogicBase* USpawnLibrary::SpawnLogicByRowHandler(
+    UObject* WorldContextObject, FDataTableRowHandle const& RowHandle, AActor* InitActor)
 {
     if (!WorldContextObject)
         return nullptr;
@@ -62,6 +63,8 @@ ULogicBase* USpawnLibrary::SpawnLogicByRowHandler(UObject* WorldContextObject, F
             return nullptr;
 
         Logic->InitializeRowHandler(RowHandle);
+        if (InitActor)
+            Logic->HardSetRepresentationActor(InitActor);
 
         return Logic;
     }
@@ -76,11 +79,11 @@ ULogicBase* USpawnLibrary::SpawnLogicByRowHandler(UObject* WorldContextObject, F
 
         if (Row->CharacterRow.DataTable->GetRowStruct() == FCharacterLogicRow::StaticStruct())
         {
-            auto CharacterLogic = Cast<UCharacterLogic>(SpawnLogicByRowHandler(World, Row->CharacterRow));
+            auto CharacterLogic = Cast<UCharacterLogic>(SpawnLogicByRowHandler(World, Row->CharacterRow, InitActor));
 
             for (auto& EquipmentSlot : Row->Equipment)
             {
-                auto EquipmentLogic = SpawnLogicByRowHandler(World, EquipmentSlot.Value);
+                auto EquipmentLogic = SpawnLogicByRowHandler(World, EquipmentSlot.Value, nullptr);
                 CharacterLogic->EquipItem(EquipmentSlot.Key, EquipmentLogic);
             }
 

@@ -4,6 +4,7 @@
 #include "CharacterLogic.h"
 #include "LogicLibrary.h"
 #include "SpawnLibrary.h"
+#include "Row.h"
 
 void UAnimInstanceBase::NativeBeginPlay()
 {
@@ -25,6 +26,8 @@ void UAnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
     if (Pawn)
     {
         Speed = Pawn->GetVelocity().Size();
+
+        bIsIdle = Speed < KINDA_SMALL_NUMBER ? true : false;
 
         float ActorYaw    = Pawn->GetActorRotation().Yaw;
         float MovementYaw = Pawn->GetVelocity().Rotation().Yaw;

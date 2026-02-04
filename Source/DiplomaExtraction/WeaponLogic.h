@@ -25,6 +25,7 @@ public:
     virtual void TickLogic(float DeltaTime);
     void         StartFiring();
     void         StopFiring();
+    void         Reload();
 
 private:
     float GetRateOfFireOneSecond() const;

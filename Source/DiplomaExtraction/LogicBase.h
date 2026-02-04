@@ -23,7 +23,7 @@ private:
     // Components
 protected:
     virtual void SetOwnerLogic(ULogicBase* IntOwnerLogic);
-    virtual void Deinitialize();
+    virtual void DestroyLogic();
 
 public:
     ULogicBase* GetOwnerLogic() const { return OwnerLogic; }
@@ -52,6 +52,7 @@ public:
     AActor* GetRepresentationActor() const { return RepresentationActor; }
     AActor* SpawnRepresentationActor(FVector const& SpawnLocation, FRotator const& SpawnRotation);
     void    HardSetRepresentationActor(AActor* NewRepresentationActor);
+    void    DestroyRepresentationActor();
 
 private:
     UPROPERTY(Transient)

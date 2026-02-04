@@ -27,6 +27,9 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category = "AnimInstance")
     bool bIsWeaponEquipped = false;
 
+    UPROPERTY(BlueprintReadOnly, Category = "AnimInstance")
+    bool bIsIdle = false;
+
     UPROPERTY(Transient)
     UCharacterLogic* CharacterLogic;
 

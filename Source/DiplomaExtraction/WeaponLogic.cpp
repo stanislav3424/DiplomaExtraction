@@ -71,6 +71,11 @@ void UWeaponLogic::StopFiring()
     bIsFiring = false;
 }
 
+void UWeaponLogic::Reload()
+{
+    //
+}
+
 float UWeaponLogic::GetRateOfFireOneSecond() const
 {
     return RateOfFire / 60.0f;

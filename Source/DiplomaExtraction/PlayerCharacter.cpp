@@ -9,6 +9,9 @@
 #include "SpawnLibrary.h"
 #include "LogicBase.h"
 #include "StaminaLogic.h"
+#include "WeaponLogic.h"
+#include "CharacterLogic.h"
+#include "Row.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -62,10 +65,17 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     EnhancedInputComponent->BindAction(RotateInputAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnRotate);
     CHECK_FIELD_RETURN(ZoomInputAction)
     EnhancedInputComponent->BindAction(ZoomInputAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnZoom);
+    
     CHECK_FIELD_RETURN(ShiftInputAction)
     EnhancedInputComponent->BindAction(ShiftInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnShift);
     CHECK_FIELD_RETURN(ShiftInputAction)
     EnhancedInputComponent->BindAction(ShiftInputAction, ETriggerEvent::Completed, this, &APlayerCharacter::OnShift);
+    CHECK_FIELD_RETURN(ShootInputAction)
+    EnhancedInputComponent->BindAction(ShootInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnShoot);
+    CHECK_FIELD_RETURN(ShootInputAction)
+    EnhancedInputComponent->BindAction(ShootInputAction, ETriggerEvent::Completed, this, &APlayerCharacter::OnShoot);
+    CHECK_FIELD_RETURN(ReloadInputAction)
+    EnhancedInputComponent->BindAction(ReloadInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnReload);
 }
 
 void APlayerCharacter::OnMove(const FInputActionValue& Value)
@@ -101,6 +111,33 @@ void APlayerCharacter::OnShift(const FInputActionValue& Value)
     auto StaminaLogic = Logic->GetLogicComponent<UStaminaLogic>();
     CHECK_FIELD_RETURN(StaminaLogic)
     StaminaLogic->SetCanRunning(ShiftInput);
+}
+
+void APlayerCharacter::OnShoot(const FInputActionValue& Value)
+{
+    auto ShootInput = Value.Get<bool>();
+
+    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
+    CHECK_FIELD_RETURN(CharacterLogic)
+    auto WeaponLogic = Cast<UWeaponLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Hands));
+    if (!WeaponLogic)
+        return;
+
+    if (ShootInput)
+        WeaponLogic->StartFiring();
+    else
+        WeaponLogic->StopFiring();
+}
+
+void APlayerCharacter::OnReload(const FInputActionValue& Value)
+{
+    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
+    CHECK_FIELD_RETURN(CharacterLogic)
+    auto WeaponLogic = Cast<UWeaponLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Hands));
+    if (!WeaponLogic)
+        return;
+
+    WeaponLogic->Reload();
 }
 
 void APlayerCharacter::ZoomTick(float DeltaTime)

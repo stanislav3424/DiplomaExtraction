@@ -16,7 +16,7 @@ void ULogicBase::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 	RepresentationActorClass = Row->RepresentationActorClass;
 	for (auto const& ComponentRowHandle : Row->ComponentRows)
 	{
-		auto ComponentLogic = USpawnLibrary::SpawnLogicByRowHandler(this, ComponentRowHandle);
+        auto ComponentLogic = USpawnLibrary::SpawnLogicByRowHandler(this, ComponentRowHandle, nullptr);
 		if (ComponentLogic)
 			AddLogicComponent(ComponentLogic);
     }
@@ -27,13 +27,14 @@ void ULogicBase::SetOwnerLogic(ULogicBase* IntOwnerLogic)
     OwnerLogic = IntOwnerLogic;
 }
 
-void ULogicBase::Deinitialize()
+void ULogicBase::DestroyLogic()
 {
 	for (auto Component : LogicComponents)
 		if (Component)
-			Component->Deinitialize();
+			Component->DestroyLogic();
 	LogicComponents.Empty();
 	OwnerLogic = nullptr;
+    DestroyRepresentationActor();
 }
 
 void ULogicBase::AddLogicComponent(ULogicBase* Component)
@@ -68,13 +69,11 @@ AActor* ULogicBase::SpawnRepresentationActor(FVector const& SpawnLocation, FRota
     if (!World)
         return nullptr;
 
-    auto LocalRepresentationActor = World->SpawnActor<AActor>(AActor::StaticClass(), SpawnLocation, SpawnRotation);
+    auto LocalRepresentationActor = World->SpawnActor<AActor>(RepresentationActorClass, SpawnLocation, SpawnRotation);
     if (!IsValid(LocalRepresentationActor))
         return nullptr;
 
     HardSetRepresentationActor(LocalRepresentationActor);
-
-    LocalRepresentationActor->SetActorLocationAndRotation(SpawnLocation, SpawnRotation);
 
     return LocalRepresentationActor;
 }
@@ -96,6 +95,12 @@ void ULogicBase::HardSetRepresentationActor(AActor* NewRepresentationActor)
 
     for (auto Component : NewRepresentationActor->GetComponents())
         ULogicLibrary::SetLogic(Component, this);
+}
+
+void ULogicBase::DestroyRepresentationActor()
+{
+    if (IsValid(RepresentationActor))
+        RepresentationActor->Destroy();
 }
 
 void ULogicBase::TickLogic(float DeltaTime)

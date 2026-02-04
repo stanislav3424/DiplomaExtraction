@@ -3,8 +3,10 @@
 #include "CharacterLogic.h"
 #include "SpawnLibrary.h"
 #include "EquipmentLogic.h"
+#include "GameFramework/Character.h"
 #include "MacroLibrary.h"
 #include "Row.h"
+#include "EnumLibrary.h"
 
 void UCharacterLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
@@ -36,6 +38,17 @@ bool UCharacterLogic::EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* It
     EquippedItems.Add(TargetSlot, Item);
     AddLogicComponent(Item);
     OnEquipmentChanged.Broadcast();
+
+    if (auto Character = Cast<ACharacter>(GetRepresentationActor()))
+    {
+        if (auto Mesh = Character->GetMesh())
+        {
+            auto Name      = UEnumLibrary::EnumToName<EEquipmentSlot>(TargetSlot);
+            auto Transform = Mesh->GetSocketTransform(Name);
+            if (auto Actor = Item->SpawnRepresentationActor(Transform.GetLocation(), Transform.Rotator()))
+                Actor->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Name);
+        }
+    }
 
     return true;
 }

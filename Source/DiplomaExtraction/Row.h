@@ -58,11 +58,11 @@ struct FCharacterLogicRow : public FLogicBaseRow
 UENUM(BlueprintType)
 enum class EEquipmentSlot : uint8
 {
-    None,
-    Hands,
+    None UMETA(DisplayName = "None"), 
+    Hands UMETA(DisplayName = "Hands"),
     //Head,
     //Chest,
-    Backpack,
+    Backpack UMETA(DisplayName = "Backpack"),
     //BackWeapon,
 };
 

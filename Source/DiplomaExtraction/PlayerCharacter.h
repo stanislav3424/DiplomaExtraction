@@ -49,6 +49,12 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Input")
     UInputAction* ShiftInputAction;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    UInputAction* ShootInputAction;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    UInputAction* ReloadInputAction;
+
     UPROPERTY(EditDefaultsOnly, Category = "Camera")
     float RotateSpeed = 1.f;
 
@@ -71,6 +77,8 @@ protected:
     void OnRotate(const FInputActionValue& Value);
     void OnZoom(const FInputActionValue& Value);
     void OnShift(const FInputActionValue& Value);
+    void OnShoot(const FInputActionValue& Value);
+    void OnReload(const FInputActionValue& Value);
 
     void ZoomTick(float DeltaTime);
     void RotateTick(float DeltaTime);

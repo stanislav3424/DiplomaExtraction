@@ -17,5 +17,5 @@ public:
     static AActor* SpawnActorByRowHandler(UObject* WorldContextObject, FDataTableRowHandle const& RowHandle,
         FVector const& SpawnLocation, FRotator const& SpawnRotation);
 
-    static ULogicBase* SpawnLogicByRowHandler(UObject* WorldContextObject, FDataTableRowHandle const& RowHandle);
+    static ULogicBase* SpawnLogicByRowHandler(UObject* WorldContextObject, FDataTableRowHandle const& RowHandle, AActor* InitActor = nullptr);
 };

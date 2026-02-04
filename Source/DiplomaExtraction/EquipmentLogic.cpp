@@ -5,6 +5,7 @@
 #include "SpawnLibrary.h"
 #include "MacroLibrary.h"
 #include "Row.h"
+#include "EnumLibrary.h"
 
 UEquipmentLogic::UEquipmentLogic()
 {

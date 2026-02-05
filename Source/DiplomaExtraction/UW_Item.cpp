@@ -13,8 +13,6 @@ void UUW_Item::LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLogic)
 {
     Super::LogicChanged(OldLogic, NewLogic);
 
-    auto ItemLogic = UItemLogic::GetItemLogicComponent(NewLogic);
-    CHECK_FIELD_RETURN(ItemLogic);
 }
 
 FReply UUW_Item::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

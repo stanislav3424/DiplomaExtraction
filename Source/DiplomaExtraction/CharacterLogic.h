@@ -20,12 +20,14 @@ class DIPLOMAEXTRACTION_API UCharacterLogic : public ULogicBase
     // Initialize
 public:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle);
+    virtual void RemoveChildLogic(ULogicBase* ChildLogic);
 
     // Equipment Management
 public:
     bool                    EquipItem(ULogicBase* Item);
     bool                    EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
     bool                    CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
+    ULogicBase*             UnequipItem(ULogicBase* Item);
     ULogicBase*             UnequipItem(EEquipmentSlot const& TargetSlot);
     ULogicBase*             GetEquippedItem(EEquipmentSlot const& TargetSlot) const;
     bool                    IsValidEquippedItem(ULogicBase* Item);

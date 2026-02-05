@@ -7,42 +7,70 @@
 #include "LogicInterface.h"
 #include "Row.h"
 
-void ULogicBase::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
+void ULogicBase::InitializeRowHandler_Internal(FDataTableRowHandle const& InitRowHandle)
 {
     RowHandle = InitRowHandle;
-    auto Row = RowHandle.GetRow<FLogicBaseRow>(FILE_FUNC);
+    auto Row  = RowHandle.GetRow<FLogicBaseRow>(FILE_FUNC);
     if (!Row)
-		return;
-	RepresentationActorClass = Row->RepresentationActorClass;
-	for (auto const& ComponentRowHandle : Row->ComponentRows)
-	{
+        return;
+    RepresentationActorClass = Row->RepresentationActorClass;
+    for (auto const& ComponentRowHandle : Row->ComponentRows)
+    {
         auto ComponentLogic = USpawnLibrary::SpawnLogicByRowHandler(this, ComponentRowHandle, nullptr);
-		if (ComponentLogic)
-			AddLogicComponent(ComponentLogic);
+        if (ComponentLogic)
+            AddLogicComponent(ComponentLogic);
     }
+    InitializeRowHandler(InitRowHandle);
+}
+
+void ULogicBase::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
+{
+    
 }
 
 void ULogicBase::SetOwnerLogic(ULogicBase* IntOwnerLogic)
 {
-    OwnerLogic = IntOwnerLogic;
+    auto OldOwnerLogic = OwnerLogic;
+    OwnerLogic         = IntOwnerLogic;
+
+    if (OldOwnerLogic)
+        OldOwnerLogic->RemoveChildLogic_Internal(this);
+
+    OwnerLogicChange(IntOwnerLogic);
 }
 
-void ULogicBase::DestroyLogic()
+void ULogicBase::OwnerLogicChange(ULogicBase* IntOwnerLogic)
 {
-	for (auto Component : LogicComponents)
-		if (Component)
-			Component->DestroyLogic();
-	LogicComponents.Empty();
-	OwnerLogic = nullptr;
-    DestroyRepresentationActor();
 }
+
+void ULogicBase::RemoveChildLogic_Internal(ULogicBase* ChildLogic)
+{
+    if (ChildLogic)
+        LogicComponents.Remove(ChildLogic);
+    RemoveChildLogic(ChildLogic);
+}
+
+void ULogicBase::RemoveChildLogic(ULogicBase* ChildLogic)
+{
+    
+}
+
+//void ULogicBase::DestroyLogic()
+//{
+//	for (auto Component : LogicComponents)
+//		if (Component)
+//			Component->DestroyLogic();
+//	LogicComponents.Empty();
+//	OwnerLogic = nullptr;
+//    DestroyRepresentationActor();
+//}
 
 void ULogicBase::AddLogicComponent(ULogicBase* Component)
 {
 	if (Component)
 	{
 		LogicComponents.AddUnique(Component);
-		Component->SetOwnerLogic(this);
+        Component->SetOwnerLogic(this);
 	}
 }
 

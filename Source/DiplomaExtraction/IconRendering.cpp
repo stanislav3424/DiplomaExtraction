@@ -34,6 +34,9 @@ void AIconRendering::BeginPlay()
 {
     Super::BeginPlay();
 
+#if WITH_EDITOR
+    WarmupTime = 0.5f;
+#endif
 }
 
 void AIconRendering::Tick(float DeltaSeconds)

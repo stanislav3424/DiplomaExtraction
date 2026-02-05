@@ -16,9 +16,9 @@ void UHealthLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle
     MaxHealth = HealthRow->MaxHealth;
 }
 
-void UHealthLogic::SetOwnerLogic(ULogicBase* IntOwnerLogic)
+void UHealthLogic::OwnerLogicChange(ULogicBase* IntOwnerLogic)
 {
-	Super::SetOwnerLogic(IntOwnerLogic);
+	Super::OwnerLogicChange(IntOwnerLogic);
 
 	CurrentHealth = MaxHealth;
 }

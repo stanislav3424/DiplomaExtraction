@@ -23,9 +23,9 @@ void UStaminaLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandl
     MaxStamina = Row->MaxStamina;
 }
 
-void UStaminaLogic::SetOwnerLogic(ULogicBase* IntOwnerLogic)
+void UStaminaLogic::OwnerLogicChange(ULogicBase* IntOwnerLogic)
 {
-    Super::SetOwnerLogic(IntOwnerLogic);
+    Super::OwnerLogicChange(IntOwnerLogic);
 
     CurrentStamina = MaxStamina;
 }

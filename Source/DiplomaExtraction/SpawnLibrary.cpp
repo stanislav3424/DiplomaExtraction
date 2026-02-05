@@ -62,7 +62,7 @@ ULogicBase* USpawnLibrary::SpawnLogicByRowHandler(
         if (!Logic)
             return nullptr;
 
-        Logic->InitializeRowHandler(RowHandle);
+        Logic->InitializeRowHandler_Internal(RowHandle);
         if (InitActor)
             Logic->HardSetRepresentationActor(InitActor);
 

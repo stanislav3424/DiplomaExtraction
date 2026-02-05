@@ -11,25 +11,42 @@ class DIPLOMAEXTRACTION_API ULogicBase : public UObject, public FTickableGameObj
 {
 	GENERATED_BODY()
 
+    friend class USpawnLibrary;
+
     // Initialize
-public:
+private:
+    void InitializeRowHandler_Internal(FDataTableRowHandle const& InitRowHandle);
+
+protected:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle);
 
+public:
     FDataTableRowHandle const& GetRowHandle() const { return RowHandle; }
 
 private:
     FDataTableRowHandle RowHandle;
 
     // Components
-protected:
+private:
     virtual void SetOwnerLogic(ULogicBase* IntOwnerLogic);
-    virtual void DestroyLogic();
+
+protected:
+    virtual void OwnerLogicChange(ULogicBase* IntOwnerLogic);
+
+private:
+    void RemoveChildLogic_Internal(ULogicBase* ChildLogic);
+
+protected:
+    virtual void RemoveChildLogic(ULogicBase* ChildLogic);
+    //virtual void DestroyLogic();
 
 public:
     ULogicBase* GetOwnerLogic() const { return OwnerLogic; }
 
     void AddLogicComponent(ULogicBase* Component);
     void RemoveLogicComponent(ULogicBase* Component);
+
+public:
     template <typename TypeComponent = ULogicBase> TypeComponent* GetLogicComponent()
     {
         const UClass* Wanted = TypeComponent::StaticClass();

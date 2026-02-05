@@ -17,6 +17,13 @@ void UCharacterLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHan
         return;
 }
 
+void UCharacterLogic::RemoveChildLogic(ULogicBase* ChildLogic)
+{
+    Super::RemoveChildLogic(ChildLogic);
+
+    UnequipItem(ChildLogic);
+}
+
 bool UCharacterLogic::EquipItem(ULogicBase* Item)
 {
     if (!IsValidEquippedItem(Item))
@@ -65,6 +72,11 @@ bool UCharacterLogic::CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase*
     return !EquippedItems.Contains(TargetSlot);
 }
 
+ULogicBase* UCharacterLogic::UnequipItem(ULogicBase* Item)
+{
+    return UnequipItem(GetEquipmentSlot(Item));
+}
+
 ULogicBase* UCharacterLogic::UnequipItem(EEquipmentSlot const& TargetSlot)
 {
     if (!EquippedItems.Contains(TargetSlot))
@@ -72,7 +84,6 @@ ULogicBase* UCharacterLogic::UnequipItem(EEquipmentSlot const& TargetSlot)
 
     auto Item = EquippedItems[TargetSlot];
     EquippedItems.Remove(TargetSlot);
-    RemoveLogicComponent(Item);
     OnEquipmentChanged.Broadcast();
 
     return Item;

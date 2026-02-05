@@ -21,6 +21,13 @@ void UInventoryLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHan
     InitializeInventory();
 }
 
+void UInventoryLogic::RemoveChildLogic(ULogicBase* ChildLogic)
+{
+    Super::RemoveChildLogic(ChildLogic);
+
+    RemoveItemFromInventory(ChildLogic);
+}
+
 void UInventoryLogic::CheckValidInventorySize()
 {
     if (IsValidInventorySize(this))
@@ -107,22 +114,18 @@ bool UInventoryLogic::CanAddItemToPosition(ULogicBase* Item, FIntVector2 const& 
 {
     if (!IsPositionNotOccupied(Position))
         return false;
-
-    auto ItemLogic = UItemLogic::GetItemLogicComponent(Item);
-    if (ItemLogic)
+    auto ItemLogic = Item->GetLogicComponent<UItemLogic>();
+    if (!ItemLogic)
         return false;
-
     auto ItemSize = UItemLogic::GetRotationSize(ItemLogic->GetItemSize(), Rotation);
-
     if (!CanPlaceItemAt(Position, ItemSize))
         return false;
-
     return true;
 }
 
 bool UInventoryLogic::AddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
 {
-    if (CanAddItemToPosition(Item, Position, Rotation))
+    if (!CanAddItemToPosition(Item, Position, Rotation))
         return false;
 
     PlaceItemInInventory(Item, Position, Rotation);
@@ -189,6 +192,8 @@ void UInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& 
     auto ItemLogic = UItemLogic::GetItemLogicComponent(Item);
     if (!ItemLogic)
         return;
+
+    AddLogicComponent(Item);
 
     ItemsInInventory.Add(Item, FItemInventoryData{ Position, Rotation });
 

@@ -21,7 +21,7 @@ public:
 
     // Components
 public:
-    virtual void SetOwnerLogic(ULogicBase* IntOwnerLogic) override;
+    virtual void OwnerLogicChange(ULogicBase* IntOwnerLogic) override;
 
     // Health Management
     void TakeDamage(float DamageAmount);

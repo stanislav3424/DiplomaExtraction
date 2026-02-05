@@ -28,6 +28,7 @@ class DIPLOMAEXTRACTION_API UInventoryLogic : public ULogicBase
     // Initialize
 public:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
+    virtual void RemoveChildLogic(ULogicBase* ChildLogic);
 
 private:
     void        CheckValidInventorySize();

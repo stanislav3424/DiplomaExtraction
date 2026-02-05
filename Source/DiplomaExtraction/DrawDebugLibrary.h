@@ -13,6 +13,6 @@ class DIPLOMAEXTRACTION_API UDrawDebugLibrary : public UBlueprintFunctionLibrary
 
 public:
     static void DrawShoot(
-        UObject* WorldContextObject, FVector const& Start, FVector const& End, FVector const& HitLocation);
+        UObject* WorldContextObject, FVector const& Start, FVector const& End, bool bHit, FVector const& HitLocation);
     static void DrawShootHitLocation(UObject* WorldContextObject, FVector const& HitLocation);
 };

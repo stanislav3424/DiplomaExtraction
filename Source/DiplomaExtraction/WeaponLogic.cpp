@@ -4,6 +4,8 @@
 #include "Row.h"
 #include "MacroLibrary.h"
 #include "DrawDebugLibrary.h"
+#include "CharacterLogic.h"
+#include "GameFramework/Character.h"
 
 UWeaponLogic::UWeaponLogic()
 {
@@ -73,7 +75,7 @@ void UWeaponLogic::StopFiring()
 
 void UWeaponLogic::Reload()
 {
-    //
+    CurrentAmmo = Ammo;
 }
 
 float UWeaponLogic::GetRateOfFireOneSecond() const
@@ -110,15 +112,43 @@ void UWeaponLogic::Shoot()
     {
     }
 
-    UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.Location);
+    UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
 }
 
 FVector UWeaponLogic::GetMuzzleLocation() const
 {
-    return FVector();
+    FVector Location = FVector::ZeroVector;
+
+    auto CharacterLogic = Cast<UCharacterLogic>(GetOwnerLogic());
+    if (!CharacterLogic)
+        return Location;
+
+    auto Character = Cast<ACharacter>(CharacterLogic->GetRepresentationActor());
+    if (!Character)
+        return Location;
+
+    auto Mesh = Character->GetMesh();
+    if (!Mesh)
+        return Location;
+
+    Location = Mesh->GetSocketLocation(TEXT("weapon_r_muzzle"));
+
+    return Location;
 }
 
 FVector UWeaponLogic::GetShootDirection() const
 {
-    return FVector();
+    FVector Location = FVector::ZeroVector;
+
+    auto CharacterLogic = Cast<UCharacterLogic>(GetOwnerLogic());
+    if (!CharacterLogic)
+        return Location;
+
+    auto Actor = CharacterLogic->GetRepresentationActor();
+    if (!Actor)
+        return Location;
+
+    Location = Actor->GetActorRotation().Vector();
+
+    return Location;
 }

@@ -33,6 +33,7 @@ AIconRendering::AIconRendering()
 void AIconRendering::BeginPlay()
 {
     Super::BeginPlay();
+
 }
 
 void AIconRendering::Tick(float DeltaSeconds)

@@ -6,15 +6,27 @@
 #include "Components/ActorComponent.h"
 #include "InitRowHandle.generated.h"
 
+UENUM(BlueprintType)
+enum class ETypeInit : uint8
+{
+    Disabled               UMETA(DisplayName = "Disabled"),
+    PlacedInWorld          UMETA(DisplayName = "PlacedInWorld"),
+    Spawned                UMETA(DisplayName = "Spawned"),
+    PlacedInWorldOrSpawned UMETA(DisplayName = "PlacedInWorldOrSpawned"),
+};
 
 UCLASS(NotBlueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class DIPLOMAEXTRACTION_API UInitRowHandle : public UActorComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 protected:
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
+    void         Init();
 
-	UPROPERTY(EditAnywhere, Category = "InitRowHandle")
-	FDataTableRowHandle InitRowHandle;
+    UPROPERTY(EditDefaultsOnly, Category = "InitRowHandle")
+    FDataTableRowHandle InitRowHandle;
+
+    UPROPERTY(EditDefaultsOnly, Category = "InitRowHandle")
+    ETypeInit TypeInit = ETypeInit::PlacedInWorld;
 };

@@ -8,11 +8,15 @@
 #include "CharacterBase.generated.h"
 
 class ULogicBase;
+class UInitRowHandle;
 
 UCLASS(Abstract, NotBlueprintable)
 class DIPLOMAEXTRACTION_API ACharacterBase : public ACharacter, public ILogicInterface
 {
     GENERATED_BODY()
+
+public:
+    ACharacterBase();
 
 public:
     virtual ULogicBase* GetLogic_Implementation() override;
@@ -21,4 +25,7 @@ public:
 private:
     UPROPERTY(Transient)
     ULogicBase* LogicBase;
+
+    UPROPERTY(VisibleAnywhere, Category = "InitRowHandle")
+    UInitRowHandle* InitRowHandle;
 };

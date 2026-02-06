@@ -14,4 +14,8 @@ bool UGroundLootInventoryLogic::CanAddItemToPosition(ULogicBase* Item, FIntVecto
 
 void UGroundLootInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
 {
+    if (!Item)
+        return;
+    AddLogicComponent(Item);
+    RemoveLogicComponent(Item);
 }

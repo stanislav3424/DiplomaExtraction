@@ -7,10 +7,15 @@
 #include "LogicInterface.h"
 #include "ActorBase.generated.h"
 
+class UInitRowHandle;
+
 UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API AActorBase : public AActor, public ILogicInterface
 {
 	GENERATED_BODY()
+
+public:
+    AActorBase();
 
 public:
     virtual ULogicBase* GetLogic_Implementation() override;
@@ -19,4 +24,7 @@ public:
 private:
     UPROPERTY(Transient)
     ULogicBase* LogicBase;
+
+    UPROPERTY(VisibleAnywhere, Category = "InitRowHandle")
+    UInitRowHandle* InitRowHandle;
 };

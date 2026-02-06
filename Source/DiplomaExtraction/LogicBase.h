@@ -28,10 +28,10 @@ private:
 
     // Components
 private:
-    virtual void SetOwnerLogic(ULogicBase* IntOwnerLogic);
+    virtual void SetOwnerLogic(ULogicBase* NewOwnerLogic);
 
 protected:
-    virtual void OwnerLogicChange(ULogicBase* IntOwnerLogic);
+    virtual void OwnerLogicChange(ULogicBase* NewOwnerLogic);
 
 private:
     void RemoveChildLogic_Internal(ULogicBase* ChildLogic);

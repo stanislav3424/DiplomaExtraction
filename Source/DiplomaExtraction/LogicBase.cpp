@@ -28,20 +28,20 @@ void ULogicBase::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
     
 }
 
-void ULogicBase::SetOwnerLogic(ULogicBase* IntOwnerLogic)
+void ULogicBase::SetOwnerLogic(ULogicBase* NewOwnerLogic)
 {
     auto OldOwnerLogic = OwnerLogic;
-    OwnerLogic         = IntOwnerLogic;
+    OwnerLogic         = NewOwnerLogic;
 
     if (OldOwnerLogic)
         OldOwnerLogic->RemoveChildLogic_Internal(this);
 
     DestroyRepresentationActor();
 
-    OwnerLogicChange(IntOwnerLogic);
+    OwnerLogicChange(NewOwnerLogic);
 }
 
-void ULogicBase::OwnerLogicChange(ULogicBase* IntOwnerLogic)
+void ULogicBase::OwnerLogicChange(ULogicBase* NewOwnerLogic)
 {
 }
 

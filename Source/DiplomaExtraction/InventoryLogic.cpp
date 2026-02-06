@@ -14,11 +14,7 @@ void UInventoryLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHan
     if (!Row)
         return;
 
-    InventorySize = Row->InventorySize;
-
-    CheckValidInventorySize();
-
-    InitializeInventory();
+    InitializeInventory(Row->InventorySize);
 }
 
 void UInventoryLogic::RemoveChildLogic(ULogicBase* ChildLogic)
@@ -36,8 +32,10 @@ void UInventoryLogic::CheckValidInventorySize()
     UE_LOG(InitGameLogic, Warning, FILE_FUNC TEXT("Invalid inventory size detected. Resetting to default (1, 1)."))
 }
 
-void UInventoryLogic::InitializeInventory()
+void UInventoryLogic::InitializeInventory(FIntVector2 const& InitSize)
 {
+    InventorySize = InitSize;
+    CheckValidInventorySize();
     InventoryGrid.SetNum(InventorySize.X * InventorySize.Y);
 }
 

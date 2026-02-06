@@ -6,7 +6,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);
 
-USTRUCT(BlueprintType)
+USTRUCT(Blueprintable)
 struct FItemInventoryData
 {
     GENERATED_BODY()
@@ -31,8 +31,12 @@ public:
     virtual void RemoveChildLogic(ULogicBase* ChildLogic);
 
 private:
-    void        CheckValidInventorySize();
-    void        InitializeInventory();
+    void CheckValidInventorySize();
+
+protected:
+    void InitializeInventory(FIntVector2 const& InitSize);
+
+private:
     static bool IsValidInventorySize(ULogicBase* Item);
 
     // Inventory Functionality
@@ -46,19 +50,20 @@ private:
     bool                ArePositionsNotOccupied(TArray<FIntVector2> const& Positions) const;
 
 public:
-    bool        CanAddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
-    bool        AddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
-    bool        AddItemToFirstAvailablePosition(ULogicBase* Item, bool PrioritizeRotation = false);
-    bool        RemoveItemFromInventory(ULogicBase* Item);
-    ULogicBase* RemoveItemFromPosition(FIntVector2 const& Position);
-    FIntVector2 GetInventorySize() const { return InventorySize; }
+    virtual bool CanAddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
+    bool         AddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
+    bool         AddItemToFirstAvailablePosition(ULogicBase* Item, bool PrioritizeRotation = false);
+    bool         RemoveItemFromInventory(ULogicBase* Item);
+    ULogicBase*  RemoveItemFromPosition(FIntVector2 const& Position);
+    FIntVector2  GetInventorySize() const { return InventorySize; }
     TMap<ULogicBase*, FItemInventoryData> GetItemsInInventory() { return ItemsInInventory; }
 
     FOnInventoryChanged OnInventoryChanged;
 
-private:
-    void PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
+protected:
+    virtual void PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
 
+private:
     FIntVector2 InventorySize = FIntVector2(1, 1);
 
     UPROPERTY(Transient)

@@ -9,6 +9,7 @@
 class UUW_Item;
 class UCanvasPanel;
 class UUW_InventoryGrid;
+class UInventoryLogic;
 class USizeBox;
 class UImage;
 
@@ -54,7 +55,7 @@ protected:
     UPROPERTY(meta = (BindWidget))
     USizeBox* SizeBox;
 
-    UPROPERTY()
+    UPROPERTY(Transient)
     UImage* GridPreviewImage;
 
     UPROPERTY(EditDefaultsOnly, Category = "GridPreview")
@@ -62,4 +63,5 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "GridPreview")
     FName PreviewOverlayParameterName = FName(TEXT("CanPlace"));
+
 };

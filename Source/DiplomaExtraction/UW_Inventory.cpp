@@ -25,27 +25,21 @@ void UUW_Inventory::LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLogic)
 {
     Super::LogicChanged(OldLogic, NewLogic);
 
-    CHECK_FIELD_RETURN(ItemWidgetClass);
+    if (auto InventoryLogic = Cast<UInventoryLogic>(OldLogic))
+        InventoryLogic->OnInventoryChanged.RemoveDynamic(this, &UUW_Inventory::OnInventoryChanged);
+    if (auto InventoryLogic = Cast<UInventoryLogic>(NewLogic))
+        InventoryLogic->OnInventoryChanged.AddUniqueDynamic(this, &UUW_Inventory::OnInventoryChanged);
 
-    if (auto CharacterLogic = Cast<UCharacterLogic>(OldLogic))
-        if (auto InventoryLogic = Cast<UInventoryLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Backpack)))
-        {
-            InventoryLogic->OnInventoryChanged.RemoveDynamic(this, &UUW_Inventory::OnInventoryChanged);
-            OnInventoryChanged();
-        }
+    if (auto InventoryLogic = Cast<UInventoryLogic>(NewLogic))
+    {
+        auto InventorySize  = InventoryLogic->GetInventorySize();
+        auto SizeInViewport = UUserWidgetLibrary::GetSizeInViewport(InventorySize);
+        SizeBox->SetWidthOverride(SizeInViewport.X);
+        SizeBox->SetHeightOverride(SizeInViewport.Y);
+    }
 
-    if (auto CharacterLogic = Cast<UCharacterLogic>(NewLogic))
-        if (auto InventoryLogic = Cast<UInventoryLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Backpack)))
-        {
-            InventoryLogic->OnInventoryChanged.AddUniqueDynamic(this, &UUW_Inventory::OnInventoryChanged);
-            InventoryLogic->OnInventoryChanged.Broadcast();
-            ULogicLibrary::SetLogic(InventoryGrid, InventoryLogic);
-
-            auto InventorySize  = InventoryLogic->GetInventorySize();
-            auto SizeInViewport = UUserWidgetLibrary::GetSizeInViewport(InventorySize);
-            SizeBox->SetWidthOverride(SizeInViewport.X);
-            SizeBox->SetHeightOverride(SizeInViewport.Y);
-        }
+    ULogicLibrary::SetLogic(InventoryGrid, NewLogic);
+    OnInventoryChanged();
 }
 
 bool UUW_Inventory::NativeOnDrop(
@@ -55,10 +49,7 @@ bool UUW_Inventory::NativeOnDrop(
 
     if (!InOperation)
         return false;
-    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
-    if (!CharacterLogic)
-        return false;
-    auto InventoryLogic = Cast<UInventoryLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Backpack));
+    auto InventoryLogic = Cast<UInventoryLogic>(GetLogic_Implementation());
     if (!InventoryLogic)
         return false;
     auto Payload = Cast<ULogicBase>(InOperation->Payload);
@@ -73,7 +64,10 @@ void UUW_Inventory::NativeOnDragEnter(
     const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
     if (!InOperation)
-        return;
+        return ;
+    auto InventoryLogic = Cast<UInventoryLogic>(GetLogic_Implementation());
+    if (!InventoryLogic)
+        return ;
     if (auto Payload = Cast<ULogicBase>(InOperation->Payload))
     {
         SetGridPreviewEnabled(true);
@@ -84,6 +78,9 @@ bool UUW_Inventory::NativeOnDragOver(
     const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
     if (!InOperation)
+        return false;
+    auto InventoryLogic = Cast<UInventoryLogic>(GetLogic_Implementation());
+    if (!InventoryLogic)
         return false;
     if (auto Payload = Cast<ULogicBase>(InOperation->Payload))
     {
@@ -103,8 +100,10 @@ void UUW_Inventory::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDr
 
 void UUW_Inventory::OnInventoryChanged()
 {
-    if (!ItemWidgetClass || !CanvasPanel)
+    if (!CanvasPanel)
         return;
+
+    CHECK_FIELD_RETURN(ItemWidgetClass)
 
     for (auto Widget : ItemWidgets)
     {
@@ -112,10 +111,8 @@ void UUW_Inventory::OnInventoryChanged()
         Widget = nullptr;
     }
 
-    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
-    if (!CharacterLogic)
-        return;
-    auto InventoryLogic = Cast<UInventoryLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Backpack));
+    auto InventoryLogic = Cast<UInventoryLogic>(GetLogic_Implementation());
+    SetVisibility(InventoryLogic ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
     if (!InventoryLogic)
         return;
 
@@ -173,10 +170,8 @@ void UUW_Inventory::UpdateGridPreviewPosition(
     auto ItemLogicComponent = Item->GetLogicComponent<UItemLogic>();
     if (!ItemLogicComponent)
         return;
-    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
-    if (!CharacterLogic)
-        return;
-    auto InventoryLogic = Cast<UInventoryLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Backpack));
+
+    auto InventoryLogic = Cast<UInventoryLogic>(GetLogic_Implementation());
     if (!InventoryLogic)
         return;
     FIntVector2 FinalPosition = GetAdjustedPositionForItem(InGeometry, MousePosition, Item);

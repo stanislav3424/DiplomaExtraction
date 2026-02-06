@@ -18,6 +18,8 @@ class DIPLOMAEXTRACTION_API UUW_Equipment : public UUW_Base
 
 protected:
     virtual void LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLogic);
+    virtual bool NativeOnDrop(
+        const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
     UPROPERTY(meta = (BindWidget))
     UUW_Item* ItemWidget;

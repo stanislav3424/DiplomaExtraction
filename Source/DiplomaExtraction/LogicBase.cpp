@@ -36,6 +36,8 @@ void ULogicBase::SetOwnerLogic(ULogicBase* IntOwnerLogic)
     if (OldOwnerLogic)
         OldOwnerLogic->RemoveChildLogic_Internal(this);
 
+    DestroyRepresentationActor();
+
     OwnerLogicChange(IntOwnerLogic);
 }
 
@@ -128,7 +130,10 @@ void ULogicBase::HardSetRepresentationActor(AActor* NewRepresentationActor)
 void ULogicBase::DestroyRepresentationActor()
 {
     if (IsValid(RepresentationActor))
+    {
         RepresentationActor->Destroy();
+        RepresentationActor = nullptr;
+    }
 }
 
 void ULogicBase::TickLogic(float DeltaTime)

@@ -27,7 +27,7 @@ private:
 
     // Initialize child logic
 protected:
-    virtual void InitializeChildLogic(ULogicBase* NewLogic);
+    void InitializeChildLogic(ULogicBase* NewLogic);
 
     bool bIsAutoInitializeChildLogic = true;
 };

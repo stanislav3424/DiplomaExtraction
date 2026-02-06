@@ -6,6 +6,7 @@
 #include "CharacterLogic.h"
 #include "MacroLibrary.h"
 #include "LogicLibrary.h"
+#include "Blueprint/DragDropOperation.h"
 
 UUW_Equipment::UUW_Equipment()
 {
@@ -20,12 +21,32 @@ void UUW_Equipment::LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLogic)
     if (EquipmentSlot == EEquipmentSlot::None)
         return;
 
-    auto CharacterLogic = Cast<UCharacterLogic>(NewLogic);
-    if (!CharacterLogic)
-        return;
+    if (auto CharacterLogic = Cast<UCharacterLogic>(OldLogic))
+    {
+        CharacterLogic->OnEquipmentChanged.RemoveDynamic(this, &UUW_Equipment::OnEquipmentChanged);
+    }
 
-    CharacterLogic->OnEquipmentChanged.AddUniqueDynamic(this, &UUW_Equipment::OnEquipmentChanged);
-    CharacterLogic->OnEquipmentChanged.Broadcast();
+    if (auto CharacterLogic = Cast<UCharacterLogic>(NewLogic))
+    {
+        CharacterLogic->OnEquipmentChanged.AddUniqueDynamic(this, &UUW_Equipment::OnEquipmentChanged);
+        CharacterLogic->OnEquipmentChanged.Broadcast();
+    }
+}
+
+bool UUW_Equipment::NativeOnDrop(
+    const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+    if (!InOperation)
+        return false;
+    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
+    if (!CharacterLogic)
+        return false;
+
+    auto Payload = Cast<ULogicBase>(InOperation->Payload);
+    if (!Payload)
+        return false;
+
+    return CharacterLogic->EquipItem(EquipmentSlot, Payload);
 }
 
 void UUW_Equipment::OnEquipmentChanged()

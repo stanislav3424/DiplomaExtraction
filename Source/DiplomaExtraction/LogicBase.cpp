@@ -125,6 +125,7 @@ void ULogicBase::HardSetRepresentationActor(AActor* NewRepresentationActor)
 
     for (auto Component : NewRepresentationActor->GetComponents())
         ULogicLibrary::SetLogic(Component, this);
+
 }
 
 void ULogicBase::DestroyRepresentationActor()
@@ -134,6 +135,35 @@ void ULogicBase::DestroyRepresentationActor()
         RepresentationActor->Destroy();
         RepresentationActor = nullptr;
     }
+}
+
+AActor* ULogicBase::DropToGround(FVector const& SpawnLocation, FRotator const& SpawnRotation)
+{
+    SetOwnerLogic(nullptr);
+
+    auto Actor = SpawnRepresentationActor(SpawnLocation - FVector(0.f, 0.f, -2000.f), SpawnRotation);
+    if (!IsValid(Actor))
+        return nullptr;
+
+    // 
+
+    Actor->SetActorLocation(SpawnLocation);
+
+    SetSimulatePhysics();
+
+    return Actor;
+}
+
+void ULogicBase::SetSimulatePhysics()
+{
+    if (!IsValid(RepresentationActor))
+        return;
+    auto PrimitiveComponent = Cast<UPrimitiveComponent>(RepresentationActor->GetRootComponent());
+    if (!PrimitiveComponent)
+        return;
+    PrimitiveComponent->SetSimulatePhysics(true);
+    PrimitiveComponent->SetEnableGravity(true);
+    PrimitiveComponent->WakeAllRigidBodies();
 }
 
 void ULogicBase::TickLogic(float DeltaTime)

@@ -15,12 +15,9 @@ class DIPLOMAEXTRACTION_API UGroundLootSceneComponent : public USceneComponent, 
 {
 	GENERATED_BODY()
 
+    UGroundLootSceneComponent();
 public:
     virtual void BeginPlay() override;
-    virtual void OnRegister() override;
-    virtual void OnUnregister() override;
-    virtual void TickComponent(
-        float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
     virtual ULogicBase* GetLogic_Implementation() override;

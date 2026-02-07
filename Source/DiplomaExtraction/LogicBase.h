@@ -70,6 +70,8 @@ public:
     AActor* SpawnRepresentationActor(FVector const& SpawnLocation, FRotator const& SpawnRotation);
     void    HardSetRepresentationActor(AActor* NewRepresentationActor);
     void    DestroyRepresentationActor();
+    AActor* DropToGround(FVector const& SpawnLocation, FRotator const& SpawnRotation);
+    virtual void SetSimulatePhysics();
 
 private:
     UPROPERTY(Transient)

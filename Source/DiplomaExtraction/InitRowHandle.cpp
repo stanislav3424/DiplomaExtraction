@@ -41,4 +41,5 @@ void UInitRowHandle::Init()
     CHECK_FIELD_RETURN(!InitRowHandle.IsNull());
     auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), InitRowHandle, Actor);
     CHECK_FIELD_RETURN(Logic);
+    Logic->SetSimulatePhysics();
 }

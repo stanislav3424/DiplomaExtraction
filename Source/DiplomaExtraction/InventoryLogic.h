@@ -57,11 +57,13 @@ public:
     ULogicBase*  RemoveItemFromPosition(FIntVector2 const& Position);
     FIntVector2  GetInventorySize() const { return InventorySize; }
     TMap<ULogicBase*, FItemInventoryData> GetItemsInInventory() { return ItemsInInventory; }
+    bool IsItemInInventory(ULogicBase* Item);
 
     FOnInventoryChanged OnInventoryChanged;
 
 protected:
-    virtual void PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false);
+    virtual void PlaceItemInInventory(
+        ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false, bool bAddLogicComponent = true);
 
 private:
     FIntVector2 InventorySize = FIntVector2(1, 1);

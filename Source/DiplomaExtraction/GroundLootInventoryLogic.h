@@ -19,6 +19,6 @@ public:
         ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false) override final;
 
 protected:
-    virtual void PlaceItemInInventory(
-        ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false) override final;
+    virtual void PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false,
+        bool bAddLogicComponent = true) override final;
 };

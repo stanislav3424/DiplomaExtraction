@@ -132,7 +132,7 @@ bool UInventoryLogic::AddItemToPosition(ULogicBase* Item, FIntVector2 const& Pos
 
 bool UInventoryLogic::AddItemToFirstAvailablePosition(ULogicBase* Item, bool PrioritizeRotation)
 {
-    auto AllPositionsInInventory = GetPositions(FIntVector2(1, 1), GetInventorySize());
+    auto AllPositionsInInventory = GetPositions(FIntVector2(0, 0), GetInventorySize());
     for (auto& Position : AllPositionsInInventory)
         if (CanAddItemToPosition(Item, Position, PrioritizeRotation))
         {
@@ -182,7 +182,15 @@ ULogicBase* UInventoryLogic::RemoveItemFromPosition(FIntVector2 const& Position)
     return nullptr;
 }
 
-void UInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
+bool UInventoryLogic::IsItemInInventory(ULogicBase* Item)
+{
+    if (!Item)
+        return false;
+    return ItemsInInventory.Contains(Item);
+}
+
+void UInventoryLogic::PlaceItemInInventory(
+    ULogicBase* Item, FIntVector2 const& Position, bool Rotation, bool bAddLogicComponent)
 {
     if (!Item)
         return;
@@ -191,7 +199,8 @@ void UInventoryLogic::PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& 
     if (!ItemLogic)
         return;
 
-    AddLogicComponent(Item);
+    if (bAddLogicComponent)
+        AddLogicComponent(Item);
 
     ItemsInInventory.Add(Item, FItemInventoryData{ Position, Rotation });
 

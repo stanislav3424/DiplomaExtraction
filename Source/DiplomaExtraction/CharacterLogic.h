@@ -21,6 +21,7 @@ class DIPLOMAEXTRACTION_API UCharacterLogic : public ULogicBase
 public:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle);
     virtual void RemoveChildLogic(ULogicBase* ChildLogic);
+    virtual void SetSimulatePhysics();
 
     // Equipment Management
 public:

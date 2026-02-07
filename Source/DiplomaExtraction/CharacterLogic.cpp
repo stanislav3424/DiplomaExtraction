@@ -24,6 +24,10 @@ void UCharacterLogic::RemoveChildLogic(ULogicBase* ChildLogic)
     UnequipItem(ChildLogic);
 }
 
+void UCharacterLogic::SetSimulatePhysics()
+{
+}
+
 bool UCharacterLogic::EquipItem(ULogicBase* Item)
 {
     if (!IsValidEquippedItem(Item))

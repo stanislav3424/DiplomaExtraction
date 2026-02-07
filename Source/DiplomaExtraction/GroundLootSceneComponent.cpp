@@ -9,6 +9,22 @@
 #include "LogicLibrary.h"
 #include "Row.h"
 
+UGroundLootSceneComponent::UGroundLootSceneComponent()
+{
+    PrimaryComponentTick.bCanEverTick = true;
+    SphereComponent                   = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+    if (!SphereComponent)
+        return;
+
+    SphereComponent->SetupAttachment(this);
+    SphereComponent->SetMobility(EComponentMobility::Movable);
+    SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    SphereComponent->bHiddenInSceneCapture         = true;
+
+    SphereComponent->bAutoActivate         = true;
+    SphereComponent->bUseAttachParentBound = true;
+}
+
 void UGroundLootSceneComponent::BeginPlay()
 {
     Super::BeginPlay();
@@ -18,48 +34,6 @@ void UGroundLootSceneComponent::BeginPlay()
 
     SphereComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &UGroundLootSceneComponent::OnBeginOverlap);
     SphereComponent->OnComponentEndOverlap.AddUniqueDynamic(this, &UGroundLootSceneComponent::OnEndOverlap);
-}
-
-void UGroundLootSceneComponent::OnRegister()
-{
-    Super::OnRegister();
-
-    /*auto Owner = GetOwner();
-    if (!Owner)
-        return;
-
-    if (!SphereComponent)
-    {
-        SphereComponent = NewObject<USphereComponent>(Owner, TEXT("SphereComponent"));
-        if (SphereComponent)
-        {
-            SphereComponent->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
-            SphereComponent->RegisterComponent();
-            SphereComponent->SetMobility(EComponentMobility::Movable);
-            SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-            SphereComponent->bHiddenInSceneCapture = true;
-        }
-    }*/
-}
-
-void UGroundLootSceneComponent::OnUnregister()
-{
-
-    /*if (SphereComponent)
-    {
-        SphereComponent->DestroyComponent();
-        SphereComponent = nullptr;
-    }*/
-
-    Super::OnUnregister();
-}
-
-void UGroundLootSceneComponent::TickComponent(
-    float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-
 }
 
 ULogicBase* UGroundLootSceneComponent::GetLogic_Implementation()

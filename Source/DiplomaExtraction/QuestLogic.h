@@ -6,12 +6,17 @@
 #include "LogicBase.h"
 #include "QuestLogic.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UQuestLogic : public ULogicBase
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+protected:
+    virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
+
+public:
+    ETypeQuest GetTypeQuest() const { return TypeQuest; };
+
+private:
+    ETypeQuest TypeQuest = ETypeQuest::None;
 };

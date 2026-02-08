@@ -110,3 +110,22 @@ struct FTemplateCharacterRow : public FTableRowBase
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TMap<EEquipmentSlot, FDataTableRowHandle> Equipment;
 };
+
+UENUM(BlueprintType)
+enum class ETypeQuest : uint8
+{
+    None  UMETA(DisplayName = "None"),
+    GreenCard UMETA(DisplayName = "GreenCard"),
+    BlueCard  UMETA(DisplayName = "BlueCard"),
+    RedCard UMETA(DisplayName = "RedCard"),
+    PowerBoard UMETA(DisplayName = "PowerBoard"),
+};
+
+USTRUCT(BlueprintType)
+struct FQuestRow : public FTableRowBase
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    ETypeQuest TypeQuest = ETypeQuest::None;
+};

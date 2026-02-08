@@ -4,6 +4,11 @@
 #include "MacroLibrary.h"
 #include "Row.h"
 
+UQuestLogic::UQuestLogic()
+{
+    TypeQuest = ETypeQuest::None;
+}
+
 void UQuestLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
     Super::InitializeRowHandler(InitRowHandle);

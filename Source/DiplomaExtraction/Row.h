@@ -129,3 +129,12 @@ struct FQuestRow : public FTableRowBase
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     ETypeQuest TypeQuest = ETypeQuest::None;
 };
+
+USTRUCT(BlueprintType)
+struct FQuestConditionRow : public FTableRowBase
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TSet<ETypeQuest> Quests;
+};

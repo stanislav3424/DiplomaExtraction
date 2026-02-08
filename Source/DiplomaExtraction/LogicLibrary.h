@@ -16,10 +16,7 @@ class DIPLOMAEXTRACTION_API ULogicLibrary : public UBlueprintFunctionLibrary
     GENERATED_BODY()
 
 public:
-    UFUNCTION(BlueprintCallable)
     static ULogicBase* GetLogic(TScriptInterface<ILogicInterface> TargetObject);
-
-    UFUNCTION(BlueprintCallable)
     static void        SetLogic(TScriptInterface<ILogicInterface> TargetObject, ULogicBase* NewLogic);
 
     template <typename TypeLogic = ULogicBase> static TypeLogic* GetLogic(TScriptInterface<ILogicInterface> TargetObject)

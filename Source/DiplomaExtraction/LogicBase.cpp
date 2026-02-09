@@ -126,6 +126,7 @@ void ULogicBase::HardSetRepresentationActor(AActor* NewRepresentationActor)
     for (auto Component : NewRepresentationActor->GetComponents())
         ULogicLibrary::SetLogic(Component, this);
 
+    RepresentationActorChanged(RepresentationActor);
 }
 
 void ULogicBase::DestroyRepresentationActor()

@@ -14,7 +14,13 @@ void UAutoWidgetComponent::SetLogic_Implementation(ULogicBase* NewLogic)
     LogicBase = NewLogic;
     if (!LogicBase)
         return;
-    auto WidgetLocal = GetWidget();
+    auto WidgetLocal = Cast<UUserWidget>(GetUserWidgetObject());
+    if (!WidgetLocal && WidgetClass && GetWorld())
+    {
+        WidgetLocal = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
+        if (WidgetLocal)
+            SetWidget(WidgetLocal);
+    }
     CHECK_FIELD_RETURN(WidgetLocal);
     ULogicLibrary::SetLogic(WidgetLocal, LogicBase);
 }

@@ -58,20 +58,23 @@ public:
     void GetLogicComponents(TArray<ULogicBase*>& OutComponents) const { OutComponents = LogicComponents; }
 
 private:
-    UPROPERTY()
+    UPROPERTY(Transient)
     ULogicBase* OwnerLogic;
 
-    UPROPERTY()
+    UPROPERTY(Transient)
     TArray<ULogicBase*> LogicComponents;
 
     // RepresentationActor
 public:
-    AActor* GetRepresentationActor() const { return RepresentationActor; }
-    AActor* SpawnRepresentationActor(FVector const& SpawnLocation, FRotator const& SpawnRotation);
-    void    HardSetRepresentationActor(AActor* NewRepresentationActor);
-    void    DestroyRepresentationActor();
-    AActor* DropToGround(FVector const& SpawnLocation, FRotator const& SpawnRotation);
+    AActor*      GetRepresentationActor() const { return RepresentationActor; }
+    AActor*      SpawnRepresentationActor(FVector const& SpawnLocation, FRotator const& SpawnRotation);
+    void         HardSetRepresentationActor(AActor* NewRepresentationActor);
+    void         DestroyRepresentationActor();
+    AActor*      DropToGround(FVector const& SpawnLocation, FRotator const& SpawnRotation);
     virtual void SetSimulatePhysics();
+
+protected:
+    virtual void RepresentationActorChanged(AActor* NewRepresentationActor) {};
 
 private:
     UPROPERTY(Transient)

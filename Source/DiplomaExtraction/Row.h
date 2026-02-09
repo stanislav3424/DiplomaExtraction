@@ -122,7 +122,7 @@ enum class ETypeQuest : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FQuestRow : public FTableRowBase
+struct FQuestRow : public FLogicBaseRow
 {
     GENERATED_BODY()
 
@@ -131,10 +131,19 @@ struct FQuestRow : public FTableRowBase
 };
 
 USTRUCT(BlueprintType)
-struct FQuestConditionRow : public FTableRowBase
+struct FQuestConditionRow : public FLogicBaseRow
 {
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TSet<ETypeQuest> Quests;
+};
+
+USTRUCT(BlueprintType)
+struct FDoorRow : public FLogicBaseRow
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Speed = 50.f;
 };

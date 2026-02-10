@@ -24,9 +24,9 @@ protected:
     virtual void BeginPlay() override;
     void         Init();
 
-    UPROPERTY(EditDefaultsOnly, Category = "InitRowHandle")
+    UPROPERTY(EditAnywhere, Category = "InitRowHandle")
     FDataTableRowHandle InitRowHandle;
 
-    UPROPERTY(EditDefaultsOnly, Category = "InitRowHandle")
+    UPROPERTY(EditAnywhere, Category = "InitRowHandle")
     ETypeInit TypeInit = ETypeInit::PlacedInWorld;
 };

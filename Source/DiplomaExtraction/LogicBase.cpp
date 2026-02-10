@@ -73,6 +73,7 @@ void ULogicBase::AddLogicComponent(ULogicBase* Component)
 	{
 		LogicComponents.AddUnique(Component);
         Component->SetOwnerLogic(this);
+        AttachedComponent(Component);
 	}
 }
 
@@ -83,6 +84,10 @@ void ULogicBase::RemoveLogicComponent(ULogicBase* Component)
 		LogicComponents.Remove(Component);
         Component->SetOwnerLogic(nullptr);
     }
+}
+
+void ULogicBase::AttachedComponent(ULogicBase* NewComponent)
+{
 }
 
 AActor* ULogicBase::SpawnRepresentationActor(FVector const& SpawnLocation, FRotator const& SpawnRotation)
@@ -127,6 +132,7 @@ void ULogicBase::HardSetRepresentationActor(AActor* NewRepresentationActor)
         ULogicLibrary::SetLogic(Component, this);
 
     RepresentationActorChanged(RepresentationActor);
+    BroadcastOnRepresentationActorChanged();
 }
 
 void ULogicBase::DestroyRepresentationActor()

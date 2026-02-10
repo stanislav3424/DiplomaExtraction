@@ -7,7 +7,7 @@
 #include "LogicInterface.h"
 #include "AutoWidgetComponent.generated.h"
 
-UCLASS(Blueprintable, ClassGroup = "UserInterface",
+UCLASS(NotBlueprintable, ClassGroup = "UserInterface",
     hidecategories = (Object, Activation, "Components|Activation", Sockets, Base, Lighting, LOD, Mesh), editinlinenew,
     meta           = (BlueprintSpawnableComponent))
 class DIPLOMAEXTRACTION_API UAutoWidgetComponent : public UWidgetComponent, public ILogicInterface

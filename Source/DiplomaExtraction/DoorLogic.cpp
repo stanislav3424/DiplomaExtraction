@@ -6,6 +6,7 @@
 #include "LogicLibrary.h"
 #include "MacroLibrary.h"
 #include "Row.h"
+#include "QuestConditionLogic.h"
 
 UDoorLogic::UDoorLogic()
 {
@@ -48,6 +49,17 @@ void UDoorLogic::RepresentationActorChanged(AActor* NewRepresentationActor)
     CollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &UDoorLogic::OnBoxEndOverlap);
 }
 
+void UDoorLogic::AttachedComponent(ULogicBase* NewComponent)
+{
+    Super::AttachedComponent(NewComponent);
+
+    auto LocalQuestConditionLogic = Cast<UQuestConditionLogic>(NewComponent);
+    if (!LocalQuestConditionLogic)
+        return;
+
+    QuestConditionLogic = LocalQuestConditionLogic;
+}
+
 void UDoorLogic::TickLogic(float DeltaTime)
 {
     Super::TickLogic(DeltaTime);
@@ -66,13 +78,23 @@ void UDoorLogic::TickLogic(float DeltaTime)
 
 void UDoorLogic::SwitchDoor(bool bNewIsOpen)
 {
+    if (IsBlockedDoor())
+        return;
+
     if (bIsOpen == bNewIsOpen)
         return;
 
     bIsOpen = bNewIsOpen;
 
-    const float Sign = bIsOpen ? 1.f : -1.f;
+    const float Sign = bIsOpen ? -1.f : 1.f;
     TargetPosition += FVector(0.f, Sign * DeltaLocation, 0.f);
+}
+
+bool UDoorLogic::IsBlockedDoor()
+{
+    if (!QuestConditionLogic)
+        return false;
+    return !QuestConditionLogic->IsAreAllQuestsCompleted();
 }
 
 void UDoorLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

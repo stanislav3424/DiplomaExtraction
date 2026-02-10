@@ -6,7 +6,9 @@
 #include "UObject/Object.h"
 #include "LogicBase.generated.h"
 
-UCLASS(Abstract, NotBlueprintable)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRepresentationActorChanged, AActor*, RepresentationActor);
+
+UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API ULogicBase : public UObject, public FTickableGameObject
 {
 	GENERATED_BODY()
@@ -38,7 +40,7 @@ private:
 
 protected:
     virtual void RemoveChildLogic(ULogicBase* ChildLogic);
-    //virtual void DestroyLogic();
+    // virtual void DestroyLogic();
 
 public:
     ULogicBase* GetOwnerLogic() const { return OwnerLogic; }
@@ -46,16 +48,40 @@ public:
     void AddLogicComponent(ULogicBase* Component);
     void RemoveLogicComponent(ULogicBase* Component);
 
+protected:
+    virtual void AttachedComponent(ULogicBase* NewComponent);
+
 public:
-    template <typename TypeComponent = ULogicBase> TypeComponent* GetLogicComponent()
+    template <typename TypeComponent = ULogicBase> TypeComponent* GetLogicComponent(bool bIncludeChildren = false)
     {
-        const UClass* Wanted = TypeComponent::StaticClass();
-        for (auto* Component : LogicComponents)
-            if (Component && Component->IsA(Wanted))
+        auto Wanted = TypeComponent::StaticClass();
+        for (auto Component : LogicComponents)
+        {
+            if (!Component)
+                continue;
+            if (Component->IsA(Wanted))
                 return Cast<TypeComponent>(Component);
+            if (bIncludeChildren)
+                if (auto Found = Component->GetLogicComponent<TypeComponent>(bIncludeChildren))
+                    return Found;
+        }
         return nullptr;
     }
-    void GetLogicComponents(TArray<ULogicBase*>& OutComponents) const { OutComponents = LogicComponents; }
+
+    template <typename TypeComponent = ULogicBase>
+    void GetLogicComponents(TArray<TypeComponent*>& OutComponents, bool bIncludeChildren = false)
+    {
+        auto Wanted = TypeComponent::StaticClass();
+        for (auto Component : LogicComponents)
+        {
+            if (!Component)
+                continue;
+            if (Component->IsA(Wanted))
+                OutComponents.Add(Cast<TypeComponent>(Component));
+            if (bIncludeChildren)
+                Component->GetLogicComponents<TypeComponent>(OutComponents, bIncludeChildren);
+        }
+    }
 
 private:
     UPROPERTY(Transient)
@@ -72,6 +98,9 @@ public:
     void         DestroyRepresentationActor();
     AActor*      DropToGround(FVector const& SpawnLocation, FRotator const& SpawnRotation);
     virtual void SetSimulatePhysics();
+
+    FOnRepresentationActorChanged OnRepresentationActorChanged;
+    void BroadcastOnRepresentationActorChanged() { OnRepresentationActorChanged.Broadcast(GetRepresentationActor()); };
 
 protected:
     virtual void RepresentationActorChanged(AActor* NewRepresentationActor) {};

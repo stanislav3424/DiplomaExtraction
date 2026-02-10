@@ -8,6 +8,7 @@
 
 class UBoxComponent;
 class UStaticMeshComponent;
+class UQuestConditionLogic;
 
 UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UDoorLogic : public ULogicBase
@@ -19,10 +20,12 @@ class DIPLOMAEXTRACTION_API UDoorLogic : public ULogicBase
 protected:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
     virtual void RepresentationActorChanged(AActor* NewRepresentationActor) override;
+    virtual void AttachedComponent(ULogicBase* NewComponent) override;
 
 public:
     virtual void TickLogic(float DeltaTime);
-    void SwitchDoor(bool bNewIsOpen);
+    void         SwitchDoor(bool bNewIsOpen);
+    bool         IsBlockedDoor();
 
 private:
     UPROPERTY(Transient)
@@ -38,12 +41,16 @@ private:
     TSet<AActor*> OtherActors;
 
     bool bIsOpen = false;
+    bool bIsBlockedDoor = false;
 
     FVector CurrentPosition = FVector::ZeroVector;
     FVector TargetPosition  = FVector::ZeroVector;
 
     float Speed = 150.f;
     float DeltaLocation = 150;
+
+    UPROPERTY(Transient)
+    UQuestConditionLogic* QuestConditionLogic;
 
     UFUNCTION()
     void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

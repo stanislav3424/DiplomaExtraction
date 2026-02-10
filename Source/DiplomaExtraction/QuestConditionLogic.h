@@ -9,6 +9,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllQuestsCompleted);
 
 enum class ETypeQuest : uint8;
+class UBoxComponent;
 
 UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UQuestConditionLogic : public ULogicBase
@@ -17,6 +18,7 @@ class DIPLOMAEXTRACTION_API UQuestConditionLogic : public ULogicBase
 
 protected:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
+    virtual void OwnerLogicChange(ULogicBase* NewOwnerLogic) override;
 
 public:
     TArray<TPair<ETypeQuest, bool>> GetQuestsStatus() { return QuestsStatus.Array(); };
@@ -29,6 +31,23 @@ public:
 private:
     void CheckQuestsCompleted();
 
-    TSet<TPair<ETypeQuest, bool>> QuestsStatus;
-    bool                          AreAllQuestsCompleted = false;
+    TMap<ETypeQuest, bool> QuestsStatus;
+    bool                   AreAllQuestsCompleted = false;
+
+    FName CollisionBoxTag = TEXT("QuestCollision");
+    FName WidgetInfoTag   = TEXT("WidgetInfo");
+
+    UPROPERTY(Transient)
+    UBoxComponent* CollisionBox;
+
+    UFUNCTION()
+    void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+        int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+    UFUNCTION()
+    void OnBoxEndOverlap(
+        UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+    UFUNCTION()
+    void OwnerRepresentationActorChanged(AActor* NewRepresentationActor);
 };

@@ -6,12 +6,17 @@
 #include "Components/WidgetComponent.h"
 #include "NotificationWidgetComponent.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(NotBlueprintable, ClassGroup = "UserInterface",
+    hidecategories = (Object, Activation, "Components|Activation", Sockets, Base, Lighting, LOD, Mesh), editinlinenew,
+    meta           = (BlueprintSpawnableComponent))
 class DIPLOMAEXTRACTION_API UNotificationWidgetComponent : public UWidgetComponent
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    virtual void BeginPlay() override;
+    void Notification(FText Text, float Time);
+    void SetHidden(bool NewHidden);
+
+    FTimerHandle Timer;
 };

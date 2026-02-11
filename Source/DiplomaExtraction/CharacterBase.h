@@ -10,7 +10,7 @@
 class ULogicBase;
 class UInitRowHandle;
 
-UCLASS(Abstract, NotBlueprintable)
+UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API ACharacterBase : public ACharacter, public ILogicInterface
 {
     GENERATED_BODY()

@@ -7,6 +7,9 @@
 #include "MacroLibrary.h"
 #include "Row.h"
 #include "QuestConditionLogic.h"
+#include "NavLinkComponent.h"
+#include "NavAreas/NavArea_Default.h" 
+#include "NavAreas/NavArea_Null.h"
 
 UDoorLogic::UDoorLogic()
 {
@@ -33,14 +36,17 @@ void UDoorLogic::RepresentationActorChanged(AActor* NewRepresentationActor)
         CollisionBox->OnComponentEndOverlap.RemoveDynamic(this, &UDoorLogic::OnBoxEndOverlap);
     }
 
-    CollisionBox = nullptr;
-    DoorMesh     = nullptr;
+    CollisionBox     = nullptr;
+    DoorMesh         = nullptr;
+    NavLinkComponent = nullptr;
 
-    CollisionBox = NewRepresentationActor->FindComponentByTag<UBoxComponent>(CollisionBoxTag);
-    DoorMesh     = NewRepresentationActor->FindComponentByTag<UStaticMeshComponent>(DoorMeshTag);
+    CollisionBox     = NewRepresentationActor->FindComponentByTag<UBoxComponent>(CollisionBoxTag);
+    DoorMesh         = NewRepresentationActor->FindComponentByTag<UStaticMeshComponent>(DoorMeshTag);
+    NavLinkComponent = NewRepresentationActor->GetComponentByClass<UNavLinkComponent>();
 
     CHECK_FIELD_RETURN(CollisionBox)
     CHECK_FIELD_RETURN(DoorMesh)
+    CHECK_FIELD_RETURN(NavLinkComponent)
 
     CurrentPosition = DoorMesh->GetRelativeLocation();
     TargetPosition  = CurrentPosition;
@@ -105,7 +111,16 @@ void UDoorLogic::ChechQuestsCompleted()
         if (!QuestConditionLogic->IsAreAllQuestsCompleted())
             bIsBlockedDoor = true;
 
-    DoorMesh->SetCanEverAffectNavigation(bIsBlockedDoor);
+    SetNavArea(!bIsBlockedDoor);
+}
+
+void UDoorLogic::SetNavArea(bool bEnable)
+{
+    if (!NavLinkComponent)
+        return;
+
+    for (auto& Link : NavLinkComponent->Links)
+        Link.SetAreaClass(bEnable ? UNavArea_Default::StaticClass() : UNavArea_Null::StaticClass());
 }
 
 void UDoorLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

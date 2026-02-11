@@ -9,6 +9,7 @@
 class UBoxComponent;
 class UStaticMeshComponent;
 class UQuestConditionLogic;
+class UNavLinkComponent;
 
 UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UDoorLogic : public ULogicBase
@@ -29,11 +30,16 @@ public:
     void         ChechQuestsCompleted();
 
 private:
+    void SetNavArea(bool bEnable);
+
     UPROPERTY(Transient)
     UBoxComponent* CollisionBox;
 
     UPROPERTY(Transient)
     UStaticMeshComponent* DoorMesh;
+    
+    UPROPERTY(Transient)
+    UNavLinkComponent* NavLinkComponent;
 
     FName CollisionBoxTag = TEXT("CollisionBox");
     FName DoorMeshTag     = TEXT("DoorMesh");

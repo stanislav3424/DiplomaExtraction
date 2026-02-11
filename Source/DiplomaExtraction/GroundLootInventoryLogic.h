@@ -17,6 +17,7 @@ public:
 public:
     virtual bool CanAddItemToPosition(
         ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false) override final;
+    virtual bool AddItemToFirstAvailablePosition(ULogicBase* Item, bool PrioritizeRotation = false) override final;
 
 protected:
     virtual void PlaceItemInInventory(ULogicBase* Item, FIntVector2 const& Position, bool Rotation = false,

@@ -20,6 +20,15 @@ bool UGroundLootInventoryLogic::CanAddItemToPosition(ULogicBase* Item, FIntVecto
     return false;
 }
 
+bool UGroundLootInventoryLogic::AddItemToFirstAvailablePosition(ULogicBase* Item, bool PrioritizeRotation)
+{
+    if (Item)
+        if (Item->GetOwnerLogic())
+            return false;
+
+    return Super::AddItemToFirstAvailablePosition(Item, PrioritizeRotation);
+}
+
 void UGroundLootInventoryLogic::PlaceItemInInventory(
     ULogicBase* Item, FIntVector2 const& Position, bool Rotation, bool bAddLogicComponent)
 {

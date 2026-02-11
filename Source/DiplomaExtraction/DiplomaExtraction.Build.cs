@@ -15,6 +15,8 @@ public class DiplomaExtraction : ModuleRules
             "InputCore",
             "EnhancedInput",
             "UMG",
+            "NavigationSystem",
+            "AIModule",
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });

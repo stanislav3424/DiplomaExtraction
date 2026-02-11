@@ -92,7 +92,13 @@ void UDoorLogic::SwitchDoor(bool bNewIsOpen)
     TargetPosition += FVector(0.f, Sign * DeltaLocation, 0.f);
 }
 
-bool UDoorLogic::ChechQuestsCompleted()
+bool UDoorLogic::IsBlockedDoor()
+{
+    ChechQuestsCompleted();
+    return bIsBlockedDoor;
+};
+
+void UDoorLogic::ChechQuestsCompleted()
 {
     bIsBlockedDoor = false;
     if (QuestConditionLogic)

@@ -25,9 +25,8 @@ protected:
 public:
     virtual void TickLogic(float DeltaTime);
     void         SwitchDoor(bool bNewIsOpen);
-    bool         IsBlockedDoor() const { return bIsBlockedDoor; };
-
-    bool ChechQuestsCompleted();
+    bool         IsBlockedDoor();
+    void         ChechQuestsCompleted();
 
 private:
     UPROPERTY(Transient)

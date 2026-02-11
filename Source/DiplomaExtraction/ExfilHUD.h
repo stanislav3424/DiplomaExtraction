@@ -7,6 +7,7 @@
 #include "ExfilHUD.generated.h"
 
 class UUW_Dialog;
+class ULogicBase;
 
 UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API AExfilHUD : public AHUD
@@ -15,6 +16,7 @@ class DIPLOMAEXTRACTION_API AExfilHUD : public AHUD
 
 protected:
     virtual void BeginPlay() override;
+    virtual void Tick(float Delta) override;
 
     UPROPERTY(EditDefaultsOnly, Category = "UI")
     TSubclassOf<UUW_Dialog> MainMenuWidgetClass;
@@ -28,8 +30,10 @@ protected:
     UPROPERTY(Transient)
     UUW_Dialog* PawnInfoWidget;
 
+    UPROPERTY(Transient)
+    ULogicBase* PlayerLogic;
+
 public:
-    UFUNCTION(BlueprintCallable)
     void InitHUD();
 
     void ToggleMainMenu();

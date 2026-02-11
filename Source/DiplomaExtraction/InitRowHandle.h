@@ -6,15 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "InitRowHandle.generated.h"
 
-UENUM(BlueprintType)
-enum class ETypeInit : uint8
-{
-    Disabled               UMETA(DisplayName = "Disabled"),
-    PlacedInWorld          UMETA(DisplayName = "PlacedInWorld"),
-    Spawned                UMETA(DisplayName = "Spawned"),
-    PlacedInWorldOrSpawned UMETA(DisplayName = "PlacedInWorldOrSpawned"),
-};
-
 UCLASS(NotBlueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class DIPLOMAEXTRACTION_API UInitRowHandle : public UActorComponent
 {
@@ -27,6 +18,4 @@ protected:
     UPROPERTY(EditAnywhere, Category = "InitRowHandle")
     FDataTableRowHandle InitRowHandle;
 
-    UPROPERTY(EditAnywhere, Category = "InitRowHandle")
-    ETypeInit TypeInit = ETypeInit::PlacedInWorld;
 };

@@ -47,6 +47,8 @@ void UDoorLogic::RepresentationActorChanged(AActor* NewRepresentationActor)
 
     CollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &UDoorLogic::OnBoxBeginOverlap);
     CollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &UDoorLogic::OnBoxEndOverlap);
+
+    ChechQuestsCompleted();
 }
 
 void UDoorLogic::AttachedComponent(ULogicBase* NewComponent)
@@ -90,11 +92,14 @@ void UDoorLogic::SwitchDoor(bool bNewIsOpen)
     TargetPosition += FVector(0.f, Sign * DeltaLocation, 0.f);
 }
 
-bool UDoorLogic::IsBlockedDoor()
+bool UDoorLogic::ChechQuestsCompleted()
 {
-    if (!QuestConditionLogic)
-        return false;
-    return !QuestConditionLogic->IsAreAllQuestsCompleted();
+    bIsBlockedDoor = false;
+    if (QuestConditionLogic)
+        if (!QuestConditionLogic->IsAreAllQuestsCompleted())
+            bIsBlockedDoor = true;
+
+    DoorMesh->SetCanEverAffectNavigation(bIsBlockedDoor);
 }
 
 void UDoorLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

@@ -9,7 +9,10 @@ public class DiplomaExtractionEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V6;
-        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
+
+        bUseUnityBuild = false;
+		bUseAdaptiveUnityBuild = false;
 
         ExtraModuleNames.AddRange( new string[] { "DiplomaExtraction" } );
 	}

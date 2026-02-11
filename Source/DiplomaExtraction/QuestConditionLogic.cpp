@@ -115,6 +115,9 @@ void UQuestConditionLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
         ApplyQuestItem(Quest->GetOwnerLogic());
     }
 
+    if (IsAreAllQuestsCompleted())
+        return;
+
     auto Notification = OtherActor->FindComponentByClass<UNotificationWidgetComponent>();
     CHECK_FIELD_RETURN(Notification);
 

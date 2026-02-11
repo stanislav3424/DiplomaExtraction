@@ -10,6 +10,7 @@
 #include "NavLinkComponent.h"
 #include "NavAreas/NavArea_Default.h" 
 #include "NavAreas/NavArea_Null.h"
+#include "NavigationSystem.h"
 
 UDoorLogic::UDoorLogic()
 {
@@ -55,6 +56,7 @@ void UDoorLogic::RepresentationActorChanged(AActor* NewRepresentationActor)
     CollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &UDoorLogic::OnBoxEndOverlap);
 
     ChechQuestsCompleted();
+    SetNavArea(!bIsBlockedDoor);
 }
 
 void UDoorLogic::AttachedComponent(ULogicBase* NewComponent)
@@ -106,12 +108,14 @@ bool UDoorLogic::IsBlockedDoor()
 
 void UDoorLogic::ChechQuestsCompleted()
 {
-    bIsBlockedDoor = false;
+    const bool bOldIsBlockedDoor = bIsBlockedDoor;
+    bIsBlockedDoor               = false;
     if (QuestConditionLogic)
         if (!QuestConditionLogic->IsAreAllQuestsCompleted())
             bIsBlockedDoor = true;
 
-    SetNavArea(!bIsBlockedDoor);
+    if (bOldIsBlockedDoor != bIsBlockedDoor)
+        SetNavArea(!bIsBlockedDoor);
 }
 
 void UDoorLogic::SetNavArea(bool bEnable)
@@ -121,6 +125,10 @@ void UDoorLogic::SetNavArea(bool bEnable)
 
     for (auto& Link : NavLinkComponent->Links)
         Link.SetAreaClass(bEnable ? UNavArea_Default::StaticClass() : UNavArea_Null::StaticClass());
+
+    NavLinkComponent->UnregisterComponent();
+    NavLinkComponent->RegisterComponent();
+
 }
 
 void UDoorLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

@@ -93,6 +93,7 @@ private:
     // RepresentationActor
 public:
     AActor*      GetRepresentationActor() const { return RepresentationActor; }
+    AActor*      GetRepresentationActor() { return RepresentationActor; }
     AActor*      SpawnRepresentationActor(FVector const& SpawnLocation, FRotator const& SpawnRotation);
     void         HardSetRepresentationActor(AActor* NewRepresentationActor);
     void         DestroyRepresentationActor();

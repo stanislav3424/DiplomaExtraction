@@ -63,11 +63,15 @@ void UDoorLogic::AttachedComponent(ULogicBase* NewComponent)
 {
     Super::AttachedComponent(NewComponent);
 
+    if (QuestConditionLogic)
+        return;
+
     auto LocalQuestConditionLogic = Cast<UQuestConditionLogic>(NewComponent);
     if (!LocalQuestConditionLogic)
         return;
 
     QuestConditionLogic = LocalQuestConditionLogic;
+    ChechQuestsCompleted();
 }
 
 void UDoorLogic::TickLogic(float DeltaTime)

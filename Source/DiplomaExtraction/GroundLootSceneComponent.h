@@ -10,7 +10,7 @@
 class USphereComponent;
 class UGroundLootInventoryLogic;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(NotBlueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DIPLOMAEXTRACTION_API UGroundLootSceneComponent : public USceneComponent, public ILogicInterface
 {
 	GENERATED_BODY()

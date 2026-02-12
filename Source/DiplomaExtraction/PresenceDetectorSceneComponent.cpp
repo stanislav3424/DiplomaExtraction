@@ -1,34 +1,74 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "PresenceDetectorSceneComponent.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/Character.h"
 
-// Sets default values for this component's properties
-UPresenceDetectorSceneComponent::UPresenceDetectorSceneComponent()
-{
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
 void UPresenceDetectorSceneComponent::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-	// ...
-	
+    SphereComponent = NewObject<USphereComponent>(this, TEXT("SphereComponent"));
+    if (SphereComponent)
+        return;
+
+    SphereComponent->SetupAttachment(this);
+    SphereComponent->bHiddenInSceneCapture = true;
+    SphereComponent->bUseAttachParentBound = true;
+
+    SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &UPresenceDetectorSceneComponent::OnBeginOverlap);
+    SphereComponent->OnComponentEndOverlap.AddDynamic(this, &UPresenceDetectorSceneComponent::OnEndOverlap);
 }
 
-
-// Called every frame
-void UPresenceDetectorSceneComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UPresenceDetectorSceneComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    if (!IsValid(OtherActor))
+        return;
 
-	// ...
+    auto World = GetWorld();
+    if (!World)
+        return;
+
+    if (TypeTracking == ETypeTracking::Player)
+    {
+        if (OtherActor->GetInstigatorController() == World->GetFirstPlayerController())
+            ActorsInside.Add(OtherActor);
+
+        CheckActorsInside();
+        return;
+    }
 }
 
+void UPresenceDetectorSceneComponent::OnEndOverlap(
+    UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    if (!IsValid(OtherActor))
+        return;
+
+    auto World = GetWorld();
+    if (!World)
+        return;
+
+    if (TypeTracking == ETypeTracking::Player)
+    {
+        if (OtherActor->GetInstigatorController() == World->GetFirstPlayerController())
+            ActorsInside.Remove(OtherActor);
+
+        CheckActorsInside();
+        return;
+    }
+}
+
+void UPresenceDetectorSceneComponent::CheckActorsInside()
+{
+    if (IsInside() == bIsInside)
+        return;
+
+    bIsInside = !bIsInside;
+
+    if (bIsInside)
+        OnZoneBecameOccupied.Broadcast();
+    else
+        OnZoneBecameEmpty.Broadcast();
+}

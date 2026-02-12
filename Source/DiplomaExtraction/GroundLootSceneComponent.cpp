@@ -11,17 +11,12 @@
 
 UGroundLootSceneComponent::UGroundLootSceneComponent()
 {
-    PrimaryComponentTick.bCanEverTick = true;
-    SphereComponent                   = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+    SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
     if (!SphereComponent)
         return;
 
     SphereComponent->SetupAttachment(this);
-    SphereComponent->SetMobility(EComponentMobility::Movable);
-    SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    SphereComponent->bHiddenInSceneCapture         = true;
-
-    SphereComponent->bAutoActivate         = true;
+    SphereComponent->bHiddenInSceneCapture = true;
     SphereComponent->bUseAttachParentBound = true;
 }
 

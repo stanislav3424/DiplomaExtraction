@@ -32,7 +32,7 @@ void UHealthLogic::TakeDamage(float DamageAmount)
 
 		if (CurrentHealth <= 0.0f)
 		{
-			OnDeath.Broadcast();
+            BroadcastDeathInfo();
 		}
 	}
 }
@@ -44,4 +44,16 @@ void UHealthLogic::Heal(float HealAmount)
 		CurrentHealth = FMath::Min(CurrentHealth + HealAmount, MaxHealth);
         BroadcastHealthChanged();
 	}
+}
+
+void UHealthLogic::BroadcastDeathInfo() const
+{
+    auto Logic = GetOwnerLogic();
+    CHECK_FIELD_RETURN(Logic);
+
+	auto Actor = Logic->GetRepresentationActor();
+    CHECK_FIELD_RETURN(Actor);
+
+	OnDeath.Broadcast();
+	OnDeathInfo.Broadcast(Logic, Actor);
 }

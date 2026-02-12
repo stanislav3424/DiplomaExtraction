@@ -8,6 +8,7 @@
 #include "HealthLogic.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, CurrentHealth, float, MaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDeathInfo, ULogicBase*, LogicBase, AActor*, Actor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
 
 UCLASS(Blueprintable)
@@ -24,16 +25,18 @@ public:
     virtual void OwnerLogicChange(ULogicBase* IntOwnerLogic) override;
 
     // Health Management
-    void TakeDamage(float DamageAmount);
-    void Heal(float HealAmount);
+    void  TakeDamage(float DamageAmount);
+    void  Heal(float HealAmount);
     float GetHealth() const { return CurrentHealth; }
     float GetMaxHealth() const { return MaxHealth; }
-    bool IsAlive() const { return CurrentHealth > 0.0f; }
+    bool  IsAlive() const { return CurrentHealth > 0.0f; }
 
     FOnHealthChanged OnHealthChanged;
-    FOnDeath OnDeath;
+    FOnDeathInfo     OnDeathInfo;
+    FOnDeath         OnDeath;
 
     void BroadcastHealthChanged() const { OnHealthChanged.Broadcast(CurrentHealth, MaxHealth); }
+    void BroadcastDeathInfo() const;
 
 private:
     float MaxHealth = 100.0f;

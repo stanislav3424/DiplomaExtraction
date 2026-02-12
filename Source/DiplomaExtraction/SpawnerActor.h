@@ -6,21 +6,45 @@
 #include "GameFramework/Actor.h"
 #include "SpawnerActor.generated.h"
 
-UCLASS()
+USTRUCT(BlueprintType) struct FUnitSpawnEntry
+{
+    GENERATED_BODY() 
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) 
+    FDataTableRowHandle UnataTableRowHandleit;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite) 
+    int32 Count = 0;
+};
+
+class ULogicBase;
+class UPresenceDetectorSceneComponent;
+
+UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API ASpawnerActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASpawnerActor();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+    virtual void Tick(float DeltaTime) override;
 
+private:
+    void FillQueue();
+    void SpawnUnit();
+
+    UPROPERTY(EditDefaultsOnly, Category = "Tick")
+    float TickInterval = 5.f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "DifficultyUnitSets") 
+    TArray<FUnitSpawnEntry> Units;
+
+    UPROPERTY(EditAnywhere)
+    UPresenceDetectorSceneComponent* PresenceDetectorSceneComponent;
+
+    TQueue<FDataTableRowHandle> Queue;
+
+    void OnDeathUnit(ULogicBase* LogicBase, AActor* Actor);
 };

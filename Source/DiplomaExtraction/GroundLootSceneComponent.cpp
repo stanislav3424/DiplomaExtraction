@@ -12,12 +12,7 @@
 UGroundLootSceneComponent::UGroundLootSceneComponent()
 {
     SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-    if (!SphereComponent)
-        return;
-
     SphereComponent->SetupAttachment(this);
-    SphereComponent->bHiddenInSceneCapture = true;
-    SphereComponent->bUseAttachParentBound = true;
 }
 
 void UGroundLootSceneComponent::BeginPlay()
@@ -29,6 +24,16 @@ void UGroundLootSceneComponent::BeginPlay()
 
     SphereComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &UGroundLootSceneComponent::OnBeginOverlap);
     SphereComponent->OnComponentEndOverlap.AddUniqueDynamic(this, &UGroundLootSceneComponent::OnEndOverlap);
+}
+
+void UGroundLootSceneComponent::OnRegister()
+{
+    Super::OnRegister();
+
+    if (SphereComponent)
+    {
+        SphereComponent->AttachToComponent(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    }
 }
 
 ULogicBase* UGroundLootSceneComponent::GetLogic_Implementation()

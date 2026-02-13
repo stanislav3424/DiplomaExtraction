@@ -20,10 +20,13 @@ USTRUCT(BlueprintType) struct FUnitSpawnEntry
 class ULogicBase;
 class UPresenceDetectorSceneComponent;
 
-UCLASS(NotBlueprintable)
+UCLASS(Blueprintable, Abstract)
 class DIPLOMAEXTRACTION_API ASpawnerActor : public AActor
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
+
+public:
+    ASpawnerActor();
 
 protected:
     virtual void BeginPlay() override;
@@ -36,15 +39,16 @@ private:
     void SpawnUnit();
 
     UPROPERTY(EditDefaultsOnly, Category = "Tick")
-    float TickInterval = 5.f;
+    float TickInterval = 1.f;
 
     UPROPERTY(EditDefaultsOnly, Category = "DifficultyUnitSets") 
     TArray<FUnitSpawnEntry> Units;
 
     UPROPERTY(EditAnywhere)
-    UPresenceDetectorSceneComponent* PresenceDetectorSceneComponent;
+    UPresenceDetectorSceneComponent* PresenceDetector;
 
     TQueue<FDataTableRowHandle> Queue;
 
+    UFUNCTION()
     void OnDeathUnit(ULogicBase* LogicBase, AActor* Actor);
 };

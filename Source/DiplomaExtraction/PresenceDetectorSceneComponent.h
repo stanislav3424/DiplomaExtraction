@@ -17,13 +17,17 @@ enum class ETypeTracking : uint8
     Player UMETA(DisplayName = "Player"),
 };
 
-UCLASS(NotBlueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class DIPLOMAEXTRACTION_API UPresenceDetectorSceneComponent : public USceneComponent
 {
     GENERATED_BODY()
 
+public:
+    UPresenceDetectorSceneComponent();
+
 protected:
     virtual void BeginPlay() override;
+    virtual void OnRegister() override;
 
 public:
     UFUNCTION(BlueprintCallable)
@@ -52,7 +56,7 @@ private:
     UPROPERTY(Transient)
     TSet<AActor*> ActorsInside;
 
-    UPROPERTY(EditAnywhere, Category = "Interaction")
+    UPROPERTY(EditAnywhere, Instanced, Category = "Interaction")
     USphereComponent* SphereComponent;
 
     UPROPERTY(EditAnywhere, Category = "Interaction")

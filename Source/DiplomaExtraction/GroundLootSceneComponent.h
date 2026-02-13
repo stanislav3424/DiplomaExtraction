@@ -10,14 +10,17 @@
 class USphereComponent;
 class UGroundLootInventoryLogic;
 
-UCLASS(NotBlueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DIPLOMAEXTRACTION_API UGroundLootSceneComponent : public USceneComponent, public ILogicInterface
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
+public:
     UGroundLootSceneComponent();
+
 public:
     virtual void BeginPlay() override;
+    virtual void OnRegister() override;
 
 public:
     virtual ULogicBase* GetLogic_Implementation() override;
@@ -37,7 +40,7 @@ private:
     UPROPERTY(Transient)
     ULogicBase* LogicBase;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+    UPROPERTY(EditAnywhere, Category = "Interaction")
     USphereComponent* SphereComponent;
 
     UPROPERTY(Transient)

@@ -8,12 +8,21 @@
 #include "MacroLibrary.h"
 #include "LogicLibrary.h"
 
+ASpawnerActor::ASpawnerActor()
+{
+    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
+    PresenceDetector = CreateDefaultSubobject<UPresenceDetectorSceneComponent>(TEXT("PresenceDetector"));
+    PresenceDetector->SetupAttachment(RootComponent);
+
+    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.TickInterval = 1.f;
+}
+
 void ASpawnerActor::BeginPlay()
 {
     Super::BeginPlay();
 
-    PrimaryActorTick.TickInterval = TickInterval;
-    PrimaryActorTick.bCanEverTick = true;
 
     FillQueue();
 }

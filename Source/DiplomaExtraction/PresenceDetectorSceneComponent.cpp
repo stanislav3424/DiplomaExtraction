@@ -4,20 +4,31 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 
+UPresenceDetectorSceneComponent::UPresenceDetectorSceneComponent()
+{
+    SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+    SphereComponent->SetupAttachment(this);
+}
+
 void UPresenceDetectorSceneComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-    SphereComponent = NewObject<USphereComponent>(this, TEXT("SphereComponent"));
-    if (SphereComponent)
+     if (SphereComponent)
         return;
-
-    SphereComponent->SetupAttachment(this);
-    SphereComponent->bHiddenInSceneCapture = true;
-    SphereComponent->bUseAttachParentBound = true;
 
     SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &UPresenceDetectorSceneComponent::OnBeginOverlap);
     SphereComponent->OnComponentEndOverlap.AddDynamic(this, &UPresenceDetectorSceneComponent::OnEndOverlap);
+}
+
+void UPresenceDetectorSceneComponent::OnRegister()
+{
+    Super::OnRegister();
+
+    if (SphereComponent)
+    {
+        SphereComponent->AttachToComponent(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    }
 }
 
 void UPresenceDetectorSceneComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

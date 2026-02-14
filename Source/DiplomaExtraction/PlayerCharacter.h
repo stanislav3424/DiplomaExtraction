@@ -18,9 +18,10 @@ class DIPLOMAEXTRACTION_API APlayerCharacter : public ACharacterBase
 {
     GENERATED_BODY()
 
+public:
     APlayerCharacter();
 
-    public:
+public:
     virtual void SetLogic_Implementation(ULogicBase* NewLogic) override;
 
 protected:

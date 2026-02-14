@@ -20,8 +20,6 @@ APlayerCharacter::APlayerCharacter()
     SpringArm->bDoCollisionTest         = false;
     SpringArm->bEnableCameraLag         = true;
     SpringArm->bEnableCameraRotationLag = true;
-    SpringArm->TargetArmLength          = 1000.f;
-    SpringArm->SetRelativeRotation(FRotator::ZeroRotator);
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);

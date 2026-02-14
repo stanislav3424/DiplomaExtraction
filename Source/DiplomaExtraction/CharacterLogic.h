@@ -29,11 +29,13 @@ protected:
     // Equipment Management
 public:
     bool                    EquipItem(ULogicBase* Item);
+    UFUNCTION(BlueprintCallable)
     bool                    EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
     void                    SetVisualization(const EEquipmentSlot& TargetSlot, ULogicBase* Item);
     bool                    CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
     ULogicBase*             UnequipItem(ULogicBase* Item);
     ULogicBase*             UnequipItem(EEquipmentSlot const& TargetSlot);
+    UFUNCTION(BlueprintCallable)
     ULogicBase*             GetEquippedItem(EEquipmentSlot const& TargetSlot) const;
     bool                    IsValidEquippedItem(ULogicBase* Item);
     static EEquipmentSlot   GetEquipmentSlot(ULogicBase* Item);

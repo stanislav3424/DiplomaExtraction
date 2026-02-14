@@ -54,8 +54,9 @@ bool UCharacterLogic::EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* It
     if (!CanEquipItem(TargetSlot, Item))
         return false;
 
-    EquippedItems.Add(TargetSlot, Item);
     AddLogicComponent(Item);
+
+    EquippedItems.Add(TargetSlot, Item);
     OnEquipmentChanged.Broadcast();
 
     SetVisualization(TargetSlot, Item);
@@ -92,6 +93,12 @@ bool UCharacterLogic::CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase*
         return false;
 
     auto ItemSlot = GetEquipmentSlot(Item);
+
+    // A temporary option
+    if (TargetSlot == EEquipmentSlot::BackWeapon && ItemSlot == EEquipmentSlot::Hands)
+        return !EquippedItems.Contains(TargetSlot);
+    //
+
     if (ItemSlot != TargetSlot)
         return false;
 
@@ -100,19 +107,27 @@ bool UCharacterLogic::CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase*
 
 ULogicBase* UCharacterLogic::UnequipItem(ULogicBase* Item)
 {
-    return UnequipItem(GetEquipmentSlot(Item));
+    if (!Item)
+        return nullptr;
+
+    for (auto Slot : EquippedItems)
+        if (Slot.Value == Item)
+        {
+            EquippedItems.Remove(Slot.Key);
+            OnEquipmentChanged.Broadcast();
+            return Item;
+        }
+   
+    return nullptr;
 }
 
 ULogicBase* UCharacterLogic::UnequipItem(EEquipmentSlot const& TargetSlot)
 {
-    if (!EquippedItems.Contains(TargetSlot))
+    auto Item = GetEquippedItem(TargetSlot);
+    if (!Item)
         return nullptr;
 
-    auto Item = EquippedItems[TargetSlot];
-    EquippedItems.Remove(TargetSlot);
-    OnEquipmentChanged.Broadcast();
-
-    return Item;
+    return UnequipItem(Item);
 }
 
 ULogicBase* UCharacterLogic::GetEquippedItem(EEquipmentSlot const& TargetSlot) const

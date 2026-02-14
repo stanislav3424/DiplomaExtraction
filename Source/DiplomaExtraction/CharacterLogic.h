@@ -23,10 +23,14 @@ public:
     virtual void RemoveChildLogic(ULogicBase* ChildLogic);
     virtual void SetSimulatePhysics();
 
+protected:
+    virtual void RepresentationActorChanged(AActor* NewRepresentationActor) override;
+
     // Equipment Management
 public:
     bool                    EquipItem(ULogicBase* Item);
     bool                    EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
+    void                    SetVisualization(const EEquipmentSlot& TargetSlot, ULogicBase* Item);
     bool                    CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item);
     ULogicBase*             UnequipItem(ULogicBase* Item);
     ULogicBase*             UnequipItem(EEquipmentSlot const& TargetSlot);

@@ -28,6 +28,14 @@ void UCharacterLogic::SetSimulatePhysics()
 {
 }
 
+void UCharacterLogic::RepresentationActorChanged(AActor* NewRepresentationActor)
+{
+    Super::RepresentationActorChanged(NewRepresentationActor);
+
+    for (auto Slot : EquippedItems)
+        SetVisualization(Slot.Key, Slot.Value);
+}
+
 bool UCharacterLogic::EquipItem(ULogicBase* Item)
 {
     if (!IsValidEquippedItem(Item))
@@ -50,18 +58,32 @@ bool UCharacterLogic::EquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* It
     AddLogicComponent(Item);
     OnEquipmentChanged.Broadcast();
 
-    if (auto Character = Cast<ACharacter>(GetRepresentationActor()))
-    {
-        if (auto Mesh = Character->GetMesh())
-        {
-            auto Name      = UEnumLibrary::EnumToName<EEquipmentSlot>(TargetSlot);
-            auto Transform = Mesh->GetSocketTransform(Name);
-            if (auto Actor = Item->SpawnRepresentationActor(Transform.GetLocation(), Transform.Rotator()))
-                Actor->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Name);
-        }
-    }
+    SetVisualization(TargetSlot, Item);
 
     return true;
+}
+
+void UCharacterLogic::SetVisualization(const EEquipmentSlot& TargetSlot, ULogicBase* Item)
+{
+    if (!Item)
+        return;
+
+    auto Character = Cast<ACharacter>(GetRepresentationActor());
+    if (!Character)
+        return;
+
+    auto Mesh = Character->GetMesh();
+    if (!Mesh)
+        return;
+
+    auto Name      = UEnumLibrary::EnumToName<EEquipmentSlot>(TargetSlot);
+    auto Transform = Mesh->GetSocketTransform(Name);
+
+    auto Actor = Item->SpawnRepresentationActor(Transform.GetLocation(), Transform.Rotator());
+    if (!Actor)
+        return;
+
+    Actor->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Name);
 }
 
 bool UCharacterLogic::CanEquipItem(EEquipmentSlot const& TargetSlot, ULogicBase* Item)

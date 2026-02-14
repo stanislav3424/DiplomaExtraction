@@ -63,7 +63,7 @@ enum class EEquipmentSlot : uint8
     //Head,
     //Chest,
     Backpack UMETA(DisplayName = "Backpack"),
-    //BackWeapon,
+    BackWeapon UMETA(DisplayName = "BackWeapon"),
 };
 
 USTRUCT(BlueprintType)

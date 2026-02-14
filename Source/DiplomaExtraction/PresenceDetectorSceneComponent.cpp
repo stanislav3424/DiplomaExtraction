@@ -3,6 +3,7 @@
 #include "PresenceDetectorSceneComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
+#include "MacroLibrary.h"
 
 UPresenceDetectorSceneComponent::UPresenceDetectorSceneComponent()
 {
@@ -14,7 +15,7 @@ void UPresenceDetectorSceneComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-     if (SphereComponent)
+     if (!SphereComponent)
         return;
 
     SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &UPresenceDetectorSceneComponent::OnBeginOverlap);

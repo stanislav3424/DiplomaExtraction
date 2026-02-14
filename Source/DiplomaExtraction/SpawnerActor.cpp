@@ -16,29 +16,46 @@ ASpawnerActor::ASpawnerActor()
     PresenceDetector->SetupAttachment(RootComponent);
 
     PrimaryActorTick.bCanEverTick = true;
-    PrimaryActorTick.TickInterval = 1.f;
 }
 
 void ASpawnerActor::BeginPlay()
 {
     Super::BeginPlay();
 
-
     FillQueue();
+
 }
 
 void ASpawnerActor::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    CHECK_FIELD_RETURN(PresenceDetector)
+    if (PresenceDetector->IsInside())
+        return;
+
     SpawnUnit();
 }
 
 void ASpawnerActor::FillQueue()
 {
+    if (Units.IsEmpty())
+    {
+        UE_LOG(InitGameLogic, Error, FILE_FUNC TEXT("Units array is empty — nothing to enqueue"));
+    }
+
     for (auto const& TypeUnits : Units)
         for (int32 Index = 0; Index < TypeUnits.Count; ++Index)
-            Queue.Enqueue(TypeUnits.UnataTableRowHandleit);
+        {
+            if (TypeUnits.DataTableRowHandle.IsNull())
+            {
+                UE_LOG(InitGameLogic, Error, FILE_FUNC TEXT("DataTableRowHandle is NULL at Index=%d (Count=%d)"), Index,
+                    TypeUnits.Count);
+                break;
+            }
+
+            Queue.Enqueue(TypeUnits.DataTableRowHandle);
+        }
 }
 
 void ASpawnerActor::SpawnUnit()
@@ -46,6 +63,9 @@ void ASpawnerActor::SpawnUnit()
     FDataTableRowHandle DataTableRowHandle;
 
     if (!Queue.Dequeue(DataTableRowHandle))
+        return;
+
+    if (DataTableRowHandle.IsNull())
         return;
 
     FVector SpawnLocation = GetActorLocation();

@@ -11,7 +11,7 @@ USTRUCT(BlueprintType) struct FUnitSpawnEntry
     GENERATED_BODY() 
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite) 
-    FDataTableRowHandle UnataTableRowHandleit;
+    FDataTableRowHandle DataTableRowHandle;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite) 
     int32 Count = 0;
@@ -38,10 +38,7 @@ private:
     void FillQueue();
     void SpawnUnit();
 
-    UPROPERTY(EditDefaultsOnly, Category = "Tick")
-    float TickInterval = 1.f;
-
-    UPROPERTY(EditDefaultsOnly, Category = "DifficultyUnitSets") 
+    UPROPERTY(EditAnywhere, Category = "DifficultyUnitSets") 
     TArray<FUnitSpawnEntry> Units;
 
     UPROPERTY(EditAnywhere)

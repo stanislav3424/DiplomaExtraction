@@ -16,32 +16,30 @@
 APlayerCharacter::APlayerCharacter()
 {
     SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-    if (SpringArm)
-    {
-        SpringArm->SetupAttachment(GetRootComponent());
-        SpringArm->bDoCollisionTest         = false;
-        SpringArm->bEnableCameraLag         = true;
-        SpringArm->bEnableCameraRotationLag = true;
-        SpringArm->TargetArmLength          = 1000.f;
-        SpringArm->SetRelativeRotation(FRotator::ZeroRotator);
-    }
+    SpringArm->SetupAttachment(GetRootComponent());
+    SpringArm->bDoCollisionTest         = false;
+    SpringArm->bEnableCameraLag         = true;
+    SpringArm->bEnableCameraRotationLag = true;
+    SpringArm->TargetArmLength          = 1000.f;
+    SpringArm->SetRelativeRotation(FRotator::ZeroRotator);
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-    if (Camera)
-    {
-        Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
-    }
+    Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+}
+
+void APlayerCharacter::SetLogic_Implementation(ULogicBase* NewLogic)
+{
+    Super::SetLogic_Implementation(NewLogic);
+
+    AddMappingContext();
+    SetActorTickEnabled(true);
 }
 
 void APlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    AddMappingContext();
-    SetActorTickEnabled(true);
-   
     TargetArmLength = SpringArm ? SpringArm->TargetArmLength : 1000.f;
-
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -56,8 +54,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     auto EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-    if (!EnhancedInputComponent)
-        return;
+    CHECK_FIELD_RETURN(EnhancedInputComponent)
 
     CHECK_FIELD_RETURN(MoveInputAction)
     EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnMove);

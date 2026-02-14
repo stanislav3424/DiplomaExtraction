@@ -104,7 +104,11 @@ AActor* ULogicBase::SpawnRepresentationActor(FVector const& SpawnLocation, FRota
     if (!World)
         return nullptr;
 
-    auto LocalRepresentationActor = World->SpawnActor<AActor>(RepresentationActorClass, SpawnLocation, SpawnRotation);
+    FActorSpawnParameters ActorSpawnParameters;
+    ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    auto LocalRepresentationActor =
+        World->SpawnActor<AActor>(RepresentationActorClass, SpawnLocation, SpawnRotation, ActorSpawnParameters);
     if (!IsValid(LocalRepresentationActor))
         return nullptr;
 

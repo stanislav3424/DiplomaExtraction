@@ -20,6 +20,9 @@ class DIPLOMAEXTRACTION_API APlayerCharacter : public ACharacterBase
 
     APlayerCharacter();
 
+    public:
+    virtual void SetLogic_Implementation(ULogicBase* NewLogic) override;
+
 protected:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;

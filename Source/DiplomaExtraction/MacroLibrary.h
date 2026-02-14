@@ -12,7 +12,7 @@ DECLARE_LOG_CATEGORY_EXTERN(InitGameLogic, Log, All);
 
 #define FILE_FUNC TEXT(__FILE__) TEXT(":") TEXT(__FUNCTION__)
 
-#define FILE_FUNC_LINE TEXT(__FILE__) TEXT(":") TEXT(__FUNCTION__) TEXT(":") TEXT(STRINGIFY(__LINE__))
+#define FILE_FUNC_LINE TEXT(__FILE__) TEXT(":") TEXT(__FUNCTION__) TEXT(":") TEXT(__LINE__)
 
 #define CHECK_FIELD(FieldName)                                                                                         \
     if (!(FieldName))                                                                                                  \

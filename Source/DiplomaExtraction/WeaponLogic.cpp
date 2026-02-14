@@ -3,6 +3,7 @@
 #include "WeaponLogic.h"
 #include "Row.h"
 #include "MacroLibrary.h"
+#include "LogicLibrary.h"
 #include "DrawDebugLibrary.h"
 #include "CharacterLogic.h"
 #include "GameFramework/Character.h"
@@ -76,6 +77,20 @@ void UWeaponLogic::StopFiring()
 void UWeaponLogic::Reload()
 {
     CurrentAmmo = Ammo;
+    OnEndReloading.Broadcast();
+}
+
+UWeaponLogic* UWeaponLogic::GetWeaponLogic(AActor* Actor)
+{
+    auto CharacterLogic = Cast<UCharacterLogic>(ULogicLibrary::GetLogic(Actor));
+    if (!CharacterLogic)
+        return nullptr;
+
+    auto WeaponLogic = Cast<UWeaponLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Hands));
+    if (!WeaponLogic)
+        return nullptr;
+
+    return WeaponLogic;
 }
 
 float UWeaponLogic::GetRateOfFireOneSecond() const
@@ -113,6 +128,9 @@ void UWeaponLogic::Shoot()
     }
 
     UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
+
+    if (CurrentAmmo == 0)
+        OnAmmoEmpty.Broadcast();
 }
 
 FVector UWeaponLogic::GetMuzzleLocation() const

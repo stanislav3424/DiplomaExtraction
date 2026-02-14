@@ -6,7 +6,10 @@
 #include "LogicBase.h"
 #include "WeaponLogic.generated.h"
 
-UCLASS(NotBlueprintable)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAmmoEmpty);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndReloading);
+
+UCLASS(Blueprintable)
 class DIPLOMAEXTRACTION_API UWeaponLogic : public ULogicBase
 {
 	GENERATED_BODY()
@@ -23,9 +26,24 @@ private:
     // Weapon Functionality
 public:
     virtual void TickLogic(float DeltaTime);
-    void         StartFiring();
-    void         StopFiring();
-    void         Reload();
+
+    UFUNCTION(BlueprintCallable)
+    void StartFiring();
+
+    UFUNCTION(BlueprintCallable)
+    void StopFiring();
+
+    UFUNCTION(BlueprintCallable)
+    void Reload();
+
+    UPROPERTY(BlueprintAssignable)
+    FOnAmmoEmpty OnAmmoEmpty;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnEndReloading OnEndReloading;
+
+    UFUNCTION(BlueprintCallable)
+    static UWeaponLogic* GetWeaponLogic(AActor* Actor);
 
 private:
     float GetRateOfFireOneSecond() const;
@@ -37,9 +55,9 @@ private:
 private:
     float Damage     = 35.f;
     float RateOfFire = 600.f;
-    float Ammo       = 30.f;
+    int32 Ammo       = 30;
 
-    float CurrentAmmo = 30.f;
+    int32 CurrentAmmo = 30;
     float FireDelay   = 1.f;
 
     float TimeSinceLastShot = 0.f;

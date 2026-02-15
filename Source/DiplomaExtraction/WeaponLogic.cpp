@@ -56,12 +56,17 @@ void UWeaponLogic::TickLogic(float DeltaTime)
 
     TimeSinceLastShot += DeltaTime;
 
-    if (bIsFiring)
-        if (TimeSinceLastShot >= FireDelay && CurrentAmmo > 0)
-        {
-            Shoot();
-            TimeSinceLastShot = 0.f;
-        }
+    if (CurrentAmmo <= 0)
+    {
+        bIsFiring = false;
+        return;
+    }
+
+    if (bIsFiring && TimeSinceLastShot >= FireDelay)
+    {
+        Shoot();
+        TimeSinceLastShot = 0.f;
+    }
 }
 
 void UWeaponLogic::StartFiring()
@@ -129,8 +134,11 @@ void UWeaponLogic::Shoot()
 
     UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
 
-    if (CurrentAmmo == 0)
+    if (CurrentAmmo <= 0)
+    {
+        bIsFiring = false;
         OnAmmoEmpty.Broadcast();
+    }
 }
 
 FVector UWeaponLogic::GetMuzzleLocation() const

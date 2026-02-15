@@ -7,6 +7,7 @@
 #include "MacroLibrary.h"
 #include "Row.h"
 #include "EnumLibrary.h"
+#include "Components/CapsuleComponent.h"
 
 void UCharacterLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
@@ -26,6 +27,29 @@ void UCharacterLogic::RemoveChildLogic(ULogicBase* ChildLogic)
 
 void UCharacterLogic::SetSimulatePhysics()
 {
+    auto Character = Cast<ACharacter>(GetRepresentationActor());
+    if (!Character)
+     
+
+    if (auto Controller = Character->GetController())
+    {
+        Controller->StopMovement();
+        Controller->UnPossess();
+    }
+
+    if (auto CapsuleComponent = Character->GetCapsuleComponent())
+    {
+        CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    }
+
+    auto Mesh = Character->GetMesh();
+    if (Mesh)
+    {
+        Mesh->SetCollisionProfileName(TEXT("Ragdoll"));
+        Mesh->SetSimulatePhysics(true);
+        Mesh->WakeAllRigidBodies();
+        Mesh->bBlendPhysics = true;
+    }
 }
 
 void UCharacterLogic::RepresentationActorChanged(AActor* NewRepresentationActor)

@@ -22,7 +22,7 @@ public:
 
     // Components
 public:
-    virtual void OwnerLogicChange(ULogicBase* IntOwnerLogic) override;
+    virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic) override;
 
     // Health Management
     void  TakeDamage(float DamageAmount);
@@ -39,6 +39,13 @@ public:
     void BroadcastDeathInfo() const;
 
 private:
-    float MaxHealth = 100.0f;
-    float CurrentHealth;
+    void Die();
+
+    float MaxHealth     = 100.0f;
+    float CurrentHealth = 100.0f;
+
+    void OnOwnerRepresentationActorChanged(AActor* NewRepresentationActor);
+
+    void HandleDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy,
+        AActor* DamageCauser);
 };

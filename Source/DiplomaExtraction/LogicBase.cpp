@@ -38,10 +38,10 @@ void ULogicBase::SetOwnerLogic(ULogicBase* NewOwnerLogic)
 
     DestroyRepresentationActor();
 
-    OwnerLogicChange(NewOwnerLogic);
+    OwnerLogicChange(OldOwnerLogic, NewOwnerLogic);
 }
 
-void ULogicBase::OwnerLogicChange(ULogicBase* NewOwnerLogic)
+void ULogicBase::OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic)
 {
 }
 

@@ -19,7 +19,7 @@ public:
 
     // Components
 public:
-    virtual void OwnerLogicChange(ULogicBase* IntOwnerLogic) override;
+    virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic) override;
 
     // Health Management
 public:

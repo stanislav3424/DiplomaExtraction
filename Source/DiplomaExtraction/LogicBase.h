@@ -6,7 +6,7 @@
 #include "UObject/Object.h"
 #include "LogicBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRepresentationActorChanged, AActor*, RepresentationActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRepresentationActorChanged, AActor*, NewRepresentationActor);
 
 UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API ULogicBase : public UObject, public FTickableGameObject
@@ -33,7 +33,7 @@ private:
     virtual void SetOwnerLogic(ULogicBase* NewOwnerLogic);
 
 protected:
-    virtual void OwnerLogicChange(ULogicBase* NewOwnerLogic);
+    virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic);
 
 private:
     void RemoveChildLogic_Internal(ULogicBase* ChildLogic);

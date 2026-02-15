@@ -18,7 +18,7 @@ class DIPLOMAEXTRACTION_API UQuestConditionLogic : public ULogicBase
 
 protected:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
-    virtual void OwnerLogicChange(ULogicBase* NewOwnerLogic) override;
+    virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic) override;
 
 public:
     TArray<TPair<ETypeQuest, bool>> GetQuestsStatus() { return QuestsStatus.Array(); };

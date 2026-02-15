@@ -7,6 +7,7 @@
 #include "DrawDebugLibrary.h"
 #include "CharacterLogic.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 UWeaponLogic::UWeaponLogic()
 {
@@ -121,7 +122,7 @@ void UWeaponLogic::Shoot()
 
     FVector               Start   = GetMuzzleLocation();
     FVector               Forward = GetShootDirection();
-    float                 Range   = 3000.f;
+    float                 Range   = 5000.f;
     FVector               End     = Start + Forward * Range;
     FHitResult            HitResult;
     FCollisionQueryParams CollisionQueryParams;
@@ -130,6 +131,7 @@ void UWeaponLogic::Shoot()
 
     if (HitResult.bBlockingHit)
     {
+        UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, nullptr, nullptr, UDamageType::StaticClass());
     }
 
     UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);

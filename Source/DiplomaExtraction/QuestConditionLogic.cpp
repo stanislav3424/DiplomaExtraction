@@ -35,15 +35,21 @@ void UQuestConditionLogic::InitializeRowHandler(FDataTableRowHandle const& InitR
         UE_LOG(InitGameLogic, Error, FILE_FUNC TEXT("Zero quests initialized"))
 }
 
-void UQuestConditionLogic::OwnerLogicChange(ULogicBase* NewOwnerLogic)
+void UQuestConditionLogic::OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic)
 {
-    Super::OwnerLogicChange(NewOwnerLogic);
+    Super::OwnerLogicChange(OldOwnerLogic, NewOwnerLogic);
 
-    if (!NewOwnerLogic)
-        return;
+    if (OldOwnerLogic)
+    {
+        OldOwnerLogic->OnRepresentationActorChanged.RemoveDynamic(
+            this, &UQuestConditionLogic::OwnerRepresentationActorChanged);
+    }
 
-    NewOwnerLogic->OnRepresentationActorChanged.AddUniqueDynamic(
-        this, &UQuestConditionLogic::OwnerRepresentationActorChanged);
+    if (NewOwnerLogic)
+    {
+        NewOwnerLogic->OnRepresentationActorChanged.AddUniqueDynamic(
+            this, &UQuestConditionLogic::OwnerRepresentationActorChanged);
+    }
 }
 
 bool UQuestConditionLogic::ApplyQuestItem(ULogicBase* QuestItem)

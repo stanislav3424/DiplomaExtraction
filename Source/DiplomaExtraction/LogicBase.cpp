@@ -160,9 +160,14 @@ AActor* ULogicBase::DropToGround(FVector const& SpawnLocation, FRotator const& S
 
     Actor->SetActorLocation(SpawnLocation);
 
-    SetSimulatePhysics();
+    OnGround();
 
     return Actor;
+}
+
+void ULogicBase::OnGround()
+{
+    SetSimulatePhysics();
 }
 
 void ULogicBase::SetSimulatePhysics()

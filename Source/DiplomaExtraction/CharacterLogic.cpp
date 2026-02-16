@@ -25,12 +25,16 @@ void UCharacterLogic::RemoveChildLogic(ULogicBase* ChildLogic)
     UnequipItem(ChildLogic);
 }
 
+void UCharacterLogic::OnGround()
+{
+}
+
 void UCharacterLogic::SetSimulatePhysics()
 {
     auto Character = Cast<ACharacter>(GetRepresentationActor());
     if (!Character)
-     
-
+        return;
+    
     if (auto Controller = Character->GetController())
     {
         Controller->StopMovement();
@@ -42,8 +46,7 @@ void UCharacterLogic::SetSimulatePhysics()
         CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     }
 
-    auto Mesh = Character->GetMesh();
-    if (Mesh)
+    if (auto Mesh = Character->GetMesh())
     {
         Mesh->SetCollisionProfileName(TEXT("Ragdoll"));
         Mesh->SetSimulatePhysics(true);
@@ -107,6 +110,14 @@ void UCharacterLogic::SetVisualization(const EEquipmentSlot& TargetSlot, ULogicB
     auto Actor = Item->SpawnRepresentationActor(Transform.GetLocation(), Transform.Rotator());
     if (!Actor)
         return;
+
+    TArray<UPrimitiveComponent*> Primitives;
+    Actor->GetComponents<UPrimitiveComponent>(Primitives);
+    for (auto Primitive : Primitives)
+    {
+        Primitive->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Primitive->SetGenerateOverlapEvents(false);
+    }
 
     Actor->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Name);
 }

@@ -44,8 +44,10 @@ private:
     float MaxHealth     = 100.0f;
     float CurrentHealth = 100.0f;
 
+    UFUNCTION()
     void OnOwnerRepresentationActorChanged(AActor* NewRepresentationActor);
 
+    UFUNCTION()
     void HandleDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy,
         AActor* DamageCauser);
 };

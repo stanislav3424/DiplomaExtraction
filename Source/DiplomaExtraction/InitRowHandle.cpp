@@ -31,5 +31,5 @@ void UInitRowHandle::Init()
     auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), InitRowHandle, Actor);
     CHECK_FIELD_RETURN(Logic);
 
-    Logic->SetSimulatePhysics();
+    Logic->OnGround();
 }

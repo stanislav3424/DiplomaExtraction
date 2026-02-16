@@ -98,6 +98,7 @@ public:
     void         HardSetRepresentationActor(AActor* NewRepresentationActor);
     void         DestroyRepresentationActor();
     AActor*      DropToGround(FVector const& SpawnLocation, FRotator const& SpawnRotation);
+    virtual void OnGround();
     virtual void SetSimulatePhysics();
 
     FOnRepresentationActorChanged OnRepresentationActorChanged;

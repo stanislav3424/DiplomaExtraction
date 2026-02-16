@@ -33,7 +33,7 @@ void UHealthLogic::OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOw
 
     if (NewOwnerLogic)
     {
-        OldOwnerLogic->OnRepresentationActorChanged.AddUniqueDynamic(
+        NewOwnerLogic->OnRepresentationActorChanged.AddUniqueDynamic(
             this, &UHealthLogic::OnOwnerRepresentationActorChanged);
     }
 }

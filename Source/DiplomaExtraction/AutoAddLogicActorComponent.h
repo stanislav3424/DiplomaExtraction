@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SceneComponent.h"
+#include "Components/ActorComponent.h"
 #include "LogicInterface.h"
-#include "SceneComponentBase.generated.h"
+#include "AutoAddLogicActorComponent.generated.h"
 
-UCLASS(Abstract)
-class DIPLOMAEXTRACTION_API USceneComponentBase : public USceneComponent, public ILogicInterface
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class DIPLOMAEXTRACTION_API UAutoAddLogicActorComponent : public UActorComponent, public ILogicInterface
 {
     GENERATED_BODY()
 
@@ -19,4 +19,7 @@ public:
 private:
     UPROPERTY(Transient)
     ULogicBase* LogicBase;
+
+    UPROPERTY(EditAnywhere, Category = "DataTableRowHandle")
+    FDataTableRowHandle DataTableRowHandle;
 };

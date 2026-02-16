@@ -38,6 +38,12 @@ public:
     void BroadcastHealthChanged() const { OnHealthChanged.Broadcast(CurrentHealth, MaxHealth); }
     void BroadcastDeathInfo() const;
 
+    UFUNCTION(BlueprintCallable)
+    static UHealthLogic* GetHealthLogic_Actor(AActor* Actor);
+
+    UFUNCTION(BlueprintCallable)
+    static UHealthLogic* GetHealthLogic_Logic(ULogicBase* Logic);
+
 private:
     void Die();
 

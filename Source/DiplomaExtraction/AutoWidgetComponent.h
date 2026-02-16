@@ -21,4 +21,7 @@ public:
 private:
     UPROPERTY(Transient)
     ULogicBase* LogicBase;
+
+    UFUNCTION()
+    void Death();
 };

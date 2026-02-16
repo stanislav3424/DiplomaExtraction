@@ -36,16 +36,11 @@ void UGroundLootSceneComponent::OnRegister()
     }
 }
 
-ULogicBase* UGroundLootSceneComponent::GetLogic_Implementation()
-{
-    return LogicBase;
-}
-
 void UGroundLootSceneComponent::SetLogic_Implementation(ULogicBase* NewLogic)
 {
-    LogicBase = NewLogic;
+    Super::SetLogic_Implementation(NewLogic);
 
-    auto CharacterLogic = Cast<UCharacterLogic>(LogicBase);
+    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
     if (!CharacterLogic)
         return;
 

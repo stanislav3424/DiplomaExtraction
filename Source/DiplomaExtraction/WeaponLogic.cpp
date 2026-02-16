@@ -86,9 +86,14 @@ void UWeaponLogic::Reload()
     OnEndReloading.Broadcast();
 }
 
-UWeaponLogic* UWeaponLogic::GetWeaponLogic(AActor* Actor)
+UWeaponLogic* UWeaponLogic::GetEquippedWeaponLogic_Actor(AActor* Actor)
 {
-    auto CharacterLogic = Cast<UCharacterLogic>(ULogicLibrary::GetLogic(Actor));
+    return GetEquippedWeaponLogic_Logic(ULogicLibrary::GetLogic(Actor));
+}
+
+UWeaponLogic* UWeaponLogic::GetEquippedWeaponLogic_Logic(ULogicBase* Logic)
+{
+    auto CharacterLogic = Cast<UCharacterLogic>(Logic);
     if (!CharacterLogic)
         return nullptr;
 

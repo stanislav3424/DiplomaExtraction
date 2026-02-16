@@ -43,7 +43,10 @@ public:
     FOnEndReloading OnEndReloading;
 
     UFUNCTION(BlueprintCallable)
-    static UWeaponLogic* GetWeaponLogic(AActor* Actor);
+    static UWeaponLogic* GetEquippedWeaponLogic_Actor(AActor* Actor);
+    
+    UFUNCTION(BlueprintCallable)
+    static UWeaponLogic* GetEquippedWeaponLogic_Logic(ULogicBase* Logic);
 
 private:
     float GetRateOfFireOneSecond() const;

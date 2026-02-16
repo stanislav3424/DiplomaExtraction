@@ -7,6 +7,7 @@
 #include "PlayerCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "CharacterLogic.h"
+#include "LogicLibrary.h"
 
 void UHealthLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
@@ -71,6 +72,23 @@ void UHealthLogic::BroadcastDeathInfo() const
 
 	OnDeath.Broadcast();
 	OnDeathInfo.Broadcast(Logic, Actor);
+}
+
+UHealthLogic* UHealthLogic::GetHealthLogic_Actor(AActor* Actor)
+{
+    return GetHealthLogic_Logic(ULogicLibrary::GetLogic(Actor));
+}
+
+UHealthLogic* UHealthLogic::GetHealthLogic_Logic(ULogicBase* Logic)
+{
+    if (!Logic)
+        return nullptr;
+
+    auto HealthLogic = Logic->GetLogicComponent<UHealthLogic>();
+    if (!HealthLogic)
+        return nullptr;
+
+    return HealthLogic;
 }
 
 void UHealthLogic::Die()

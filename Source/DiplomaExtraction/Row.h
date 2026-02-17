@@ -101,7 +101,7 @@ struct FWeaponLogicRow : public FLogicBaseRow
     float Ammo = 30.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    UNiagaraSystem* BulletTraceFX;
+    UNiagaraSystem* BulletTraceFX = nullptr;
 };
 
 USTRUCT(BlueprintType)

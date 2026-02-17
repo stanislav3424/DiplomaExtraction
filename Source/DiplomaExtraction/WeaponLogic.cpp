@@ -137,7 +137,18 @@ void UWeaponLogic::Shoot()
     FVector               End     = Start + Forward * Range;
     FHitResult            HitResult;
     FCollisionQueryParams CollisionQueryParams;
+
+    auto LocalLogic = GetOwnerLogic();
+    if (!LocalLogic)
+        return;
+
+    auto LocalActor = LocalLogic->GetRepresentationActor();
+    if (!LocalActor)
+        return;
+
     CollisionQueryParams.AddIgnoredActor(GetRepresentationActor());
+    CollisionQueryParams.AddIgnoredActor(LocalActor);
+
     World->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionQueryParams);
 
     if (HitResult.bBlockingHit)
@@ -146,7 +157,7 @@ void UWeaponLogic::Shoot()
     }
 
     DrawShoot(Start, HitResult.bBlockingHit ? HitResult.Location : End);
-    //UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
+    UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
 
     if (CurrentAmmo <= 0)
     {
@@ -157,7 +168,7 @@ void UWeaponLogic::Shoot()
 
 FVector UWeaponLogic::GetMuzzleLocation() const
 {
-    FVector Location = FVector::ZeroVector;
+    FVector Location = FVector(0.f, 0.f, 45.f);
 
     auto CharacterLogic = Cast<UCharacterLogic>(GetOwnerLogic());
     if (!CharacterLogic)
@@ -167,11 +178,12 @@ FVector UWeaponLogic::GetMuzzleLocation() const
     if (!Character)
         return Location;
 
-    auto Mesh = Character->GetMesh();
-    if (!Mesh)
-        return Location;
+    Location += Character->GetActorLocation();
+    //auto Mesh = Character->GetMesh();
+    //if (!Mesh)
+    //    return Location;
 
-    Location = Mesh->GetSocketLocation(TEXT("weapon_r_muzzle"));
+    //Location = Mesh->GetSocketLocation(TEXT("weapon_r_muzzle"));
 
     return Location;
 }

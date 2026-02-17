@@ -57,6 +57,7 @@ private:
     FVector GetMuzzleLocation() const;
     FVector GetShootDirection() const;
     void    DrawShoot(FVector const& Start, FVector const& End);
+    void PlaySound();
 
 private:
     float Damage     = 35.f;
@@ -69,5 +70,9 @@ private:
     float TimeSinceLastShot = 0.f;
     bool  bIsFiring         = false;
 
+    UPROPERTY(Transient) 
     UNiagaraSystem* BulletTraceFX;
+
+    UPROPERTY(Transient) 
+    USoundBase* SoundShoot;
 };

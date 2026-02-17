@@ -102,6 +102,9 @@ struct FWeaponLogicRow : public FLogicBaseRow
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UNiagaraSystem* BulletTraceFX = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    USoundBase* SoundShoot = nullptr;
 };
 
 USTRUCT(BlueprintType)
@@ -151,4 +154,13 @@ struct FDoorRow : public FLogicBaseRow
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Speed = 50.f;
+};
+
+USTRUCT(BlueprintType)
+struct FFirstAidKitRow : public FLogicBaseRow
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float Heal = 50.f;
 };

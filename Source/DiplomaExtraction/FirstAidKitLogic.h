@@ -6,12 +6,22 @@
 #include "LogicBase.h"
 #include "FirstAidKitLogic.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(Blueprintable)
 class DIPLOMAEXTRACTION_API UFirstAidKitLogic : public ULogicBase
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+    // Initialize
+public:
+    virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
+
+private:
+    void InitializeFirstAidKit();
+
+    // FirstAidKit Functionality
+public:
+    void Apply();
+
+private:
+    float Heal = 100.f;
 };

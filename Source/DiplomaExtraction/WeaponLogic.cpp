@@ -25,10 +25,11 @@ void UWeaponLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle
     if (!Row)
         return;
 
-    Damage = Row->Damage;
-    RateOfFire = Row->RateOfFire;
-    Ammo = Row->Ammo;
+    Damage        = Row->Damage;
+    RateOfFire    = Row->RateOfFire;
+    Ammo          = Row->Ammo;
     BulletTraceFX = Row->BulletTraceFX;
+    SoundShoot    = Row->SoundShoot;
 
     InitializeWeapon();
 }
@@ -52,6 +53,7 @@ void UWeaponLogic::InitializeWeapon()
     }
 
     CHECK_VAR(BulletTraceFX);
+    CHECK_VAR(SoundShoot);
 
     CurrentAmmo = Ammo;
     FireDelay   = GetFireDelay();
@@ -159,6 +161,10 @@ void UWeaponLogic::Shoot()
     DrawShoot(Start, HitResult.bBlockingHit ? HitResult.Location : End);
     UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
 
+
+    PlaySound();
+    
+
     if (CurrentAmmo <= 0)
     {
         bIsFiring = false;
@@ -220,4 +226,27 @@ void UWeaponLogic::DrawShoot(FVector const& Start, FVector const& End)
 
     NiagaraComponent->SetFloatParameter(TEXT("User.Lifatime"), LifeTime);
     NiagaraComponent->SetFloatParameter(TEXT("User.Speed"), Speed);
+}
+
+void UWeaponLogic::PlaySound()
+{
+    if (!SoundShoot)
+        return;
+
+    auto LocalLogic = GetOwnerLogic();
+    if (!LocalLogic)
+        return;
+
+    auto LocalActor = LocalLogic->GetRepresentationActor();
+    if (!LocalActor)
+        return;
+
+    USoundAttenuation*         Attenuation = NewObject<USoundAttenuation>(USoundAttenuation::StaticClass());
+    FSoundAttenuationSettings& Settings    = Attenuation->Attenuation;
+    Settings.bAttenuate                    = true;
+    Settings.bSpatialize                   = true;
+    Settings.AttenuationShape              = EAttenuationShape::Sphere;
+    Settings.AttenuationShapeExtents       = FVector(0.f);
+    Settings.FalloffDistance               = 2000.f;
+    UGameplayStatics::PlaySoundAtLocation(this, SoundShoot, LocalActor->GetActorLocation(), 1.f, 1.f, 0.f, Attenuation);
 }

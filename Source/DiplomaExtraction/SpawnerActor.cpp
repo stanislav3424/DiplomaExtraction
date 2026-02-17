@@ -81,11 +81,13 @@ void ASpawnerActor::SpawnUnit()
     CHECK_FIELD_RETURN(HealthLogic);
 
     HealthLogic->OnDeathInfo.AddUniqueDynamic(this, &ASpawnerActor::OnDeathUnit);
+
+    SpawnedUnits.Add(Actor, DataTableRowHandle);
 }
 
 void ASpawnerActor::OnDeathUnit(ULogicBase* LogicBase, AActor* Actor)
 {
-    auto const& RowHandle = LogicBase->GetRowHandle();
-
-    Queue.Enqueue(RowHandle);
+    FDataTableRowHandle RowHandle;
+    if (SpawnedUnits.RemoveAndCopyValue(Actor, RowHandle))
+        Queue.Enqueue(RowHandle);
 }

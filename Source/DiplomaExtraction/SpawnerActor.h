@@ -46,6 +46,9 @@ private:
 
     TQueue<FDataTableRowHandle> Queue;
 
+    UPROPERTY(Transient)
+    TMap<AActor*, FDataTableRowHandle> SpawnedUnits;
+
     UFUNCTION()
     void OnDeathUnit(ULogicBase* LogicBase, AActor* Actor);
 };

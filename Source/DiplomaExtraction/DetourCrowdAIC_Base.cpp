@@ -7,6 +7,6 @@ void ADetourCrowdAIC_Base::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
-    CHECK_FIELD_RETURN(BehaviorTreeAsset)
+    CHECK_VAR_RETURN(BehaviorTreeAsset)
     RunBehaviorTree(BehaviorTreeAsset);
 }

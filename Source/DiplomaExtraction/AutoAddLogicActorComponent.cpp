@@ -18,10 +18,10 @@ void UAutoAddLogicActorComponent::SetLogic_Implementation(ULogicBase* NewLogic)
     if (!NewLogic)
         return;
 
-    CHECK_FIELD_RETURN(!DataTableRowHandle.IsNull());
+    CHECK_VAR_RETURN(!DataTableRowHandle.IsNull());
 
     auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), DataTableRowHandle);
-    CHECK_FIELD_RETURN(Logic);
+    CHECK_VAR_RETURN(Logic);
 
     NewLogic->AddLogicComponent(Logic);
 

@@ -8,6 +8,9 @@
 #include "CharacterLogic.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 
 UWeaponLogic::UWeaponLogic()
 {
@@ -25,6 +28,7 @@ void UWeaponLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle
     Damage = Row->Damage;
     RateOfFire = Row->RateOfFire;
     Ammo = Row->Ammo;
+    BulletTraceFX = Row->BulletTraceFX;
 
     InitializeWeapon();
 }
@@ -46,6 +50,8 @@ void UWeaponLogic::InitializeWeapon()
         Ammo = 30.f;
         UE_LOG(InitGameLogic, Warning, FILE_FUNC TEXT("Ammo was invalid, resetting to default (30.0)"));
     }
+
+    CHECK_VAR(BulletTraceFX);
 
     CurrentAmmo = Ammo;
     FireDelay   = GetFireDelay();
@@ -139,7 +145,8 @@ void UWeaponLogic::Shoot()
         UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, nullptr, nullptr, UDamageType::StaticClass());
     }
 
-    UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
+    DrawShoot(Start, HitResult.bBlockingHit ? HitResult.Location : End);
+    //UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
 
     if (CurrentAmmo <= 0)
     {
@@ -184,4 +191,21 @@ FVector UWeaponLogic::GetShootDirection() const
     Location = Actor->GetActorRotation().Vector();
 
     return Location;
+}
+
+void UWeaponLogic::DrawShoot(FVector const& Start, FVector const& End)
+{
+    CHECK_VAR_RETURN(BulletTraceFX)
+
+    const float Speed    = 7000.f;
+    const float Distance = FVector::Distance(Start, End);
+    const float LifeTime = Distance / Speed;
+    FRotator    Rotation = (End - Start).Rotation();
+
+    auto NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BulletTraceFX, Start, Rotation);
+    if (!NiagaraComponent)
+        return;
+
+    NiagaraComponent->SetFloatParameter(TEXT("User.Lifatime"), LifeTime);
+    NiagaraComponent->SetFloatParameter(TEXT("User.Speed"), Speed);
 }

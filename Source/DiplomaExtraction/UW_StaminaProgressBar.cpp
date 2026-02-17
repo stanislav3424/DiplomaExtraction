@@ -15,7 +15,7 @@ void UUW_StaminaProgressBar::LogicChanged(ULogicBase* OldLogic, ULogicBase* NewL
     if (NewLogic)
     {
         auto StaminaLogic = NewLogic->GetLogicComponent<UStaminaLogic>();
-        CHECK_FIELD_RETURN(StaminaLogic);
+        CHECK_VAR_RETURN(StaminaLogic);
         StaminaLogic->OnStaminaChanged.AddUniqueDynamic(this, &UUW_StaminaProgressBar::SetPercent);
         StaminaLogic->BroadcastStaminaChanged();
     }

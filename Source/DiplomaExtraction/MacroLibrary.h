@@ -14,26 +14,26 @@ DECLARE_LOG_CATEGORY_EXTERN(InitGameLogic, Log, All);
 
 #define FILE_FUNC_LINE TEXT(__FILE__) TEXT(":") TEXT(__FUNCTION__) TEXT(":") TEXT(__LINE__)
 
-#define CHECK_FIELD(FieldName)                                                                                         \
-    if (!(FieldName))                                                                                                  \
+#define CHECK_VAR(VarName)                                                                                             \
+    if (!(VarName))                                                                                                    \
     {                                                                                                                  \
-        UE_LOG(                                                                                                        \
-            InitGameLogic, Error, TEXT("%s LINE %d Field '%s' is not set!"), *GetName(), __LINE__, TEXT(#FieldName));  \
+        UE_LOG(InitGameLogic, Error, TEXT("%s LINE %d: Expected a valid value for variable '%s'"), *GetName(),         \
+            __LINE__, TEXT(#VarName));                                                                                 \
     }
 
-#define CHECK_FIELD_RETURN(FieldName)                                                                                  \
-    if (!(FieldName))                                                                                                  \
+#define CHECK_VAR_RETURN(VarName)                                                                                      \
+    if (!(VarName))                                                                                                    \
     {                                                                                                                  \
-        UE_LOG(                                                                                                        \
-            InitGameLogic, Error, TEXT("%s LINE %d Field '%s' is not set!"), *GetName(), __LINE__, TEXT(#FieldName));  \
+        UE_LOG(InitGameLogic, Error, TEXT("%s LINE %d: Expected a valid value for variable '%s'"), *GetName(),         \
+            __LINE__, TEXT(#VarName));                                                                                 \
         return;                                                                                                        \
     }
 
-#define CHECK_FIELD_RETURN_VALUE(FieldName, ReturnValue)                                                               \
-    if (!(FieldName))                                                                                                  \
+#define CHECK_VAR_RETURN_VALUE(VarName, ReturnValue)                                                                   \
+    if (!(VarName))                                                                                                    \
     {                                                                                                                  \
-        UE_LOG(                                                                                                        \
-            InitGameLogic, Error, TEXT("%s LINE %d Field '%s' is not set!"), *GetName(), __LINE__, TEXT(#FieldName));  \
+        UE_LOG(InitGameLogic, Error, TEXT("%s LINE %d: Expected a valid value for variable '%s'"), *GetName(),         \
+            __LINE__, TEXT(#VarName));                                                                                 \
         return ReturnValue;                                                                                            \
     }
 

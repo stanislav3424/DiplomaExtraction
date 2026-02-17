@@ -19,13 +19,13 @@ void UNotificationWidgetComponent::Notification(FText Text, float Time)
     if (!TextWidget)
     {
         auto LocalWidgetClass = GetWidgetClass();
-        CHECK_FIELD_RETURN(LocalWidgetClass)
+        CHECK_VAR_RETURN(LocalWidgetClass)
 
         TextWidget = CreateWidget<UUW_Notification>(GetWorld(), LocalWidgetClass);
         SetWidget(TextWidget);
     }
 
-    CHECK_FIELD_RETURN(TextWidget)
+    CHECK_VAR_RETURN(TextWidget)
     TextWidget->SetText(Text);
 
     auto World = GetWorld();

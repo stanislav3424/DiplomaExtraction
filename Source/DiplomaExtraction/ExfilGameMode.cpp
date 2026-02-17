@@ -13,10 +13,10 @@ void AExfilGameMode::BeginPlay()
     if (!World)
         return;
 
-    CHECK_FIELD_RETURN(IconRendererClass)
+    CHECK_VAR_RETURN(IconRendererClass)
 
     IconRenderer = World->SpawnActor<AIconRendering>(IconRendererClass);
-    CHECK_FIELD_RETURN(IconRenderer)
+    CHECK_VAR_RETURN(IconRenderer)
 }
 
 void AExfilGameMode::TogglePause()

@@ -125,7 +125,7 @@ void UQuestConditionLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
         return;
 
     auto Notification = OtherActor->FindComponentByClass<UNotificationWidgetComponent>();
-    CHECK_FIELD_RETURN(Notification);
+    CHECK_VAR_RETURN(Notification);
 
     FString ItemsString;
     for (auto const& Quest : QuestsStatus)
@@ -147,13 +147,13 @@ void UQuestConditionLogic::OnBoxEndOverlap(
 
 void UQuestConditionLogic::OwnerRepresentationActorChanged(AActor* NewRepresentationActor)
 {
-    CHECK_FIELD_RETURN(NewRepresentationActor);
+    CHECK_VAR_RETURN(NewRepresentationActor);
 
     if (CollisionBox)
         return;
 
     CollisionBox = NewRepresentationActor->FindComponentByTag<UBoxComponent>(CollisionBoxTag);
-    CHECK_FIELD_RETURN(CollisionBox);
+    CHECK_VAR_RETURN(CollisionBox);
 
     CollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &UQuestConditionLogic::OnBoxBeginOverlap);
     CollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &UQuestConditionLogic::OnBoxEndOverlap);

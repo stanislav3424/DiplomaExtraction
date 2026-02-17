@@ -15,7 +15,7 @@ void AExfilPlayerController::BeginPlay()
 
 void AExfilPlayerController::AddMappingContext()
 {
-    CHECK_FIELD_RETURN(UserInterfaceInputMappingContext)
+    CHECK_VAR_RETURN(UserInterfaceInputMappingContext)
 
     auto World = GetWorld();
     if (!World)
@@ -37,11 +37,11 @@ void AExfilPlayerController::SetupInputComponent()
     if (!EnhancedInputComponent)
         return;
 
-    CHECK_FIELD_RETURN(MainMenuInputAction)
+    CHECK_VAR_RETURN(MainMenuInputAction)
     EnhancedInputComponent->BindAction(
         MainMenuInputAction, ETriggerEvent::Started, this, &AExfilPlayerController::OnMainMenu);
 
-    CHECK_FIELD_RETURN(PawnInfoInputAction)
+    CHECK_VAR_RETURN(PawnInfoInputAction)
     EnhancedInputComponent->BindAction(
         PawnInfoInputAction, ETriggerEvent::Started, this, &AExfilPlayerController::OnPawnInfo);
 }

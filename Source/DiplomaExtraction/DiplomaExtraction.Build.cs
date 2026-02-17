@@ -17,6 +17,7 @@ public class DiplomaExtraction : ModuleRules
             "UMG",
             "NavigationSystem",
             "AIModule",
+            "Niagara",
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });

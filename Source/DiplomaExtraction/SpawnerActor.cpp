@@ -23,14 +23,13 @@ void ASpawnerActor::BeginPlay()
     Super::BeginPlay();
 
     FillQueue();
-
 }
 
 void ASpawnerActor::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    CHECK_FIELD_RETURN(PresenceDetector)
+    CHECK_VAR_RETURN(PresenceDetector)
     if (PresenceDetector->IsInside())
         return;
 
@@ -68,17 +67,17 @@ void ASpawnerActor::SpawnUnit()
     if (DataTableRowHandle.IsNull())
         return;
 
-    FVector SpawnLocation = GetActorLocation();
+    FVector  SpawnLocation = GetActorLocation();
     FRotator SpawnRotation = GetActorRotation();
 
     auto Actor = USpawnLibrary::SpawnActorByRowHandler(GetWorld(), DataTableRowHandle, SpawnLocation, SpawnRotation);
-    CHECK_FIELD_RETURN(Actor);
+    CHECK_VAR_RETURN(Actor);
 
     auto Logic = ULogicLibrary::GetLogic(Actor);
-    CHECK_FIELD_RETURN(Logic);
+    CHECK_VAR_RETURN(Logic);
 
     auto HealthLogic = Logic->GetLogicComponent<UHealthLogic>();
-    CHECK_FIELD_RETURN(HealthLogic);
+    CHECK_VAR_RETURN(HealthLogic);
 
     HealthLogic->OnDeathInfo.AddUniqueDynamic(this, &ASpawnerActor::OnDeathUnit);
 

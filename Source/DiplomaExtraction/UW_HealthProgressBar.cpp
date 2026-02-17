@@ -15,7 +15,7 @@ void UUW_HealthProgressBar::LogicChanged(ULogicBase* OldLogic, ULogicBase* NewLo
     if (NewLogic)
     {
         auto HealthLogic = NewLogic->GetLogicComponent<UHealthLogic>();
-        CHECK_FIELD_RETURN(HealthLogic);
+        CHECK_VAR_RETURN(HealthLogic);
         HealthLogic->OnHealthChanged.AddUniqueDynamic(this, &UUW_HealthProgressBar::SetPercent);
         HealthLogic->BroadcastHealthChanged();
     }

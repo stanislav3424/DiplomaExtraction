@@ -84,6 +84,8 @@ struct FItemLogicRow : public FLogicBaseRow
     FIntVector2 ItemSize = FIntVector2(1, 1);
 };
 
+class UNiagaraSystem;
+
 USTRUCT(BlueprintType)
 struct FWeaponLogicRow : public FLogicBaseRow
 {
@@ -97,6 +99,9 @@ struct FWeaponLogicRow : public FLogicBaseRow
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float Ammo = 30.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UNiagaraSystem* BulletTraceFX;
 };
 
 USTRUCT(BlueprintType)

@@ -45,9 +45,9 @@ void UDoorLogic::RepresentationActorChanged(AActor* NewRepresentationActor)
     DoorMesh         = NewRepresentationActor->FindComponentByTag<UStaticMeshComponent>(DoorMeshTag);
     NavLinkComponent = NewRepresentationActor->GetComponentByClass<UNavLinkComponent>();
 
-    CHECK_FIELD_RETURN(CollisionBox)
-    CHECK_FIELD_RETURN(DoorMesh)
-    CHECK_FIELD_RETURN(NavLinkComponent)
+    CHECK_VAR_RETURN(CollisionBox)
+    CHECK_VAR_RETURN(DoorMesh)
+    CHECK_VAR_RETURN(NavLinkComponent)
 
     CurrentPosition = DoorMesh->GetRelativeLocation();
     TargetPosition  = CurrentPosition;

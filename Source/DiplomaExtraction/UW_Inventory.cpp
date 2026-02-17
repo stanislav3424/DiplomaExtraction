@@ -103,7 +103,7 @@ void UUW_Inventory::OnInventoryChanged()
     if (!CanvasPanel)
         return;
 
-    CHECK_FIELD_RETURN(ItemWidgetClass)
+    CHECK_VAR_RETURN(ItemWidgetClass)
 
     for (auto Widget : ItemWidgets)
     {
@@ -147,7 +147,7 @@ void UUW_Inventory::SetGridPreviewEnabled(bool bEnabled)
         if (!GridPreviewImage || !CanvasPanel)
             return;
 
-        CHECK_FIELD(GridPreviewMaterial);
+        CHECK_VAR(GridPreviewMaterial);
 
         CanvasPanel->AddChild(GridPreviewImage);
         if (GridPreviewMaterial)

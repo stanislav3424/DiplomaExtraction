@@ -98,7 +98,7 @@ AActor* ULogicBase::SpawnRepresentationActor(FVector const& SpawnLocation, FRota
         return RepresentationActor;
     }
 
-    CHECK_FIELD_RETURN_VALUE(RepresentationActorClass, nullptr);
+    CHECK_VAR_RETURN_VALUE(RepresentationActorClass, nullptr);
 
     auto World = GetWorld();
     if (!World)

@@ -65,10 +65,10 @@ void UHealthLogic::Heal(float HealAmount)
 void UHealthLogic::BroadcastDeathInfo() const
 {
     auto Logic = GetOwnerLogic();
-    CHECK_FIELD_RETURN(Logic);
+    CHECK_VAR_RETURN(Logic);
 
 	auto Actor = Logic->GetRepresentationActor();
-    CHECK_FIELD_RETURN(Actor);
+    CHECK_VAR_RETURN(Actor);
 
 	OnDeath.Broadcast();
 	OnDeathInfo.Broadcast(Logic, Actor);

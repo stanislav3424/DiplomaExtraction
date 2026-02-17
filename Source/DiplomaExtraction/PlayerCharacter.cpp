@@ -52,24 +52,24 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     auto EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-    CHECK_FIELD_RETURN(EnhancedInputComponent)
+    CHECK_VAR_RETURN(EnhancedInputComponent)
 
-    CHECK_FIELD_RETURN(MoveInputAction)
+    CHECK_VAR_RETURN(MoveInputAction)
     EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnMove);
-    CHECK_FIELD_RETURN(RotateInputAction)
+    CHECK_VAR_RETURN(RotateInputAction)
     EnhancedInputComponent->BindAction(RotateInputAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnRotate);
-    CHECK_FIELD_RETURN(ZoomInputAction)
+    CHECK_VAR_RETURN(ZoomInputAction)
     EnhancedInputComponent->BindAction(ZoomInputAction, ETriggerEvent::Triggered, this, &APlayerCharacter::OnZoom);
     
-    CHECK_FIELD_RETURN(ShiftInputAction)
+    CHECK_VAR_RETURN(ShiftInputAction)
     EnhancedInputComponent->BindAction(ShiftInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnShift);
-    CHECK_FIELD_RETURN(ShiftInputAction)
+    CHECK_VAR_RETURN(ShiftInputAction)
     EnhancedInputComponent->BindAction(ShiftInputAction, ETriggerEvent::Completed, this, &APlayerCharacter::OnShift);
-    CHECK_FIELD_RETURN(ShootInputAction)
+    CHECK_VAR_RETURN(ShootInputAction)
     EnhancedInputComponent->BindAction(ShootInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnShoot);
-    CHECK_FIELD_RETURN(ShootInputAction)
+    CHECK_VAR_RETURN(ShootInputAction)
     EnhancedInputComponent->BindAction(ShootInputAction, ETriggerEvent::Completed, this, &APlayerCharacter::OnShoot);
-    CHECK_FIELD_RETURN(ReloadInputAction)
+    CHECK_VAR_RETURN(ReloadInputAction)
     EnhancedInputComponent->BindAction(ReloadInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnReload);
 }
 
@@ -102,9 +102,9 @@ void APlayerCharacter::OnShift(const FInputActionValue& Value)
     auto ShiftInput = Value.Get<bool>();
 
     auto Logic = GetLogic_Implementation();
-    CHECK_FIELD_RETURN(Logic)
+    CHECK_VAR_RETURN(Logic)
     auto StaminaLogic = Logic->GetLogicComponent<UStaminaLogic>();
-    CHECK_FIELD_RETURN(StaminaLogic)
+    CHECK_VAR_RETURN(StaminaLogic)
     StaminaLogic->SetCanRunning(ShiftInput);
 }
 
@@ -113,7 +113,7 @@ void APlayerCharacter::OnShoot(const FInputActionValue& Value)
     auto ShootInput = Value.Get<bool>();
 
     auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
-    CHECK_FIELD_RETURN(CharacterLogic)
+    CHECK_VAR_RETURN(CharacterLogic)
     auto WeaponLogic = Cast<UWeaponLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Hands));
     if (!WeaponLogic)
         return;
@@ -127,7 +127,7 @@ void APlayerCharacter::OnShoot(const FInputActionValue& Value)
 void APlayerCharacter::OnReload(const FInputActionValue& Value)
 {
     auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
-    CHECK_FIELD_RETURN(CharacterLogic)
+    CHECK_VAR_RETURN(CharacterLogic)
     auto WeaponLogic = Cast<UWeaponLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Hands));
     if (!WeaponLogic)
         return;
@@ -164,8 +164,8 @@ void APlayerCharacter::RotatePawnToCursor()
 
 void APlayerCharacter::AddMappingContext()
 {
-    CHECK_FIELD_RETURN(CameraInputMappingContext)   
-    CHECK_FIELD_RETURN(ControlPawnInputMappingContext)   
+    CHECK_VAR_RETURN(CameraInputMappingContext)   
+    CHECK_VAR_RETURN(ControlPawnInputMappingContext)   
 
     auto World = GetWorld();
     if (!World)

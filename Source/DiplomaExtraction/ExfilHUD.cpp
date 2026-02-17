@@ -28,14 +28,14 @@ void AExfilHUD::InitHUD()
     if (!PlayerLogic)
         return;
 
-    CHECK_FIELD_RETURN(MainMenuWidgetClass)
+    CHECK_VAR_RETURN(MainMenuWidgetClass)
 
     MainMenuWidget = CreateWidget<UUW_Dialog>(GetWorld(), MainMenuWidgetClass);
     if (!MainMenuWidget)
         return;
     MainMenuWidget->AddToViewport(5);
 
-    CHECK_FIELD_RETURN(PawnInfoWidgetClass)
+    CHECK_VAR_RETURN(PawnInfoWidgetClass)
 
     PawnInfoWidget = CreateWidget<UUW_Dialog>(GetWorld(), PawnInfoWidgetClass);
     if (!PawnInfoWidget)

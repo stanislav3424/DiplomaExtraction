@@ -9,6 +9,8 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAmmoEmpty);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndReloading);
 
+class UNiagaraSystem;
+
 UCLASS(Blueprintable)
 class DIPLOMAEXTRACTION_API UWeaponLogic : public ULogicBase
 {
@@ -49,11 +51,12 @@ public:
     static UWeaponLogic* GetEquippedWeaponLogic_Logic(ULogicBase* Logic);
 
 private:
-    float GetRateOfFireOneSecond() const;
-    float GetFireDelay() const;
-    void  Shoot();
+    float   GetRateOfFireOneSecond() const;
+    float   GetFireDelay() const;
+    void    Shoot();
     FVector GetMuzzleLocation() const;
     FVector GetShootDirection() const;
+    void    DrawShoot(FVector const& Start, FVector const& End);
 
 private:
     float Damage     = 35.f;
@@ -65,4 +68,6 @@ private:
 
     float TimeSinceLastShot = 0.f;
     bool  bIsFiring         = false;
+
+    UNiagaraSystem* BulletTraceFX;
 };

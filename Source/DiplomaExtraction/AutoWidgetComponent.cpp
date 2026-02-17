@@ -22,11 +22,11 @@ void UAutoWidgetComponent::SetLogic_Implementation(ULogicBase* NewLogic)
         if (WidgetLocal)
             SetWidget(WidgetLocal);
     }
-    CHECK_FIELD_RETURN(WidgetLocal);
+    CHECK_VAR_RETURN(WidgetLocal);
     ULogicLibrary::SetLogic(WidgetLocal, LogicBase);
 
     auto HealthLogic = UHealthLogic::GetHealthLogic_Logic(LogicBase);
-    CHECK_FIELD_RETURN(HealthLogic);
+    CHECK_VAR_RETURN(HealthLogic);
 
     HealthLogic->OnDeath.AddUniqueDynamic(this, &UAutoWidgetComponent::Death);
 }

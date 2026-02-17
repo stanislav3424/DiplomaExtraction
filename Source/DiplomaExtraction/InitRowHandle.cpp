@@ -11,7 +11,7 @@ void UInitRowHandle::BeginPlay()
     Super::BeginPlay();
 
     auto World = GetWorld();
-    CHECK_FIELD_RETURN(World);
+    CHECK_VAR_RETURN(World);
 
     FTimerHandle TimerHandle;
     World->GetTimerManager().SetTimer(TimerHandle, this, &UInitRowHandle::Init, 0.1f, false);
@@ -19,17 +19,17 @@ void UInitRowHandle::BeginPlay()
 
 void UInitRowHandle::Init()
 {
-    CHECK_FIELD_RETURN(!InitRowHandle.IsNull());
+    CHECK_VAR_RETURN(!InitRowHandle.IsNull());
 
     auto Actor = GetOwner();
-    CHECK_FIELD_RETURN(Actor);
+    CHECK_VAR_RETURN(Actor);
 
     auto CurrentLogic = ULogicLibrary::GetLogic(Actor);
     if (CurrentLogic)
         return;
 
     auto Logic = USpawnLibrary::SpawnLogicByRowHandler(GetWorld(), InitRowHandle, Actor);
-    CHECK_FIELD_RETURN(Logic);
+    CHECK_VAR_RETURN(Logic);
 
     Logic->OnGround();
 }

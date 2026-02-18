@@ -30,9 +30,10 @@ void UUW_InventoryAdapterWidget::OnEquipmentChanged()
     if (auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation()))
         NewInventoryLogic = Cast<UInventoryLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Backpack));
 
-    if (InventoryLogic != NewInventoryLogic)
+    if (InventoryLogic != NewInventoryLogic || bFirst)
     {
         InventoryLogic = NewInventoryLogic;
         InitializeChildLogic(InventoryLogic);
+        bFirst = false;
     }
 }

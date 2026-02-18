@@ -23,4 +23,6 @@ protected:
 
 	UPROPERTY(Transient)
 	UInventoryLogic* InventoryLogic;
+
+	bool bFirst = true;
 };

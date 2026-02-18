@@ -133,7 +133,7 @@ void UWeaponLogic::Shoot()
     if (!World)
         return;
 
-    FVector               Start   = GetMuzzleLocation();
+    FVector               Start   = GetStartShootLocation();
     FVector               Forward = GetShootDirection();
     float                 Range   = 5000.f;
     FVector               End     = Start + Forward * Range;
@@ -154,16 +154,12 @@ void UWeaponLogic::Shoot()
     World->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, CollisionQueryParams);
 
     if (HitResult.bBlockingHit)
-    {
         UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, nullptr, nullptr, UDamageType::StaticClass());
-    }
 
-    DrawShoot(Start, HitResult.bBlockingHit ? HitResult.Location : End);
+    DrawShoot(GetMuzzleLocation(), HitResult.bBlockingHit ? HitResult.Location : End);
     UDrawDebugLibrary::DrawShoot(World, Start, End, HitResult.bBlockingHit, HitResult.Location);
 
-
     PlaySound();
-    
 
     if (CurrentAmmo <= 0)
     {
@@ -172,7 +168,7 @@ void UWeaponLogic::Shoot()
     }
 }
 
-FVector UWeaponLogic::GetMuzzleLocation() const
+FVector UWeaponLogic::GetStartShootLocation() const
 {
     FVector Location = FVector(0.f, 0.f, 45.f);
 
@@ -185,11 +181,27 @@ FVector UWeaponLogic::GetMuzzleLocation() const
         return Location;
 
     Location += Character->GetActorLocation();
-    //auto Mesh = Character->GetMesh();
-    //if (!Mesh)
-    //    return Location;
 
-    //Location = Mesh->GetSocketLocation(TEXT("weapon_r_muzzle"));
+    return Location;
+}
+
+FVector UWeaponLogic::GetMuzzleLocation() const
+{
+    FVector Location = FVector(0.f, 0.f, 0.f);
+
+    auto CharacterLogic = Cast<UCharacterLogic>(GetOwnerLogic());
+    if (!CharacterLogic)
+        return Location;
+
+    auto Character = Cast<ACharacter>(CharacterLogic->GetRepresentationActor());
+    if (!Character)
+        return Location;
+
+    auto Mesh = Character->GetMesh();
+    if (!Mesh)
+        return Location;
+
+    Location = Mesh->GetSocketLocation(TEXT("weapon_r_muzzle"));
 
     return Location;
 }

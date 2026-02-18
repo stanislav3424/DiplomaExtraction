@@ -54,6 +54,7 @@ private:
     float   GetRateOfFireOneSecond() const;
     float   GetFireDelay() const;
     void    Shoot();
+    FVector GetStartShootLocation() const;
     FVector GetMuzzleLocation() const;
     FVector GetShootDirection() const;
     void    DrawShoot(FVector const& Start, FVector const& End);

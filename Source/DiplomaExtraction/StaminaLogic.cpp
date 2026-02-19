@@ -33,6 +33,13 @@ void UStaminaLogic::OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewO
     OnStartRun.Clear();
     OnEndRun.Clear();
 
+    if (NewOwnerLogic)
+        NewOwnerLogic->OnRepresentationActorChanged.AddUniqueDynamic(
+            this, &UStaminaLogic::OnRepresentationActorChanged);
+}
+
+void UStaminaLogic::OnRepresentationActorChanged(AActor* NewRepresentationActor)
+{
     ApplyRunning();
 }
 
@@ -44,6 +51,11 @@ void UStaminaLogic::SetRunning(bool bNewRunning)
     bIsRunning = bNewRunning;
 
     ApplyRunning();
+
+    if (bIsRunning)
+        OnStartRun.Broadcast();
+    else
+        OnEndRun.Broadcast();
 }
 
 void UStaminaLogic::ApplyRunning()
@@ -53,19 +65,12 @@ void UStaminaLogic::ApplyRunning()
         return;
 
     auto Character = Cast<ACharacter>(Logic->GetRepresentationActor());
-    if (!Character)
-        return;
+    CHECK_VAR_RETURN(Character)
 
     auto Movement = Character->GetCharacterMovement();
-    if (!Movement)
-        return;
+    CHECK_VAR_RETURN(Movement)
 
     Movement->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
-
-    if (bIsRunning)
-        OnStartRun.Broadcast();
-    else
-        OnEndRun.Broadcast();
 }
 
 void UStaminaLogic::TickLogic(float DeltaTime)

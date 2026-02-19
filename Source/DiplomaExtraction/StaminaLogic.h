@@ -23,6 +23,9 @@ public:
 protected:
     virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic) override;
 
+    UFUNCTION()
+    void OnRepresentationActorChanged(AActor* NewRepresentationActor);
+
     // Health Management
 public:
     float GetStamina() const { return CurrentStamina; }

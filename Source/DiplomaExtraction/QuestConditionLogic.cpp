@@ -137,7 +137,7 @@ void UQuestConditionLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
     }
 
     ItemsString.RemoveFromEnd(TEXT(", "));
-    Notification->Notification(FText::FromString(FString::Printf(TEXT("Need an item: %s"), *ItemsString)), 2.f);
+    Notification->AddNotification(FText::FromString(FString::Printf(TEXT("Need an item: %s"), *ItemsString)), 2.f);
 }
 
 void UQuestConditionLogic::OnBoxEndOverlap(

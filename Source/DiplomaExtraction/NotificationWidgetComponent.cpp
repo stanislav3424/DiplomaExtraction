@@ -4,39 +4,9 @@
 #include "UW_Notification.h"
 #include "MacroLibrary.h"
 
-void UNotificationWidgetComponent::BeginPlay()
+void UNotificationWidgetComponent::AddNotification(FText Text, float Time)
 {
-    Super::BeginPlay();
-    SetHidden(true);
-}
-
-void UNotificationWidgetComponent::Notification(FText Text, float Time)
-{
-    SetHidden(false);
-
-    auto TextWidget = Cast<UUW_Notification>(GetWidget());
-
-    if (!TextWidget)
-    {
-        auto LocalWidgetClass = GetWidgetClass();
-        CHECK_VAR_RETURN(LocalWidgetClass)
-
-        TextWidget = CreateWidget<UUW_Notification>(GetWorld(), LocalWidgetClass);
-        SetWidget(TextWidget);
-    }
-
-    CHECK_VAR_RETURN(TextWidget)
-    TextWidget->SetText(Text);
-
-    auto World = GetWorld();
-    if (!World)
-        return;
-
-    World->GetTimerManager().ClearTimer(Timer);
-    World->GetTimerManager().SetTimer(Timer, [this]() { SetHidden(true); }, Time, false);
-}
-
-void UNotificationWidgetComponent::SetHidden(bool NewHidden)
-{
-    SetHiddenInGame(NewHidden);
+    auto UW_Notification = Cast<UUW_Notification>(GetWidget());
+    CHECK_VAR_RETURN(UW_Notification)
+    UW_Notification->AddNotification(Text, Time);
 }

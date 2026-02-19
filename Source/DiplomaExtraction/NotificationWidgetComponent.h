@@ -14,9 +14,5 @@ class DIPLOMAEXTRACTION_API UNotificationWidgetComponent : public UWidgetCompone
     GENERATED_BODY()
 
 public:
-    virtual void BeginPlay() override;
-    void Notification(FText Text, float Time);
-    void SetHidden(bool NewHidden);
-
-    FTimerHandle Timer;
+    void AddNotification(FText Text, float Time);
 };

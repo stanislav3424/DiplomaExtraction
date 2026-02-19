@@ -44,6 +44,9 @@ protected:
     TMap<UTextureRenderTarget2D*, TArray<UMaterialInstanceDynamic*>> WaitingMIDs;
     TQueue<TPair<FDataTableRowHandle, UTextureRenderTarget2D*>>      QueueRender;
 
+    UPROPERTY(Transient)
+    TArray<UTextureRenderTarget2D*> TexturesRefGC;
+
     float WarmupTime = 5.0f;
 
     bool WarmupCapture(float DeltaSeconds);

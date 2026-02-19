@@ -110,6 +110,8 @@ bool UInventoryLogic::ArePositionsNotOccupied(TArray<FIntVector2> const& Positio
 
 bool UInventoryLogic::CanAddItemToPosition(ULogicBase* Item, FIntVector2 const& Position, bool Rotation)
 {
+    if (!Item)
+        return false;
     if (!IsPositionNotOccupied(Position))
         return false;
     auto ItemLogic = Item->GetLogicComponent<UItemLogic>();

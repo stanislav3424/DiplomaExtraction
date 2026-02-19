@@ -34,6 +34,8 @@ void AIconRendering::BeginPlay()
 {
     Super::BeginPlay();
 
+    TexturesRefGC.Reserve(100);
+
 #if WITH_EDITOR
     WarmupTime = 0.5f;
 #endif
@@ -118,6 +120,9 @@ UTextureRenderTarget2D* AIconRendering::GetNewRenderTarget()
     auto NewRenderTarget = NewObject<UTextureRenderTarget2D>(this);
     if (!NewRenderTarget)
         return nullptr;
+
+    TexturesRefGC.Add(NewRenderTarget);
+
     const int32 RTSize = 256;
     NewRenderTarget->InitAutoFormat(RTSize, RTSize);
     NewRenderTarget->ClearColor = FLinearColor::Green;

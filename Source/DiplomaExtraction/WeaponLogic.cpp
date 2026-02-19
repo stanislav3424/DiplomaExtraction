@@ -34,6 +34,16 @@ void UWeaponLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle
     InitializeWeapon();
 }
 
+void UWeaponLogic::OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic)
+{
+    Super::OwnerLogicChange(OldOwnerLogic, NewOwnerLogic);
+
+    OnAmmoEmpty.Clear();
+    OnEndReloading.Clear();
+    OnStartFiring.Clear();
+    OnStopFiring.Clear();
+}
+
 void UWeaponLogic::InitializeWeapon()
 {
     if (Damage <= 0)
@@ -67,7 +77,7 @@ void UWeaponLogic::TickLogic(float DeltaTime)
 
     if (CurrentAmmo <= 0)
     {
-        bIsFiring = false;
+        SetFiring(false);
         return;
     }
 
@@ -80,12 +90,12 @@ void UWeaponLogic::TickLogic(float DeltaTime)
 
 void UWeaponLogic::StartFiring()
 {
-    bIsFiring = true;
+    SetFiring(true);
 }
 
 void UWeaponLogic::StopFiring()
 {
-    bIsFiring = false;
+    SetFiring(false);
 }
 
 void UWeaponLogic::Reload()
@@ -163,7 +173,7 @@ void UWeaponLogic::Shoot()
 
     if (CurrentAmmo <= 0)
     {
-        bIsFiring = false;
+        SetFiring(false);
         OnAmmoEmpty.Broadcast();
     }
 }
@@ -261,4 +271,17 @@ void UWeaponLogic::PlaySound()
     Settings.AttenuationShapeExtents       = FVector(0.f);
     Settings.FalloffDistance               = 2000.f;
     UGameplayStatics::PlaySoundAtLocation(this, SoundShoot, LocalActor->GetActorLocation(), 1.f, 1.f, 0.f, Attenuation);
+}
+
+void UWeaponLogic::SetFiring(bool bNewFiring)
+{
+    if (bIsFiring == bNewFiring)
+        return;
+
+    bIsFiring = bNewFiring;
+
+    if (bIsFiring)
+        OnStartFiring.Broadcast();
+    else
+        OnStopFiring.Broadcast();
 }

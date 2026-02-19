@@ -8,6 +8,8 @@
 #include "Row.h"
 #include "EnumLibrary.h"
 #include "Components/CapsuleComponent.h"
+#include "StaminaLogic.h"
+#include "WeaponLogic.h"
 
 void UCharacterLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
@@ -61,6 +63,20 @@ void UCharacterLogic::RepresentationActorChanged(AActor* NewRepresentationActor)
 
     for (auto Slot : EquippedItems)
         SetVisualization(Slot.Key, Slot.Value);
+}
+
+void UCharacterLogic::AttachedComponent(ULogicBase* NewComponent)
+{
+    Super::AttachedComponent(NewComponent);
+
+    if (auto StaminaLogic = Cast<UStaminaLogic>(NewComponent))
+        StaminaLogic->OnEndRun.AddUniqueDynamic(this, &UCharacterLogic::ResetTypeAction);
+
+    if (auto WeaponLogic = Cast<UWeaponLogic>(NewComponent))
+    {
+        WeaponLogic->OnEndReloading.AddUniqueDynamic(this, &UCharacterLogic::ResetTypeAction);
+        WeaponLogic->OnStopFiring.AddUniqueDynamic(this, &UCharacterLogic::ResetTypeAction);
+    }
 }
 
 bool UCharacterLogic::EquipItem(ULogicBase* Item)
@@ -194,4 +210,72 @@ EEquipmentSlot UCharacterLogic::GetEquipmentSlot(ULogicBase* Item)
         return EEquipmentSlot::None;
 
     return EquipmentLogic->GetEquipmentSlot();
+}
+
+void UCharacterLogic::OnShift(bool bShift)
+{
+    if (!bShift && TypeAction != ETypeAction::Runing)
+        return;
+
+    if (!ToСhangeTypeAction(bShift ? ETypeAction::Runing : ETypeAction::Idle))
+        return;
+
+    auto StaminaLogic = GetLogicComponent<UStaminaLogic>();
+    CHECK_VAR_RETURN(StaminaLogic)
+    StaminaLogic->SetCanRunning(bShift);
+}
+
+void UCharacterLogic::OnShoot(bool bShoot)
+{
+    if (!bShoot && TypeAction != ETypeAction::Firing)
+        return;
+
+    if (!ToСhangeTypeAction(bShoot ? ETypeAction::Firing : ETypeAction::Idle))
+        return;
+
+    auto WeaponLogic = Cast<UWeaponLogic>(GetEquippedItem(EEquipmentSlot::Hands));
+    if (!WeaponLogic)
+        return;
+
+    if (bShoot)
+        WeaponLogic->StartFiring();
+    else
+        WeaponLogic->StopFiring();
+}
+
+void UCharacterLogic::OnReload()
+{
+    if (!ToСhangeTypeAction(ETypeAction::Reloading))
+        return;
+
+    auto WeaponLogic = Cast<UWeaponLogic>(GetEquippedItem(EEquipmentSlot::Hands));
+    if (!WeaponLogic)
+        return;
+
+    WeaponLogic->Reload();
+}
+
+bool UCharacterLogic::ToСhangeTypeAction(ETypeAction const& NewTypeAction)
+{
+    if (TypeAction == NewTypeAction)
+        return false;
+
+    if (TypeAction != ETypeAction::Idle && NewTypeAction == ETypeAction::Idle)
+    {
+        TypeAction = NewTypeAction;
+        return true;
+    }
+
+    if (TypeAction == ETypeAction::Idle)
+    {
+        TypeAction = NewTypeAction;
+        return true;
+    }
+
+    return false;
+}
+
+void UCharacterLogic::ResetTypeAction()
+{
+    ToСhangeTypeAction(ETypeAction::Idle);
 }

@@ -5,6 +5,8 @@
 #include "StaminaLogic.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStaminaChanged, float, CurrentStamina, float, MaxStamina);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStartRun);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndRun);
 
 UCLASS(Blueprintable)
 class DIPLOMAEXTRACTION_API UStaminaLogic : public ULogicBase
@@ -18,7 +20,7 @@ public:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
 
     // Components
-public:
+protected:
     virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic) override;
 
     // Health Management
@@ -27,6 +29,8 @@ public:
     float GetMaxStamina() const { return MaxStamina; }
 
     FOnStaminaChanged OnStaminaChanged;
+    FOnStartRun       OnStartRun;
+    FOnEndRun         OnEndRun;
 
     void BroadcastStaminaChanged() const { OnStaminaChanged.Broadcast(CurrentStamina, MaxStamina); }
 
@@ -44,6 +48,7 @@ private:
     bool bCanRun    = false;
 
     void SetRunning(bool bNewRunning);
+    void ApplyRunning();
 
 public:
     void SetCanRunning(bool bNewCanRun) { bCanRun = bNewCanRun; }

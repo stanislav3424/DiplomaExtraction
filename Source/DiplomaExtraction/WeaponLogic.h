@@ -8,6 +8,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAmmoEmpty);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndReloading);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStartFiring);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStopFiring);
 
 class UNiagaraSystem;
 
@@ -21,6 +23,10 @@ class DIPLOMAEXTRACTION_API UWeaponLogic : public ULogicBase
     // Initialize
 public:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
+
+    // Components
+protected:
+    virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic) override;
 
 private:
     void InitializeWeapon();
@@ -44,6 +50,9 @@ public:
     UPROPERTY(BlueprintAssignable)
     FOnEndReloading OnEndReloading;
 
+    FOnStartFiring OnStartFiring;
+    FOnStopFiring  OnStopFiring;
+
     UFUNCTION(BlueprintCallable)
     static UWeaponLogic* GetEquippedWeaponLogic_Actor(AActor* Actor);
     
@@ -58,7 +67,7 @@ private:
     FVector GetMuzzleLocation() const;
     FVector GetShootDirection() const;
     void    DrawShoot(FVector const& Start, FVector const& End);
-    void PlaySound();
+    void    PlaySound();
 
 private:
     float Damage     = 35.f;
@@ -71,9 +80,11 @@ private:
     float TimeSinceLastShot = 0.f;
     bool  bIsFiring         = false;
 
-    UPROPERTY(Transient) 
+    void SetFiring(bool bNewFiring);
+
+    UPROPERTY(Transient)
     UNiagaraSystem* BulletTraceFX;
 
-    UPROPERTY(Transient) 
+    UPROPERTY(Transient)
     USoundBase* SoundShoot;
 };

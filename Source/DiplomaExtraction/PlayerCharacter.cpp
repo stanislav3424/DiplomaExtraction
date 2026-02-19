@@ -101,11 +101,10 @@ void APlayerCharacter::OnShift(const FInputActionValue& Value)
 {
     auto ShiftInput = Value.Get<bool>();
 
-    auto Logic = GetLogic_Implementation();
-    CHECK_VAR_RETURN(Logic)
-    auto StaminaLogic = Logic->GetLogicComponent<UStaminaLogic>();
-    CHECK_VAR_RETURN(StaminaLogic)
-    StaminaLogic->SetCanRunning(ShiftInput);
+    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
+    CHECK_VAR_RETURN(CharacterLogic)
+
+    CharacterLogic->OnShift(ShiftInput);
 }
 
 void APlayerCharacter::OnShoot(const FInputActionValue& Value)
@@ -114,25 +113,16 @@ void APlayerCharacter::OnShoot(const FInputActionValue& Value)
 
     auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
     CHECK_VAR_RETURN(CharacterLogic)
-    auto WeaponLogic = Cast<UWeaponLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Hands));
-    if (!WeaponLogic)
-        return;
 
-    if (ShootInput)
-        WeaponLogic->StartFiring();
-    else
-        WeaponLogic->StopFiring();
+    CharacterLogic->OnShoot(ShootInput);
 }
 
 void APlayerCharacter::OnReload(const FInputActionValue& Value)
 {
     auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
     CHECK_VAR_RETURN(CharacterLogic)
-    auto WeaponLogic = Cast<UWeaponLogic>(CharacterLogic->GetEquippedItem(EEquipmentSlot::Hands));
-    if (!WeaponLogic)
-        return;
 
-    WeaponLogic->Reload();
+    CharacterLogic->OnReload();
 }
 
 void APlayerCharacter::ZoomTick(float DeltaTime)

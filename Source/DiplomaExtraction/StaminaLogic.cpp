@@ -28,12 +28,26 @@ void UStaminaLogic::OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewO
     Super::OwnerLogicChange(OldOwnerLogic, NewOwnerLogic);
 
     CurrentStamina = MaxStamina;
+
+    OnStaminaChanged.Clear();
+    OnStartRun.Clear();
+    OnEndRun.Clear();
+
+    ApplyRunning();
 }
 
 void UStaminaLogic::SetRunning(bool bNewRunning)
 {
+    if (bIsRunning == bNewRunning)
+        return;
+
     bIsRunning = bNewRunning;
 
+    ApplyRunning();
+}
+
+void UStaminaLogic::ApplyRunning()
+{
     auto Logic = GetOwnerLogic();
     if (!Logic)
         return;
@@ -42,10 +56,16 @@ void UStaminaLogic::SetRunning(bool bNewRunning)
     if (!Character)
         return;
 
-    auto Movement  = Character->GetCharacterMovement();
+    auto Movement = Character->GetCharacterMovement();
     if (!Movement)
         return;
+
     Movement->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
+
+    if (bIsRunning)
+        OnStartRun.Broadcast();
+    else
+        OnEndRun.Broadcast();
 }
 
 void UStaminaLogic::TickLogic(float DeltaTime)

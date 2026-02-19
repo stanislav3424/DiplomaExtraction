@@ -10,6 +10,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEquipmentChanged);
 
 enum class EEquipmentSlot : uint8;
 
+UENUM(BlueprintType)
+enum class ETypeAction : uint8
+{
+    Idle      UMETA(DisplayName = "Idle"),
+    Firing    UMETA(DisplayName = "Firing"),
+    Reloading UMETA(DisplayName = "Reloading"),
+    Runing    UMETA(DisplayName = "Runing"),
+};
+
 class UEquipmentLogic;
 
 UCLASS(Blueprintable)
@@ -26,6 +35,7 @@ public:
 
 protected:
     virtual void RepresentationActorChanged(AActor* NewRepresentationActor) override;
+    virtual void AttachedComponent(ULogicBase* NewComponent) override;
 
     // Equipment Management
 public:
@@ -44,5 +54,24 @@ public:
     FOnEquipmentChanged OnEquipmentChanged;
 
 private:
+    UPROPERTY(Transient)
     TMap<EEquipmentSlot, ULogicBase*> EquippedItems;
+
+    // Control
+public:
+    UFUNCTION(BlueprintCallable)
+    void OnShift(bool bShift);
+
+    UFUNCTION(BlueprintCallable)
+    void OnShoot(bool bShoot);
+
+    UFUNCTION(BlueprintCallable)
+    void OnReload();
+
+private:
+    ETypeAction TypeAction = ETypeAction::Idle;
+    bool        ToСhangeTypeAction(ETypeAction const& NewTypeAction);
+
+    UFUNCTION()
+    void        ResetTypeAction();
 };

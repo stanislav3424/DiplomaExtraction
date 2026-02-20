@@ -6,12 +6,17 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "LevelStartSubsystem.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class DIPLOMAEXTRACTION_API ULevelStartSubsystem : public UGameInstanceSubsystem
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    static ULevelStartSubsystem* Get(UObject* WorldContextObject);
+
+    bool GetAutoStartGame() const { return bAutoStartGame; };
+    void SetAutoStartGame(bool bNewAutoStartGame) { bAutoStartGame = bNewAutoStartGame; };
+
+private:
+    bool bAutoStartGame = false;
 };

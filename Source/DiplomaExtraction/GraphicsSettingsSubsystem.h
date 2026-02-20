@@ -6,12 +6,12 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GraphicsSettingsSubsystem.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class DIPLOMAEXTRACTION_API UGraphicsSettingsSubsystem : public UGameInstanceSubsystem
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    static UGraphicsSettingsSubsystem* Get(UObject* WorldContextObject);
+
 };

@@ -9,9 +9,6 @@
 AActor* USpawnLibrary::SpawnActorByRowHandler(UObject* WorldContextObject, FDataTableRowHandle const& RowHandle,
     FVector const& SpawnLocation, FRotator const& SpawnRotation)
 {
-    if (!WorldContextObject)
-        return nullptr;
-
     if (!GEngine)
         return nullptr;
 
@@ -34,9 +31,6 @@ AActor* USpawnLibrary::SpawnActorByRowHandler(UObject* WorldContextObject, FData
 ULogicBase* USpawnLibrary::SpawnLogicByRowHandler(
     UObject* WorldContextObject, FDataTableRowHandle const& RowHandle, AActor* InitActor)
 {
-    if (!WorldContextObject)
-        return nullptr;
-
     if (!GEngine)
         return nullptr;
 

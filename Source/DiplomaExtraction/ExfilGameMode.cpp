@@ -64,6 +64,9 @@ void AExfilGameMode::TogglePause()
 
 void AExfilGameMode::SetPauseGame(bool bPause)
 {
+    if (StatusGame != EStatusGame::Started)
+        return;
+
     if (bIsPaused == bPause)
         return;
 

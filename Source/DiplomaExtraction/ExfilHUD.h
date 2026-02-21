@@ -9,6 +9,8 @@
 class UUW_Dialog;
 class ULogicBase;
 
+enum class EStatusGame : uint8;
+
 UCLASS(Abstract, Blueprintable)
 class DIPLOMAEXTRACTION_API AExfilHUD : public AHUD
 {
@@ -33,9 +35,12 @@ protected:
     UPROPERTY(Transient)
     ULogicBase* PlayerLogic;
 
-public:
     void InitHUD();
 
+    UFUNCTION()
+    void OnStatusGameChanged(EStatusGame const& StatusGame);
+
+public:
     void ToggleMainMenu();
     void TogglePawnInfo();
 };

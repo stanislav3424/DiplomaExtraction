@@ -7,6 +7,7 @@
 #include "SpawnLibrary.h"
 #include "MacroLibrary.h"
 #include "LogicLibrary.h"
+#include "IniSettingsSubsystem.h"
 
 ASpawnerActor::ASpawnerActor()
 {
@@ -15,7 +16,7 @@ ASpawnerActor::ASpawnerActor()
     PresenceDetector = CreateDefaultSubobject<UPresenceDetectorSceneComponent>(TEXT("PresenceDetector"));
     PresenceDetector->SetupAttachment(RootComponent);
 
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 }
 
 void ASpawnerActor::BeginPlay()
@@ -23,6 +24,13 @@ void ASpawnerActor::BeginPlay()
     Super::BeginPlay();
 
     FillQueue();
+
+    auto Subsystem = UIniSettingsSubsystem::Get(GetWorld());
+    if (!Subsystem)
+        return;
+
+    PrimaryActorTick.TickInterval = Subsystem->GetEnemySpawnInterval();
+    PrimaryActorTick.SetTickFunctionEnable(true);
 }
 
 void ASpawnerActor::Tick(float DeltaTime)

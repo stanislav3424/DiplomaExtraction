@@ -7,7 +7,6 @@ void UUW_Dialog::NativeConstruct()
 {
     Super::NativeConstruct();
     SetVisibility(ESlateVisibility::Hidden);
-    CloseDialog();
 }
 
 void UUW_Dialog::ToggleDialog()

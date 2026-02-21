@@ -15,7 +15,7 @@ enum class EStatusGame : uint8
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGamePausedChanged, bool, bIsPaused);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatusGameChanged, EStatusGame, StatusGame);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatusGameChanged, EStatusGame const&, StatusGame);
 
 class AIconRendering;
 

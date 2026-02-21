@@ -24,7 +24,7 @@ public:
     bool IsOpen() const { return bIsOpen; }
 
 private:
-    bool         bIsOpen = true;
+    bool         bIsOpen = false;
     FTimerHandle FinishTimerHandle;
 
 protected:

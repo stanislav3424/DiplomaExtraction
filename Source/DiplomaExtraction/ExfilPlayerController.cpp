@@ -5,28 +5,73 @@
 #include "EnhancedInputSubsystems.h"
 #include "MacroLibrary.h"
 #include "ExfilHUD.h"
+#include "ExfilGameMode.h"
+#include "LevelSequence.h"
+#include "LevelSequenceActor.h"
+#include "LevelSequencePlayer.h"
 
 void AExfilPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
-    AddMappingContext();
+    auto GameMode = AExfilGameMode::Get(GetWorld());
+    if(GameMode)
+    GameMode->OnStatusGameChanged.AddUniqueDynamic(this, &AExfilPlayerController::FOnStatusGameChanged);
+
+    CHECK_VAR_RETURN(!ArrLevelSequence.IsEmpty())
+    for (auto LevelSequence : ArrLevelSequence)
+        CHECK_VAR_RETURN(LevelSequence);
+}
+
+void AExfilPlayerController::FOnStatusGameChanged(EStatusGame const& NewStatusGame)
+{
+    RemoveMappingContext();
+    StopLevelSequence();
+
+    switch (NewStatusGame)
+    {
+        case EStatusGame::NotStarted:
+            EnterCinematicMode();
+            break;
+        case EStatusGame::Started:
+            EnterDefaultMode();
+            break;
+        case EStatusGame::Over:
+            EnterSpectatorMode();
+            break;
+        default:
+            break;
+    }
 }
 
 void AExfilPlayerController::AddMappingContext()
 {
     CHECK_VAR_RETURN(UserInterfaceInputMappingContext)
 
-    auto World = GetWorld();
-    if (!World)
-        return;
-    auto LocalPlayer = World->GetFirstLocalPlayerFromController();
+    auto LocalPlayer = GetLocalPlayer();
     if (!LocalPlayer)
         return;
+
     auto EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
     if (!EnhancedInputLocalPlayerSubsystem)
         return;
+
     EnhancedInputLocalPlayerSubsystem->AddMappingContext(UserInterfaceInputMappingContext, 0);
+}
+
+void AExfilPlayerController::RemoveMappingContext()
+{
+    CHECK_VAR_RETURN(UserInterfaceInputMappingContext)
+
+    auto LocalPlayer = GetLocalPlayer();
+    if (!LocalPlayer)
+        return;
+
+    auto EnhancedInputLocalPlayerSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+    if (!EnhancedInputLocalPlayerSubsystem)
+        return;
+
+    EnhancedInputLocalPlayerSubsystem->RemoveMappingContext(UserInterfaceInputMappingContext);
 }
 
 void AExfilPlayerController::SetupInputComponent()
@@ -62,4 +107,54 @@ void AExfilPlayerController::OnPawnInfo(FInputActionValue const& Value)
         return;
 
     HUD->TogglePawnInfo();
+}
+
+void AExfilPlayerController::EnterCinematicMode()
+{
+    PlayLevelSequence();
+
+
+}
+
+void AExfilPlayerController::EnterDefaultMode()
+{
+    AddMappingContext();
+}
+
+void AExfilPlayerController::EnterSpectatorMode()
+{
+}
+
+void AExfilPlayerController::PlayLevelSequence()
+{
+    StopLevelSequence();
+
+    CHECK_VAR_RETURN(!ArrLevelSequence.IsEmpty())
+    int32 Index = FMath::RandHelper(ArrLevelSequence.Num());
+
+    auto LevelSequence = ArrLevelSequence[Index];
+    CHECK_VAR_RETURN(LevelSequence)
+
+    FMovieSceneSequencePlaybackSettings Settings;
+    Settings.bHidePlayer                    = true;
+    Settings.bDisableMovementInput          = true;
+    ALevelSequenceActor* LevelSequenceActor = nullptr;
+    LevelSequencePlayer =
+        ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), LevelSequence, Settings, LevelSequenceActor);
+    if (!LevelSequencePlayer)
+        return;
+
+    LevelSequencePlayer->Play();
+    LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &AExfilPlayerController::PlayLevelSequence);
+}
+
+void AExfilPlayerController::StopLevelSequence()
+{
+    if (!LevelSequencePlayer)
+        return;
+
+    LevelSequencePlayer->OnFinished.RemoveAll(this);
+    LevelSequencePlayer->Stop();
+
+    LevelSequencePlayer = nullptr;
 }

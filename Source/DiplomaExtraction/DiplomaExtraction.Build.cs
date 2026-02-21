@@ -18,6 +18,8 @@ public class DiplomaExtraction : ModuleRules
             "NavigationSystem",
             "AIModule",
             "Niagara",
+            "LevelSequence",
+            "MovieScene",
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });

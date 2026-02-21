@@ -10,6 +10,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryItemRotate);
 
 class UInputMappingContext;
 class UInputAction;
+class ULevelSequence;
+class ULevelSequencePlayer;
 
 struct FInputActionValue;
 
@@ -20,7 +22,11 @@ class DIPLOMAEXTRACTION_API AExfilPlayerController : public APlayerController
 
 protected:
     virtual void BeginPlay() override;
+
+    UFUNCTION()
+    void         FOnStatusGameChanged(EStatusGame const& NewStatusGame);
     void         AddMappingContext();
+    void         RemoveMappingContext();
     virtual void SetupInputComponent() override;
 
     UPROPERTY(EditDefaultsOnly, Category = "Input")
@@ -34,6 +40,20 @@ protected:
 
     void OnMainMenu(FInputActionValue const& Value);
     void OnPawnInfo(FInputActionValue const& Value);
+
+    void EnterCinematicMode();
+    void EnterDefaultMode();
+    void EnterSpectatorMode();
+
+    UFUNCTION()
+    void PlayLevelSequence();
+    void StopLevelSequence();
+
+    UPROPERTY(Transient)
+    ULevelSequencePlayer* LevelSequencePlayer;
+
+    UPROPERTY(EditDefaultsOnly, Category = "LevelSequence")
+    TArray<ULevelSequence*> ArrLevelSequence;
 
 public:
     FOnInventoryItemRotate OnInventoryItemRotate;

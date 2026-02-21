@@ -15,7 +15,7 @@ enum class EStatusGame : uint8
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGamePausedChanged, bool, bIsPaused);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatusGameChanged, EStatusGame const&, StatusGame);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatusGameChanged, EStatusGame const&, NewStatusGame);
 
 class AIconRendering;
 
@@ -37,11 +37,12 @@ protected:
     UPROPERTY(Transient)
     AIconRendering* IconRenderer;
 
-    UPROPERTY(EditDefaultsOnly, Category = "IconRendererClass")
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
     TSubclassOf<AIconRendering> IconRendererClass;
 
 public:
-    AIconRendering* GetIconRenderer() const { return IconRenderer; }
+    AIconRendering*        GetIconRenderer() const { return IconRenderer; }
     static AIconRendering* GetIconRenderer(UObject* WorldContextObject);
 
     // Status Game

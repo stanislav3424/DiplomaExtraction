@@ -12,41 +12,27 @@ enum class ETypeQuest : uint8;
 class UBoxComponent;
 class UPresenceDetectorSceneComponent;
 
-UCLASS(NotBlueprintable)
+UCLASS(NotBlueprintable, Abstract)
 class DIPLOMAEXTRACTION_API UQuestConditionLogic : public ULogicBase
 {
     GENERATED_BODY()
 
 protected:
     virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle) override;
-    virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic) override;
 
 public:
     TArray<TPair<ETypeQuest, bool>> GetQuestsStatus() { return QuestsStatus.Array(); };
-    bool                            ApplyQuestItem(ULogicBase* QuestItem);
+    virtual bool                    ApplyQuestItem(ULogicBase* QuestItem);
     bool                            CheckQuestItem(ULogicBase* QuestItem);
     bool                            IsAreAllQuestsCompleted() const { return AreAllQuestsCompleted; };
 
     FOnAllQuestsCompleted OnAllQuestsCompleted;
 
-private:
+protected:
     void CheckQuestsCompleted();
 
     TMap<ETypeQuest, bool> QuestsStatus;
     bool                   AreAllQuestsCompleted = false;
 
-    FName PresenceTag   = TEXT("Player");
-    FName WidgetInfoTag   = TEXT("WidgetInfo");
 
-
-    UFUNCTION()
-    void OwnerRepresentationActorChanged(AActor* NewRepresentationActor);
-
-    UPROPERTY(Transient)
-    UPresenceDetectorSceneComponent* PresenceDetector;
-
-    UFUNCTION()
-    void OnPlayerEntered(AActor* Player);
-
-    void Notification(AActor* Player);
 };

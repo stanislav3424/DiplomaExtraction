@@ -6,21 +6,17 @@
 #include "GameFramework/Actor.h"
 #include "LevelQuestBase.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class DIPLOMAEXTRACTION_API ALevelQuestBase : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ALevelQuestBase();
+    GENERATED_BODY()
+
+public:
+    static ALevelQuestBase* Get(UObject* WorldContextObject);
+
+private:
+    static ALevelQuestBase* Instance;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+    virtual void BeginPlay() override;
 };

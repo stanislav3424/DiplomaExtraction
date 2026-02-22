@@ -3,15 +3,31 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "QuestConditionLogic.h"
+#include "ListenQuestConditionLogic.h"
 #include "NotificationQuestConditionLogic.generated.h"
 
-/**
- * 
- */
-UCLASS()
-class DIPLOMAEXTRACTION_API UNotificationQuestConditionLogic : public UQuestConditionLogic
+UCLASS(NotBlueprintable)
+class DIPLOMAEXTRACTION_API UNotificationQuestConditionLogic : public UListenQuestConditionLogic
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+protected:
+    virtual void OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic) override;
+
+public:
+    virtual bool ApplyQuestItem(ULogicBase* QuestItem) override;
+
+private:
+    FName PresenceTag = TEXT("Player");
+
+    UFUNCTION()
+    void OwnerRepresentationActorChanged(AActor* NewRepresentationActor);
+
+    UPROPERTY(Transient)
+    UPresenceDetectorSceneComponent* PresenceDetector;
+
+    UFUNCTION()
+    void OnPlayerEntered(AActor* Player);
+
+    void Notification(AActor* Player);
 };

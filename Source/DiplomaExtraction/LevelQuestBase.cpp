@@ -1,27 +1,41 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "LevelQuestBase.h"
+#include "MacroLibrary.h"
+#include "EngineUtils.h"
 
-// Sets default values
-ALevelQuestBase::ALevelQuestBase()
+ALevelQuestBase* ALevelQuestBase::Instance = nullptr;
+
+ALevelQuestBase* ALevelQuestBase::Get(UObject* WorldContextObject)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    if (!GEngine)
+        return nullptr;
 
+    auto World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
+    if (!World)
+        return nullptr;
+
+    if (Instance && Instance->GetWorld() == World)
+        return Instance;
+
+    for (TActorIterator<ALevelQuestBase> It(World); It; ++It)
+    {
+        Instance = *It;
+        return Instance;
+    }
+
+    return nullptr;
 }
 
-// Called when the game starts or when spawned
 void ALevelQuestBase::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
+
+    if (Instance != this)
+    {
+        CHECK_VAR(!Instance);
+
+        Destroy();
+        return;
+    }
 }
-
-// Called every frame
-void ALevelQuestBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

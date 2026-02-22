@@ -4,14 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "QuestConditionLogic.h"
-#include "listenQuestConditionLogic.generated.h"
+#include "ListenQuestConditionLogic.generated.h"
 
-/**
- * 
- */
-UCLASS()
-class DIPLOMAEXTRACTION_API UlistenQuestConditionLogic : public UQuestConditionLogic
+UCLASS(NotBlueprintable)
+class DIPLOMAEXTRACTION_API UListenQuestConditionLogic : public UQuestConditionLogic
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+protected:
+    virtual void InitializeRowHandler(FDataTableRowHandle const& InitRowHandle);
+
+    UFUNCTION()
+    void OnLevelQuestCompleted(ULogicBase* LevelQuestLogic);
+
+    bool bIsListenLevelQuest = true;
 };

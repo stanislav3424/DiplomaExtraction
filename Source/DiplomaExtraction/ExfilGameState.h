@@ -6,12 +6,19 @@
 #include "GameFramework/GameStateBase.h"
 #include "ExfilGameState.generated.h"
 
-/**
- * 
- */
-UCLASS(Abstract, NotBlueprintable)
+class ULogicBase;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelQuestCompleted, ULogicBase*, LevelQuestLogic);
+
+UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API AExfilGameState : public AGameStateBase
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    static AExfilGameState* Get(UObject* WorldContextObject);
+
+    FOnLevelQuestCompleted OnLevelQuestCompleted;
+
+    void QuestCompleted(ULogicBase* LevelQuestLogic);
 };

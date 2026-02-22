@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "QuestConditionLogic.h"
+#include "NotificationQuestConditionLogic.h"
 #include "AtomicQuestConditionLogic.generated.h"
 
-/**
- * 
- */
-UCLASS()
-class DIPLOMAEXTRACTION_API UAtomicQuestConditionLogic : public UQuestConditionLogic
+UCLASS(NotBlueprintable)
+class DIPLOMAEXTRACTION_API UAtomicQuestConditionLogic : public UNotificationQuestConditionLogic
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    UAtomicQuestConditionLogic();
 };

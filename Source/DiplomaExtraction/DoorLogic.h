@@ -10,6 +10,7 @@ class UBoxComponent;
 class UStaticMeshComponent;
 class UQuestConditionLogic;
 class UNavLinkComponent;
+class UPresenceDetectorSceneComponent;
 
 UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UDoorLogic : public ULogicBase

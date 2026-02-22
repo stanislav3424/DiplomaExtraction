@@ -10,6 +10,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllQuestsCompleted);
 
 enum class ETypeQuest : uint8;
 class UBoxComponent;
+class UPresenceDetectorSceneComponent;
 
 UCLASS(NotBlueprintable)
 class DIPLOMAEXTRACTION_API UQuestConditionLogic : public ULogicBase
@@ -34,20 +35,18 @@ private:
     TMap<ETypeQuest, bool> QuestsStatus;
     bool                   AreAllQuestsCompleted = false;
 
-    FName CollisionBoxTag = TEXT("QuestCollision");
+    FName PresenceTag   = TEXT("Player");
     FName WidgetInfoTag   = TEXT("WidgetInfo");
 
-    UPROPERTY(Transient)
-    UBoxComponent* CollisionBox;
-
-    UFUNCTION()
-    void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-        int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-    UFUNCTION()
-    void OnBoxEndOverlap(
-        UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
     UFUNCTION()
     void OwnerRepresentationActorChanged(AActor* NewRepresentationActor);
+
+    UPROPERTY(Transient)
+    UPresenceDetectorSceneComponent* PresenceDetector;
+
+    UFUNCTION()
+    void OnPlayerEntered(AActor* Player);
+
+    void Notification(AActor* Player);
 };

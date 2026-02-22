@@ -11,6 +11,7 @@
 #include "NavAreas/NavArea_Default.h" 
 #include "NavAreas/NavArea_Null.h"
 #include "NavigationSystem.h"
+#include "PresenceDetectorSceneComponent.h"
 
 UDoorLogic::UDoorLogic()
 {

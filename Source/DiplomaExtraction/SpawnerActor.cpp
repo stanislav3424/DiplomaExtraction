@@ -23,6 +23,9 @@ void ASpawnerActor::BeginPlay()
 {
     Super::BeginPlay();
 
+    if (PresenceDetector)
+        PresenceDetector->SetTypeTracking(ETypeTracking::Player);
+
     HIDE_COLLISION(this)
 
     FillQueue();

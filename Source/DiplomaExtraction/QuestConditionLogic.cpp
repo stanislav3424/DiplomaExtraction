@@ -8,6 +8,7 @@
 #include "Components/BoxComponent.h"
 #include "NotificationWidgetComponent.h"
 #include "EnumLibrary.h"
+#include "PresenceDetectorSceneComponent.h"
 
 void UQuestConditionLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle)
 {
@@ -32,7 +33,9 @@ void UQuestConditionLogic::InitializeRowHandler(FDataTableRowHandle const& InitR
 
     CheckQuestsCompleted();
     if (IsAreAllQuestsCompleted())
-        UE_LOG(InitGameLogic, Error, FILE_FUNC TEXT("Zero quests initialized"))
+        UE_LOG(InitGameLogic, Error, FILE_FUNC TEXT("Zero quests initialized"));
+
+   PresenceTag = UEnumLibrary::EnumToName(ETypeTracking::Player);
 }
 
 void UQuestConditionLogic::OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBase* NewOwnerLogic)
@@ -40,16 +43,11 @@ void UQuestConditionLogic::OwnerLogicChange(ULogicBase* OldOwnerLogic, ULogicBas
     Super::OwnerLogicChange(OldOwnerLogic, NewOwnerLogic);
 
     if (OldOwnerLogic)
-    {
-        OldOwnerLogic->OnRepresentationActorChanged.RemoveDynamic(
-            this, &UQuestConditionLogic::OwnerRepresentationActorChanged);
-    }
+        OldOwnerLogic->OnRepresentationActorChanged.RemoveAll(this);
 
     if (NewOwnerLogic)
-    {
         NewOwnerLogic->OnRepresentationActorChanged.AddUniqueDynamic(
             this, &UQuestConditionLogic::OwnerRepresentationActorChanged);
-    }
 }
 
 bool UQuestConditionLogic::ApplyQuestItem(ULogicBase* QuestItem)
@@ -96,20 +94,31 @@ void UQuestConditionLogic::CheckQuestsCompleted()
     OnAllQuestsCompleted.Broadcast();
 }
 
-void UQuestConditionLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void UQuestConditionLogic::OwnerRepresentationActorChanged(AActor* NewRepresentationActor)
 {
-    if (!IsValid(OtherActor))
+    CHECK_VAR_RETURN(NewRepresentationActor);
+
+    if (PresenceDetector)
+    {
+        PresenceDetector->OnNewActor.RemoveAll(this);
+        PresenceDetector = nullptr;
+    }
+
+    PresenceDetector = NewRepresentationActor->FindComponentByTag<UPresenceDetectorSceneComponent>(PresenceTag);
+    CHECK_VAR_RETURN(PresenceDetector);
+
+    PresenceDetector->OnNewActor.AddUniqueDynamic(this, &UQuestConditionLogic::OnPlayerEntered);
+}
+
+void UQuestConditionLogic::OnPlayerEntered(AActor* Player)
+{
+    if (!IsValid(Player))
         return;
 
     if (IsAreAllQuestsCompleted())
         return;
 
-    auto PC = OtherActor->GetInstigatorController<APlayerController>();
-    if (!PC)
-        return;
-
-    auto Logic = ULogicLibrary::GetLogic(OtherActor);
+    auto Logic = ULogicLibrary::GetLogic(Player);
     if (!Logic)
         return;
 
@@ -117,14 +126,20 @@ void UQuestConditionLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
     Logic->GetLogicComponents<UQuestLogic>(Quests, true);
 
     for (auto Quest : Quests)
-    {
         ApplyQuestItem(Quest->GetOwnerLogic());
-    }
 
     if (IsAreAllQuestsCompleted())
         return;
 
-    auto Notification = OtherActor->FindComponentByClass<UNotificationWidgetComponent>();
+    Notification(Player);
+}
+
+void UQuestConditionLogic::Notification(AActor* Player)
+{
+    if (!IsValid(Player))
+        return;
+
+    auto Notification = Player->FindComponentByClass<UNotificationWidgetComponent>();
     CHECK_VAR_RETURN(Notification);
 
     FString ItemsString;
@@ -138,23 +153,4 @@ void UQuestConditionLogic::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 
     ItemsString.RemoveFromEnd(TEXT(", "));
     Notification->AddNotification(FText::FromString(FString::Printf(TEXT("Need an item: %s"), *ItemsString)), 2.f);
-}
-
-void UQuestConditionLogic::OnBoxEndOverlap(
-    UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-}
-
-void UQuestConditionLogic::OwnerRepresentationActorChanged(AActor* NewRepresentationActor)
-{
-    CHECK_VAR_RETURN(NewRepresentationActor);
-
-    if (CollisionBox)
-        return;
-
-    CollisionBox = NewRepresentationActor->FindComponentByTag<UBoxComponent>(CollisionBoxTag);
-    CHECK_VAR_RETURN(CollisionBox);
-
-    CollisionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &UQuestConditionLogic::OnBoxBeginOverlap);
-    CollisionBox->OnComponentEndOverlap.AddUniqueDynamic(this, &UQuestConditionLogic::OnBoxEndOverlap);
 }

@@ -4,6 +4,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 #include "MacroLibrary.h"
+#include "EnumLibrary.h"
 
 UPresenceDetectorSceneComponent::UPresenceDetectorSceneComponent()
 {
@@ -14,6 +15,8 @@ UPresenceDetectorSceneComponent::UPresenceDetectorSceneComponent()
 void UPresenceDetectorSceneComponent::BeginPlay()
 {
     Super::BeginPlay();
+
+    ComponentTags.AddUnique(UEnumLibrary::EnumToName(TypeTracking));
 
      if (!SphereComponent)
         return;
@@ -27,14 +30,30 @@ void UPresenceDetectorSceneComponent::OnRegister()
     Super::OnRegister();
 
     if (SphereComponent)
-    {
         SphereComponent->AttachToComponent(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-    }
+}
+
+void UPresenceDetectorSceneComponent::SetTypeTracking(ETypeTracking const& NewTypeTracking)
+{
+    if (TypeTracking == NewTypeTracking)
+        return;
+
+    ComponentTags.Remove(UEnumLibrary::EnumToName(TypeTracking));
+    TypeTracking = NewTypeTracking;
+    ComponentTags.AddUnique(UEnumLibrary::EnumToName(TypeTracking));
+
+    ActorsInside.Empty();
+
+    if (SphereComponent)
+        SphereComponent->UpdateOverlaps();
 }
 
 void UPresenceDetectorSceneComponent::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+    if (TypeTracking == ETypeTracking::None)
+        return;
+
     if (!IsValid(OtherActor))
         return;
 
@@ -45,16 +64,23 @@ void UPresenceDetectorSceneComponent::OnBeginOverlap(UPrimitiveComponent* Overla
     if (TypeTracking == ETypeTracking::Player)
     {
         if (OtherActor->GetInstigatorController() == World->GetFirstPlayerController())
+        {
+            if (!ActorsInside.Contains(OtherActor))
+                OnNewActor.Broadcast(OtherActor);
+
             ActorsInside.Add(OtherActor);
 
-        CheckActorsInside();
-        return;
+            CheckActorsInside();
+        }
     }
 }
 
 void UPresenceDetectorSceneComponent::OnEndOverlap(
     UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+    if (TypeTracking == ETypeTracking::None)
+        return;
+
     if (!IsValid(OtherActor))
         return;
 
@@ -65,10 +91,11 @@ void UPresenceDetectorSceneComponent::OnEndOverlap(
     if (TypeTracking == ETypeTracking::Player)
     {
         if (OtherActor->GetInstigatorController() == World->GetFirstPlayerController())
+        {
             ActorsInside.Remove(OtherActor);
 
-        CheckActorsInside();
-        return;
+            CheckActorsInside();
+        }
     }
 }
 

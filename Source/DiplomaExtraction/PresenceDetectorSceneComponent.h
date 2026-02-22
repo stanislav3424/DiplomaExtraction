@@ -8,13 +8,16 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnZoneBecameOccupied);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnZoneBecameEmpty);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewActor, AActor*, NewActor);
 
 class USphereComponent;
 
 UENUM(BlueprintType)
 enum class ETypeTracking : uint8
 {
+    None   UMETA(DisplayName = "None"),
     Player UMETA(DisplayName = "Player"),
+    Any    UMETA(DisplayName = "Any"),
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -39,8 +42,13 @@ public:
     UPROPERTY(BlueprintAssignable)
     FOnZoneBecameEmpty OnZoneBecameEmpty;
 
+    UPROPERTY(BlueprintAssignable)
+    FOnNewActor OnNewActor;
+
     UFUNCTION(BlueprintCallable)
     TArray<AActor*> GetActorsInside() { return ActorsInside.Array(); };
+
+    void SetTypeTracking(ETypeTracking const& NewTypeTracking);
 
 private:
     UFUNCTION()
@@ -60,7 +68,7 @@ private:
     USphereComponent* SphereComponent;
 
     UPROPERTY(EditAnywhere, Category = "Interaction")
-    ETypeTracking TypeTracking = ETypeTracking::Player;
+    ETypeTracking TypeTracking = ETypeTracking::None;
 
     bool bIsInside = false;
 };

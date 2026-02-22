@@ -58,12 +58,13 @@ bool UQuestConditionLogic::ApplyQuestItem(ULogicBase* QuestItem)
     if (!CheckQuestItem(QuestItem))
         return false;
 
-    auto QuestLogic = QuestItem->GetLogicComponent<UQuestLogic>();
+    auto QuestLogic = Cast<UQuestLogic>(QuestItem);
     if (!QuestLogic)
         return false;
 
     auto TypeQuest = QuestLogic->GetTypeQuest();
-    QuestsStatus.Add(TypeQuest, true);
+
+    QuestsStatus[TypeQuest] = true;
 
     CheckQuestsCompleted();
 
@@ -72,9 +73,7 @@ bool UQuestConditionLogic::ApplyQuestItem(ULogicBase* QuestItem)
 
 bool UQuestConditionLogic::CheckQuestItem(ULogicBase* QuestItem)
 {
-    if (!QuestItem)
-        return false;
-    auto QuestLogic = QuestItem->GetLogicComponent<UQuestLogic>();
+    auto QuestLogic = Cast<UQuestLogic>(QuestItem);
     if (!QuestLogic)
         return false;
     auto TypeQuest = QuestLogic->GetTypeQuest();
@@ -126,7 +125,7 @@ void UQuestConditionLogic::OnPlayerEntered(AActor* Player)
     Logic->GetLogicComponents<UQuestLogic>(Quests, true);
 
     for (auto Quest : Quests)
-        ApplyQuestItem(Quest->GetOwnerLogic());
+        ApplyQuestItem(Quest);
 
     if (IsAreAllQuestsCompleted())
         return;

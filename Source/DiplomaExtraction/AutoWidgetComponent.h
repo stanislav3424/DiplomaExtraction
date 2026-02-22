@@ -15,6 +15,7 @@ class DIPLOMAEXTRACTION_API UAutoWidgetComponent : public UWidgetComponent, publ
     GENERATED_BODY()
 
 public:
+    virtual void        BeginPlay() override;
     virtual ULogicBase* GetLogic_Implementation() override;
     virtual void        SetLogic_Implementation(ULogicBase* NewLogic) override;
 
@@ -24,4 +25,7 @@ private:
 
     UFUNCTION()
     void Death();
+
+    UFUNCTION()
+    void OnStatusGameChanged(EStatusGame const& NewStatusGame);
 };

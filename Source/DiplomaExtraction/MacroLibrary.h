@@ -37,8 +37,30 @@ DECLARE_LOG_CATEGORY_EXTERN(InitGameLogic, Log, All);
         return ReturnValue;                                                                                            \
     }
 
+#define HIDE_COLLISION(Actor) UMacroLibrary::HideCollisionComponentsForShipping(Actor);
+
 UCLASS()
 class DIPLOMAEXTRACTION_API UMacroLibrary : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
+
+public:
+    UFUNCTION(BlueprintCallable, Category = "Utils")
+    static void HideCollisionComponentsForShipping(AActor* Actor)
+    {
+#if UE_BUILD_SHIPPING
+
+        if (!Actor)
+            return;
+        TArray<UPrimitiveComponent*> PrimitiveComponents;
+        Actor->GetComponents<UPrimitiveComponent>(PrimitiveComponents);
+        for (auto PrimitiveComponent : PrimitiveComponents)
+        {
+            if (!PrimitiveComponent)
+                continue;
+            PrimitiveComponent->SetHiddenInGame(true, true);
+        }
+
+#endif
+    }
 };

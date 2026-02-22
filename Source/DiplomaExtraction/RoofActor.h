@@ -6,21 +6,20 @@
 #include "GameFramework/Actor.h"
 #include "RoofActor.generated.h"
 
+enum class EStatusGame : uint8;
+
 UCLASS()
 class DIPLOMAEXTRACTION_API ARoofActor : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
-	ARoofActor();
-
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void OnStatusGameChanged(EStatusGame const& NewStatusGame);
 
+	void SetVisibility(bool bNewVisibility);
+
+	bool bVisibility = true;
 };

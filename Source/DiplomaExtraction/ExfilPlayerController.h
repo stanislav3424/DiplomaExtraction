@@ -24,7 +24,7 @@ protected:
     virtual void BeginPlay() override;
 
     UFUNCTION()
-    void         FOnStatusGameChanged(EStatusGame const& NewStatusGame);
+    void         OnStatusGameChanged(EStatusGame const& NewStatusGame);
     void         AddMappingContext();
     void         RemoveMappingContext();
     virtual void SetupInputComponent() override;

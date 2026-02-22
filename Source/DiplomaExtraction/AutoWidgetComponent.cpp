@@ -4,6 +4,16 @@
 #include "HealthLogic.h"
 #include "LogicLibrary.h"
 #include "MacroLibrary.h"
+#include "ExfilGameMode.h"
+
+void UAutoWidgetComponent::BeginPlay()
+{
+    auto GameMode = AExfilGameMode::Get(GetWorld());
+    CHECK_VAR_RETURN(GameMode);
+
+    GameMode->OnStatusGameChanged.AddUniqueDynamic(this, &UAutoWidgetComponent::OnStatusGameChanged);
+    OnStatusGameChanged(GameMode->GetStatusGame());
+}
 
 ULogicBase* UAutoWidgetComponent::GetLogic_Implementation()
 {
@@ -33,5 +43,15 @@ void UAutoWidgetComponent::SetLogic_Implementation(ULogicBase* NewLogic)
 
 void UAutoWidgetComponent::Death()
 {
+    auto HealthLogic = UHealthLogic::GetHealthLogic_Logic(LogicBase);
+    CHECK_VAR_RETURN(HealthLogic);
+
+    HealthLogic->OnDeath.RemoveAll(this);
+
     DestroyComponent();
+}
+
+void UAutoWidgetComponent::OnStatusGameChanged(EStatusGame const& NewStatusGame)
+{
+    SetHiddenInGame(NewStatusGame == EStatusGame::Started ? false : true);
 }

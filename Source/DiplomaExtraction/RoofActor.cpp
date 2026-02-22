@@ -1,27 +1,52 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "RoofActor.h"
+#include "ExfilGameMode.h"
+#include "MacroLibrary.h"
 
-// Sets default values
-ARoofActor::ARoofActor()
-{
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-}
-
-// Called when the game starts or when spawned
 void ARoofActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+    SetVisibility(false);
+
+    TArray<UPrimitiveComponent*> PrimitiveComponents;
+    GetComponents<UPrimitiveComponent>(PrimitiveComponents);
+    for (auto PrimitiveComponent : PrimitiveComponents)
+    {
+        if (!PrimitiveComponent)
+            continue;
+
+        PrimitiveComponent->SetVisibility(true, true);
+        PrimitiveComponent->SetCastHiddenShadow(true);
+    }
 	
+	auto GameMode = AExfilGameMode::Get(GetWorld());
+    CHECK_VAR_RETURN(GameMode);
+
+    GameMode->OnStatusGameChanged.AddUniqueDynamic(this, &ARoofActor::OnStatusGameChanged);
+    OnStatusGameChanged(GameMode->GetStatusGame());
 }
 
-// Called every frame
-void ARoofActor::Tick(float DeltaTime)
+void ARoofActor::OnStatusGameChanged(EStatusGame const& NewStatusGame)
 {
-	Super::Tick(DeltaTime);
-
+    SetVisibility(NewStatusGame == EStatusGame::NotStarted ? true : false);
 }
 
+void ARoofActor::SetVisibility(bool bNewVisibility)
+{
+    if (bVisibility == bNewVisibility)
+        return;
+
+    bVisibility = bNewVisibility;
+
+    TArray<UPrimitiveComponent*> PrimitiveComponents;
+    GetComponents<UPrimitiveComponent>(PrimitiveComponents);
+    for (auto PrimitiveComponent : PrimitiveComponents)
+    {
+        if (!PrimitiveComponent)
+            continue;
+
+        PrimitiveComponent->SetHiddenInGame(!bVisibility, true);
+    }
+}

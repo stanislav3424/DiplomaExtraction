@@ -46,11 +46,11 @@ void AExfilHUD::InitHUD()
 
     ULogicLibrary::SetLogic(PawnInfoWidget, PlayerLogic);
 
-    auto GM = AExfilGameMode::Get(GetWorld());
-    CHECK_VAR_RETURN(GM)
+    auto GameMode = AExfilGameMode::Get(GetWorld());
+    CHECK_VAR_RETURN(GameMode)
 
-    GM->OnStatusGameChanged.AddUniqueDynamic(this, &AExfilHUD::OnStatusGameChanged);
-    GM->BroadcastStatusGameChanged();
+    GameMode->OnStatusGameChanged.AddUniqueDynamic(this, &AExfilHUD::OnStatusGameChanged);
+    OnStatusGameChanged(GameMode->GetStatusGame());
 }
 
 void AExfilHUD::OnStatusGameChanged(EStatusGame const& StatusGame)
@@ -59,6 +59,8 @@ void AExfilHUD::OnStatusGameChanged(EStatusGame const& StatusGame)
 
     if (StatusGame == EStatusGame::NotStarted)
         MainMenuWidget->OpenDialog();
+    else
+        MainMenuWidget->CloseDialog();
 }
 
 void AExfilHUD::ToggleMainMenu()

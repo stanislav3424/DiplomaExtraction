@@ -53,8 +53,11 @@ public:
     void                 BroadcastGamePausedChanged() const;
 
     FOnStatusGameChanged OnStatusGameChanged;
-    void                 BroadcastStatusGameChanged() const;
 
+private:
+    void BroadcastStatusGameChanged() const;
+
+public:
     UFUNCTION(BlueprintCallable)
     void StartGame();
     UFUNCTION(BlueprintCallable)
@@ -63,6 +66,8 @@ public:
     void ReloadGame();
     UFUNCTION(BlueprintCallable)
     void ReloadGameAndStartGame();
+
+    EStatusGame const& GetStatusGame() const { return StatusGame; }
 
 private:
     void SetStatusGame(EStatusGame const& NewStatusGame);

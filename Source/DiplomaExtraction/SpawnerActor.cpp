@@ -23,6 +23,8 @@ void ASpawnerActor::BeginPlay()
 {
     Super::BeginPlay();
 
+    HIDE_COLLISION(this)
+
     FillQueue();
 
     auto Subsystem = UIniSettingsSubsystem::Get(GetWorld());

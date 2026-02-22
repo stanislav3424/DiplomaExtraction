@@ -15,15 +15,17 @@ void AExfilPlayerController::BeginPlay()
     Super::BeginPlay();
 
     auto GameMode = AExfilGameMode::Get(GetWorld());
-    if(GameMode)
-    GameMode->OnStatusGameChanged.AddUniqueDynamic(this, &AExfilPlayerController::FOnStatusGameChanged);
+    CHECK_VAR_RETURN(GameMode);
 
-    CHECK_VAR_RETURN(!ArrLevelSequence.IsEmpty())
+    GameMode->OnStatusGameChanged.AddUniqueDynamic(this, &AExfilPlayerController::OnStatusGameChanged);
+    OnStatusGameChanged(GameMode->GetStatusGame());
+
+    CHECK_VAR_RETURN(!ArrLevelSequence.IsEmpty());
     for (auto LevelSequence : ArrLevelSequence)
         CHECK_VAR_RETURN(LevelSequence);
 }
 
-void AExfilPlayerController::FOnStatusGameChanged(EStatusGame const& NewStatusGame)
+void AExfilPlayerController::OnStatusGameChanged(EStatusGame const& NewStatusGame)
 {
     RemoveMappingContext();
     StopLevelSequence();

@@ -105,6 +105,9 @@ struct FWeaponLogicRow : public FLogicBaseRow
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     USoundBase* SoundShoot = nullptr;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UAnimMontage* ReloadAnimMontage = nullptr;
 };
 
 USTRUCT(BlueprintType)

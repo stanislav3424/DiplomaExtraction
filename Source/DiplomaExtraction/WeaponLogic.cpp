@@ -30,6 +30,7 @@ void UWeaponLogic::InitializeRowHandler(FDataTableRowHandle const& InitRowHandle
     Ammo          = Row->Ammo;
     BulletTraceFX = Row->BulletTraceFX;
     SoundShoot    = Row->SoundShoot;
+    ReloadAnimMontage = Row->ReloadAnimMontage;
 
     InitializeWeapon();
 }
@@ -64,6 +65,7 @@ void UWeaponLogic::InitializeWeapon()
 
     CHECK_VAR(BulletTraceFX);
     CHECK_VAR(SoundShoot);
+    CHECK_VAR(ReloadAnimMontage);
 
     CurrentAmmo = Ammo;
     FireDelay   = GetFireDelay();
@@ -100,8 +102,33 @@ void UWeaponLogic::StopFiring()
 
 void UWeaponLogic::Reload()
 {
-    CurrentAmmo = Ammo;
-    OnEndReloading.Broadcast();
+    CHECK_VAR_RETURN(ReloadAnimMontage);
+
+    auto LocalOwnerLogic = GetOwnerLogic();
+    if (!LocalOwnerLogic)
+        return;
+
+    auto Character = Cast<ACharacter>(LocalOwnerLogic->GetRepresentationActor());
+    if (!Character)
+        return;
+
+    auto Mesh = Character->GetMesh();
+    if (!Mesh)
+        return;
+
+    auto AnimInstance = Mesh->GetAnimInstance();
+    if (!AnimInstance)
+        return;
+
+    AnimInstance->Montage_Play(ReloadAnimMontage);
+    float Length = ReloadAnimMontage->GetPlayLength();
+
+    auto World = GetWorld();
+    if (!World)
+        return;
+
+    FTimerHandle TimerHandle;
+    World->GetTimerManager().SetTimer(TimerHandle, this, &UWeaponLogic::EndReload, Length, false);
 }
 
 UWeaponLogic* UWeaponLogic::GetEquippedWeaponLogic_Actor(AActor* Actor)
@@ -120,6 +147,12 @@ UWeaponLogic* UWeaponLogic::GetEquippedWeaponLogic_Logic(ULogicBase* Logic)
         return nullptr;
 
     return WeaponLogic;
+}
+
+void UWeaponLogic::EndReload()
+{
+    CurrentAmmo = Ammo;
+    OnEndReloading.Broadcast();
 }
 
 float UWeaponLogic::GetRateOfFireOneSecond() const

@@ -8,6 +8,8 @@
 
 void UAutoWidgetComponent::BeginPlay()
 {
+    Super::BeginPlay();
+
     auto GameMode = AExfilGameMode::Get(GetWorld());
     CHECK_VAR_RETURN(GameMode);
 

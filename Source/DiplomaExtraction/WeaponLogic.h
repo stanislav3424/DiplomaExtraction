@@ -60,6 +60,8 @@ public:
     static UWeaponLogic* GetEquippedWeaponLogic_Logic(ULogicBase* Logic);
 
 private:
+    UFUNCTION()
+    void    EndReload();
     float   GetRateOfFireOneSecond() const;
     float   GetFireDelay() const;
     void    Shoot();
@@ -87,4 +89,7 @@ private:
 
     UPROPERTY(Transient)
     USoundBase* SoundShoot;
+
+    UPROPERTY(Transient)
+    UAnimMontage* ReloadAnimMontage;
 };

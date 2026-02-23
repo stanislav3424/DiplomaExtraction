@@ -67,6 +67,9 @@ void AExfilHUD::ToggleMainMenu()
 {
     if (MainMenuWidget)
         MainMenuWidget->ToggleDialog();
+
+    if (PawnInfoWidget)
+        PawnInfoWidget->CloseDialog();
 }
 
 void AExfilHUD::TogglePawnInfo()

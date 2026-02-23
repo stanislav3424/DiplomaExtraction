@@ -175,4 +175,14 @@ void AExfilPlayerController::PlayGameEndLevelSequence()
         return;
 
     LevelSequencePlayer->Play();
+
+    LevelSequencePlayer->OnFinished.AddUniqueDynamic(this, &AExfilPlayerController::GameEnd);
+}
+
+void AExfilPlayerController::GameEnd()
+{
+    auto GameMode = AExfilGameMode::Get(GetWorld());
+    CHECK_VAR_RETURN(GameMode);
+
+    GameMode->ReloadGame();
 }

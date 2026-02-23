@@ -87,7 +87,7 @@ private:
     UPROPERTY(Transient)
     ULogicBase* OwnerLogic;
 
-    UPROPERTY(Transient)
+    UPROPERTY()
     TArray<ULogicBase*> LogicComponents;
 
     // RepresentationActor

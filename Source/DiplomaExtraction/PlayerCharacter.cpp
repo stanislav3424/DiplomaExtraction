@@ -12,6 +12,8 @@
 #include "WeaponLogic.h"
 #include "CharacterLogic.h"
 #include "Row.h"
+#include "HealthLogic.h"
+#include "ExfilGameMode.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -31,6 +33,14 @@ void APlayerCharacter::SetLogic_Implementation(ULogicBase* NewLogic)
 
     AddMappingContext();
     SetActorTickEnabled(true);
+
+    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
+    CHECK_VAR_RETURN(CharacterLogic);
+
+    auto HealthLogic = CharacterLogic->GetLogicComponent<UHealthLogic>();
+    CHECK_VAR_RETURN(HealthLogic);
+
+    HealthLogic->OnDeath.AddUniqueDynamic(this, &APlayerCharacter::OnDeath);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -178,6 +188,14 @@ void APlayerCharacter::AddMappingContext()
         return;
     EnhancedInputLocalPlayerSubsystem->AddMappingContext(CameraInputMappingContext, 0);
     EnhancedInputLocalPlayerSubsystem->AddMappingContext(ControlPawnInputMappingContext, 0);
+}
+
+void APlayerCharacter::OnDeath()
+{
+    auto GameMode = AExfilGameMode::Get(GetWorld());
+    CHECK_VAR_RETURN(GameMode);
+
+    GameMode->ReloadGameAndStartGame();
 }
 
     

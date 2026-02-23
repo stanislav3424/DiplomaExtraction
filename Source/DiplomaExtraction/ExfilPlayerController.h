@@ -52,6 +52,9 @@ protected:
     UFUNCTION()
     void PlayGameEndLevelSequence();
 
+    UFUNCTION()
+    void GameEnd();
+
     UPROPERTY(Transient)
     ULevelSequencePlayer* LevelSequencePlayer;
 

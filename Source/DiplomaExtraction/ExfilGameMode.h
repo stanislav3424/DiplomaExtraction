@@ -52,6 +52,7 @@ public:
     FOnGamePausedChanged OnGamePausedChanged;
     void                 BroadcastGamePausedChanged() const;
 
+    UPROPERTY(BlueprintAssignable)
     FOnStatusGameChanged OnStatusGameChanged;
 
 private:
@@ -67,6 +68,7 @@ public:
     UFUNCTION(BlueprintCallable)
     void ReloadGameAndStartGame();
 
+    UFUNCTION(BlueprintCallable)
     EStatusGame const& GetStatusGame() const { return StatusGame; }
 
 private:

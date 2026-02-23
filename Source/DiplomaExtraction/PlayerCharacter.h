@@ -94,4 +94,6 @@ protected:
 
     void AddMappingContext();
 
+    UFUNCTION()
+    void OnDeath();
 };

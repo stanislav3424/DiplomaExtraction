@@ -113,6 +113,12 @@ void AExfilGameMode::EndGame()
 
 void AExfilGameMode::ReloadGame()
 {
+    auto LevelStartSubsystem = ULevelStartSubsystem::Get(GetWorld());
+    if (!LevelStartSubsystem)
+        return;
+
+    LevelStartSubsystem->SetAutoStartGame(false);
+
     auto World = GetWorld();
     if (!World)
         return;
@@ -128,5 +134,9 @@ void AExfilGameMode::ReloadGameAndStartGame()
 
     LevelStartSubsystem->SetAutoStartGame(true);
 
-    ReloadGame();
+     auto World = GetWorld();
+    if (!World)
+        return;
+    FName CurrentLevel = *World->GetMapName();
+    UGameplayStatics::OpenLevel(World, CurrentLevel);
 }

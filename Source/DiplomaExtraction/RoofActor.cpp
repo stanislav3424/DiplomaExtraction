@@ -30,7 +30,8 @@ void ARoofActor::BeginPlay()
 
 void ARoofActor::OnStatusGameChanged(EStatusGame const& NewStatusGame)
 {
-    SetVisibility(NewStatusGame == EStatusGame::NotStarted ? true : false);
+    SetVisibility(
+        (NewStatusGame == EStatusGame::NotStarted || NewStatusGame == EStatusGame::Over) ? true : false);
 }
 
 void ARoofActor::SetVisibility(bool bNewVisibility)

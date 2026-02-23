@@ -113,9 +113,12 @@ void UStaminaLogic::CheckRunningState()
 
     if (bIsRunning)
         if (CurrentStamina <= 0.f)
-             SetRunning(false);
+        {
+            SetRunning(false);
+            SetCanRunning(false);
+        }
 
     if (!bIsRunning)
         if (CurrentStamina > MinStaminaToRun)
-             SetRunning(true);
+            SetRunning(true);
 }

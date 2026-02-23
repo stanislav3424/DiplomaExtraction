@@ -19,10 +19,14 @@ void UInitRowHandle::BeginPlay()
 
 void UInitRowHandle::Init()
 {
-    CHECK_VAR_RETURN(!InitRowHandle.IsNull());
-
     auto Actor = GetOwner();
     CHECK_VAR_RETURN(Actor);
+
+    if (InitRowHandle.IsNull())
+    {
+        UE_LOG(InitGameLogic, Error, TEXT("InitRowHandle is null for owner %s"), *Actor->GetName());
+        return;
+    }
 
     auto CurrentLogic = ULogicLibrary::GetLogic(Actor);
     if (CurrentLogic)

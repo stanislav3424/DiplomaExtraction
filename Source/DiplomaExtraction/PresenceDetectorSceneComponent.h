@@ -50,7 +50,7 @@ public:
 
     void SetTypeTracking(ETypeTracking const& NewTypeTracking);
 
-private:
+protected:
     UFUNCTION()
     void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -64,7 +64,7 @@ private:
     UPROPERTY(Transient)
     TSet<AActor*> ActorsInside;
 
-    UPROPERTY(EditAnywhere, Instanced, Category = "Interaction")
+    UPROPERTY(EditAnywhere, Category = "Interaction")
     USphereComponent* SphereComponent;
 
     UPROPERTY(EditAnywhere, Category = "Interaction")

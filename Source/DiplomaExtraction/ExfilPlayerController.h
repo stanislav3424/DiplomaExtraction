@@ -49,11 +49,17 @@ protected:
     void PlayLevelSequence();
     void StopLevelSequence();
 
+    UFUNCTION()
+    void PlayGameEndLevelSequence();
+
     UPROPERTY(Transient)
     ULevelSequencePlayer* LevelSequencePlayer;
 
     UPROPERTY(EditDefaultsOnly, Category = "LevelSequence")
     TArray<ULevelSequence*> ArrLevelSequence;
+
+    UPROPERTY(EditDefaultsOnly, Category = "LevelSequence")
+    ULevelSequence* GameEndLevelSequence;
 
 public:
     FOnInventoryItemRotate OnInventoryItemRotate;

@@ -20,9 +20,11 @@ void AExfilPlayerController::BeginPlay()
     GameMode->OnStatusGameChanged.AddUniqueDynamic(this, &AExfilPlayerController::OnStatusGameChanged);
     OnStatusGameChanged(GameMode->GetStatusGame());
 
-    CHECK_VAR_RETURN(!ArrLevelSequence.IsEmpty());
+    CHECK_VAR(!ArrLevelSequence.IsEmpty());
     for (auto LevelSequence : ArrLevelSequence)
-        CHECK_VAR_RETURN(LevelSequence);
+        CHECK_VAR(LevelSequence);
+
+    CHECK_VAR(GameEndLevelSequence);
 }
 
 void AExfilPlayerController::OnStatusGameChanged(EStatusGame const& NewStatusGame)
@@ -39,7 +41,7 @@ void AExfilPlayerController::OnStatusGameChanged(EStatusGame const& NewStatusGam
             EnterDefaultMode();
             break;
         case EStatusGame::Over:
-            EnterSpectatorMode();
+            PlayGameEndLevelSequence();
             break;
         default:
             break;
@@ -114,8 +116,6 @@ void AExfilPlayerController::OnPawnInfo(FInputActionValue const& Value)
 void AExfilPlayerController::EnterCinematicMode()
 {
     PlayLevelSequence();
-
-
 }
 
 void AExfilPlayerController::EnterDefaultMode()
@@ -159,4 +159,20 @@ void AExfilPlayerController::StopLevelSequence()
     LevelSequencePlayer->Stop();
 
     LevelSequencePlayer = nullptr;
+}
+
+void AExfilPlayerController::PlayGameEndLevelSequence()
+{
+    CHECK_VAR_RETURN(GameEndLevelSequence)
+
+    FMovieSceneSequencePlaybackSettings Settings;
+    Settings.bHidePlayer                    = true;
+    Settings.bDisableMovementInput          = true;
+    ALevelSequenceActor* LevelSequenceActor = nullptr;
+    LevelSequencePlayer =
+        ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), GameEndLevelSequence, Settings, LevelSequenceActor);
+    if (!LevelSequencePlayer)
+        return;
+
+    LevelSequencePlayer->Play();
 }

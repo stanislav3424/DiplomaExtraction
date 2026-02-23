@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "CharacterLogic.h"
+#include "HealthLogic.h"
+#include "FirstAidKitLogic.h"
 #include "SpawnLibrary.h"
 #include "EquipmentLogic.h"
 #include "GameFramework/Character.h"
@@ -253,6 +255,19 @@ void UCharacterLogic::OnReload()
         return;
 
     WeaponLogic->Reload();
+}
+
+void UCharacterLogic::OnHealing()
+{
+    if (!ToСhangeTypeAction(ETypeAction::Healing))
+        return;
+
+    auto FirstAidKitLogic = GetLogicComponent<UFirstAidKitLogic>(true);
+    if (!FirstAidKitLogic)
+        return;
+
+    FirstAidKitLogic->OnHealingEnd.AddUniqueDynamic(this, &UCharacterLogic::ResetTypeAction);
+    FirstAidKitLogic->Apply();
 }
 
 bool UCharacterLogic::ToСhangeTypeAction(ETypeAction const& NewTypeAction)

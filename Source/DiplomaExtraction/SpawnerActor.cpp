@@ -16,7 +16,6 @@ ASpawnerActor::ASpawnerActor()
     PresenceDetector = CreateDefaultSubobject<UPresenceDetectorSceneComponent>(TEXT("PresenceDetector"));
     PresenceDetector->SetupAttachment(RootComponent);
 
-    PrimaryActorTick.bCanEverTick = false;
 }
 
 void ASpawnerActor::BeginPlay()

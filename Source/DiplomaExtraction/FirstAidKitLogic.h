@@ -6,7 +6,9 @@
 #include "LogicBase.h"
 #include "FirstAidKitLogic.generated.h"
 
-UCLASS(Blueprintable)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHealingEnd);
+
+UCLASS(Blueprintable) 
 class DIPLOMAEXTRACTION_API UFirstAidKitLogic : public ULogicBase
 {
     GENERATED_BODY()
@@ -21,6 +23,8 @@ private:
     // FirstAidKit Functionality
 public:
     void Apply();
+
+    FOnHealingEnd OnHealingEnd;
 
 private:
     float Heal = 100.f;

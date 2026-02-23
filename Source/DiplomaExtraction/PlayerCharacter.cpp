@@ -71,6 +71,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     EnhancedInputComponent->BindAction(ShootInputAction, ETriggerEvent::Completed, this, &APlayerCharacter::OnShoot);
     CHECK_VAR_RETURN(ReloadInputAction)
     EnhancedInputComponent->BindAction(ReloadInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnReload);
+    CHECK_VAR_RETURN(HealingInputAction)
+    EnhancedInputComponent->BindAction(HealingInputAction, ETriggerEvent::Started, this, &APlayerCharacter::OnHealing);
 }
 
 void APlayerCharacter::OnMove(const FInputActionValue& Value)
@@ -123,6 +125,14 @@ void APlayerCharacter::OnReload(const FInputActionValue& Value)
     CHECK_VAR_RETURN(CharacterLogic)
 
     CharacterLogic->OnReload();
+}
+
+void APlayerCharacter::OnHealing(const FInputActionValue& Value)
+{
+    auto CharacterLogic = Cast<UCharacterLogic>(GetLogic_Implementation());
+    CHECK_VAR_RETURN(CharacterLogic)
+
+    CharacterLogic->OnHealing();
 }
 
 void APlayerCharacter::ZoomTick(float DeltaTime)

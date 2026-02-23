@@ -41,4 +41,11 @@ void UFirstAidKitLogic::Apply()
         return;
 
     HealthLogic->Heal(Heal);
+
+    OnHealingEnd.Broadcast();
+    OnHealingEnd.Clear();
+
+    auto LocalOwnerLogic = GetOwnerLogic();
+    if (LocalOwnerLogic)
+        RemoveLogicComponent(this);
 }

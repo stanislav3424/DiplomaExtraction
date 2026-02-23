@@ -64,7 +64,7 @@ protected:
     UPROPERTY(Transient)
     TSet<AActor*> ActorsInside;
 
-    UPROPERTY(EditAnywhere, Category = "Interaction")
+    UPROPERTY(EditAnywhere, Instanced, Category = "Interaction")
     USphereComponent* SphereComponent;
 
     UPROPERTY(EditAnywhere, Category = "Interaction")

@@ -17,6 +17,7 @@ enum class ETypeAction : uint8
     Firing    UMETA(DisplayName = "Firing"),
     Reloading UMETA(DisplayName = "Reloading"),
     Runing    UMETA(DisplayName = "Runing"),
+    Healing   UMETA(DisplayName = "Healing"),
 };
 
 class UEquipmentLogic;
@@ -67,6 +68,9 @@ public:
 
     UFUNCTION(BlueprintCallable)
     void OnReload();
+
+    UFUNCTION(BlueprintCallable)
+    void OnHealing();
 
 private:
     ETypeAction TypeAction = ETypeAction::Idle;
